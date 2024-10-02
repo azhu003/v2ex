@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "v2ex"
 include(":app")
- 
+include(":basic")

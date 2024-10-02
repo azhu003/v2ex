@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">v2ex</string>
+    <string name="replies">回复 %s</string>
+    <string name="title_activity_subject_details">SubjectDetailsActivity</string>
 </resources>

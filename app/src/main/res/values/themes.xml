@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.V2ex" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.ComposeV2ex.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowAnimationStyle">@style/activityAnimationTransverse</item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">500</item>
+    </style>
+
+    <style name="activityAnimationTransverse" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter_transverse</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_open_exit_transverse</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter_transverse</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_close_exit_transverse</item>
+    </style>
+
+    <style name="Theme.V2ex" parent="Theme.ComposeV2ex.Base">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">@android:color/white</item>
+    </style>
 </resources>
