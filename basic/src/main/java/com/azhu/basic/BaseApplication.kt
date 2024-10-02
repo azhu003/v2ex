@@ -10,9 +10,15 @@ open class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AppManager.init(this)
         StoreProvider.init(this)
         AppThemeProvider.init(this)
         ContextProvider.init(this)
         Logger.newInstance(BuildConfig.DEBUG)
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        AppManager.destroy(this)
     }
 }

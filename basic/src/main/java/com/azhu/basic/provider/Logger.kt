@@ -37,6 +37,11 @@ class Logger(private val on: Boolean) {
             Log.e(TAG, msg)
     }
 
+    fun error(msg: String? = null, throwable: Throwable) {
+        if (on)
+            Log.e(TAG, msg, throwable)
+    }
+
     fun warning(msg: String) {
         if (on)
             Log.w(TAG, msg)

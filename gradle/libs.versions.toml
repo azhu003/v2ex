@@ -31,7 +31,13 @@ androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 
+android-navigation-compose = { module = "androidx.navigation:navigation-compose", version = "2.8.1" }
+
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.9.0" }
+
 # 网络
+com-squareup-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
+com-squareup-okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version = "4.12.0" }
 com-squareup-retrofit2 = { module = "com.squareup.retrofit2:retrofit", version = "2.11.0" }
 
 # 键值存储 https://github.com/Tencent/MMKV
@@ -41,8 +47,8 @@ com-tencent-mmkv = { module = "com.tencent:mmkv", version = "1.3.9" }
 org-jsoup = { module = "org.jsoup:jsoup", version = "1.18.1" }
 androidx-runtime-android = { module = "androidx.compose.runtime:runtime-android", version.ref = "runtimeAndroid" }
 
-android-navigation-compose = { module = "androidx.navigation:navigation-compose", version = "2.8.1" }
-
+# json解析
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version = "2.18.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

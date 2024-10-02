@@ -8,4 +8,6 @@ package com.azhu.v2ex.viewmodels
  */
 class SubjectDetailsViewModel : BaseViewModel() {
 
+
+
 }

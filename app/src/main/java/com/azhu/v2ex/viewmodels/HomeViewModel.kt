@@ -5,12 +5,27 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.lifecycle.viewModelScope
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.data.NodeItem
 import com.azhu.v2ex.data.SubjectItem
 import com.azhu.v2ex.data.TabPageState
 import com.azhu.v2ex.ext.startActivityClass
+import com.azhu.v2ex.http.ApiService
+import com.azhu.v2ex.http.Http
+import com.azhu.v2ex.http.Retrofits
+import com.azhu.v2ex.http.before
+import com.azhu.v2ex.http.error
+import com.azhu.v2ex.http.success
 import com.azhu.v2ex.ui.activity.SubjectDetailsActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
+import okhttp3.internal.wait
 import kotlin.random.Random
 
 /**
@@ -33,6 +48,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     private fun fetchNodes() {
+        nodesState.add(NodeItem("recent", "最近"))
         nodesState.add(NodeItem("tach", "技术"))
         nodesState.add(NodeItem("creative", "创意"))
         nodesState.add(NodeItem("play", "好玩"))
@@ -49,20 +65,17 @@ class HomeViewModel : BaseViewModel() {
         nodesState.add(NodeItem("members", "关注"))
     }
 
-    fun onTabPageSelectChanged(selectedIndex: Int) {
-        val node = nodesState[selectedIndex]
-        fetchSubjectsByTabIndex(selectedIndex, node)
-    }
-
-    fun onSubjectItemClick(context: Context, position: Int, item: SubjectItem) {
-        logger.debug("onSubjectItemClick -> position: $position id: ${item.id}")
-        context.startActivityClass(SubjectDetailsActivity::class)
-    }
-
     private fun fetchSubjectsByTabIndex(index: Int, node: NodeItem) {
         val subjects = (tabPageState.getOrPut(index) { TabPageState(node) }).subjects
-        logger.debug("fetch: size ${subjects.size} $subjects")
         if (subjects.isEmpty()) {
+
+            http.fetch { http.service.getSubjectList("") }
+                .before { logger.debug(">>>> before") }
+                .flowOn(Dispatchers.IO)
+                .success { logger.debug(">>>> success ${it.string()}") }
+                .error { logger.debug(">>>> error $it") }
+                .launchIn(viewModelScope)
+
             repeat(40) {
                 val rId = getSubjectNextId().toString()
                 subjects.add(
@@ -79,8 +92,16 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
+    fun onTabPageSelectChanged(selectedIndex: Int) {
+        val node = nodesState[selectedIndex]
+        fetchSubjectsByTabIndex(selectedIndex, node)
+    }
+
+    fun onSubjectItemClick(context: Context, position: Int, item: SubjectItem) {
+        context.startActivityClass(SubjectDetailsActivity::class)
+    }
+
     fun getSubjectsByTabIndex(index: Int): SnapshotStateList<SubjectItem> {
-        logger.debug("get -> $index")
         return tabPageState[index]?.subjects ?: mutableStateListOf()
     }
 

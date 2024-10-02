@@ -70,10 +70,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.com.squareup.retrofit2)
     implementation(libs.org.jsoup)
     implementation(project(":basic"))
 
     implementation(libs.android.navigation.compose)
+
+    implementation(libs.com.squareup.okhttp3)
+    implementation(libs.com.squareup.okhttp3.logging.interceptor)
+    implementation(libs.com.squareup.retrofit2)
+
+    implementation(libs.jackson.databind)
 
 }
