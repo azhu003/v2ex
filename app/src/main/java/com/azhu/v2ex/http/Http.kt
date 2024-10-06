@@ -1,8 +1,6 @@
 package com.azhu.v2ex.http
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import okhttp3.ResponseBody
 
 /**
@@ -16,39 +14,11 @@ class Http {
         Retrofits.getService(ApiService::class)
     }
 
-    fun fetch(doRequest: suspend () -> ResponseBody) =
-        flow<SimpleResponse<ResponseBody>> {
-            emit(SimpleResponse.Before)
+    fun fetch(onRequestBefore: () -> Unit = {}, doRequest: suspend () -> ResponseBody) =
+        flow<Result<ResponseBody>> {
+            onRequestBefore.invoke()
             runCatching { doRequest.invoke() }
-                .onSuccess {
-                    emit(SimpleResponse.Success(it))
-                }
-                .onFailure {
-                    emit(SimpleResponse.Error(ApiException(it.message)))
-                }
+                .onSuccess { emit(Result.success(it)) }
+                .onFailure { emit(Result.failure(ApiException(it.message))) }
         }
-}
-
-fun <T> Flow<SimpleResponse<T>>.before(onBefore: suspend () -> Unit): Flow<SimpleResponse<T>> {
-    return onEach {
-        if (it == SimpleResponse.Before) {
-            onBefore.invoke()
-        }
-    }
-}
-
-fun <T> Flow<SimpleResponse<T>>.success(onSuccess: suspend (T) -> Unit): Flow<SimpleResponse<T>> {
-    return onEach {
-        if (it is SimpleResponse.Success) {
-            onSuccess.invoke(it.data)
-        }
-    }
-}
-
-fun <T> Flow<SimpleResponse<T>>.error(onError: suspend (ApiException) -> Unit): Flow<SimpleResponse<T>> {
-    return onEach {
-        if (it is SimpleResponse.Error) {
-            onError.invoke(it.exception)
-        }
-    }
 }

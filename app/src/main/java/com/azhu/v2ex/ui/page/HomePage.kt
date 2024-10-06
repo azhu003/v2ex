@@ -1,11 +1,9 @@
 package com.azhu.v2ex.ui.page
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,13 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.SubjectItem
 import com.azhu.v2ex.ui.theme.custom
@@ -53,7 +51,7 @@ fun HomePage(vm: HomeViewModel) {
         vm.onTabPageSelectChanged(pagerState.currentPage)
     }
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { pv ->
+    Scaffold { pv ->
         Column {
             // 👇🏻 这个Row组件用来填充系统状态栏使状态栏和TabRow颜色保持一致
             Row(
@@ -103,6 +101,7 @@ fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
     val ctx = LocalContext.current
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(10.dp, 5.dp)
             .clip(MaterialTheme.shapes.medium)
             .clickable {
@@ -111,8 +110,8 @@ fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
             .background(MaterialTheme.custom.container)
             .padding(15.dp, 15.dp, 15.dp, 8.dp)
     ) {
-        Image(
-            painter = painterResource(R.mipmap.avatar),
+        AsyncImage(
+            model = item.avatar,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -124,13 +123,14 @@ fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = item.node,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Left,
                     color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                    fontSize = TextUnit(10f, TextUnitType.Sp),
+                    lineHeight = TextUnit(1f, TextUnitType.Sp),
                     modifier = Modifier
-                        .clip(MaterialTheme.shapes.small)
+                        .clip(MaterialTheme.shapes.extraSmall)
                         .background(MaterialTheme.custom.backgroundSecondary)
-                        .padding(start = 5.dp, end = 5.dp)
+                        .padding(5.dp, 3.dp)
                 )
                 Text(
                     text = item.operator,
@@ -144,8 +144,8 @@ fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
                     text = item.title,
                     color = MaterialTheme.custom.onContainerPrimary,
                     fontSize = TextUnit(14f, TextUnitType.Sp),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
                 )
                 Row(modifier = Modifier.padding(top = 5.dp)) {
                     Text(
@@ -153,12 +153,14 @@ fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
                         fontSize = TextUnit(12f, TextUnitType.Sp),
                         color = MaterialTheme.custom.onContainerSecondary,
                     )
-                    Text(
-                        text = stringResource(R.string.replies, item.replies.toString()),
-                        fontSize = TextUnit(12f, TextUnitType.Sp),
-                        color = MaterialTheme.custom.onContainerSecondary,
-                        modifier = Modifier.padding(start = 15.dp)
-                    )
+                    item.replies?.let {
+                        Text(
+                            text = stringResource(R.string.replies, it.toString()),
+                            fontSize = TextUnit(12f, TextUnitType.Sp),
+                            color = MaterialTheme.custom.onContainerSecondary,
+                            modifier = Modifier.padding(start = 15.dp)
+                        )
+                    }
                 }
             }
         }

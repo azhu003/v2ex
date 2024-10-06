@@ -4,11 +4,11 @@ import androidx.compose.runtime.Stable
 
 @Stable
 data class SubjectItem(
-    val id: String = "",
-    val title: String = "",
-    val node: String = "",
-    val operator: String = "", //作者
-    val avatar: String = "", //作者头像
-    val time: String = "", //发布时间
-    val replies: Int = 0  //回复总数
+    var id: String = "",
+    var title: String = "",
+    var node: String = "",
+    var operator: String = "", //作者
+    var avatar: String = "", //作者头像
+    var time: String= "", //发布时间
+    var replies: Int? = 0  //回复总数
 )

@@ -1,6 +1,5 @@
 package com.azhu.v2ex.data
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -9,9 +8,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 data class NodeItem(val key: String = "", val name: String = "")
 
 @Stable
-data class NodeTabState(
-    val index: MutableState<Int>,
-    val onTabClick: (Int, NodeItem) -> Unit?
+data class HomePageState(
+    var index: Int = 0
 )
 
 @Stable

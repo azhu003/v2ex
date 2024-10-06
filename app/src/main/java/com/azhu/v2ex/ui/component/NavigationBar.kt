@@ -1,5 +1,6 @@
 package com.azhu.v2ex.ui.component
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -34,6 +35,7 @@ fun NavigationBar(homeViewModel: HomeViewModel) {
     val currentDestination = navBackStackEntry?.destination
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         bottomBar = {
             NavigationBar(containerColor = MaterialTheme.custom.container) {
                 BottomNavigationItem().items().forEachIndexed { _, navigationItem ->
@@ -61,10 +63,11 @@ fun NavigationBar(homeViewModel: HomeViewModel) {
                 }
             }
         }
-    ) { _ ->
+    ) { pv ->
         NavHost(
             navController = navController,
             startDestination = Routes.Home.route,
+            modifier = Modifier.padding(pv)
         ) {
             composable(Routes.Home.route) { HomePage(homeViewModel) }
             composable(Routes.Search.route) { SearchPage() }

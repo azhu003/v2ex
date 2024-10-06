@@ -3,30 +3,25 @@ package com.azhu.v2ex.viewmodels
 import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.viewModelScope
 import com.azhu.basic.provider.logger
+import com.azhu.v2ex.data.HomePageState
 import com.azhu.v2ex.data.NodeItem
+import com.azhu.v2ex.data.RegexConstant
 import com.azhu.v2ex.data.SubjectItem
 import com.azhu.v2ex.data.TabPageState
+import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.startActivityClass
-import com.azhu.v2ex.http.ApiService
-import com.azhu.v2ex.http.Http
-import com.azhu.v2ex.http.Retrofits
-import com.azhu.v2ex.http.before
-import com.azhu.v2ex.http.error
-import com.azhu.v2ex.http.success
+import com.azhu.v2ex.ext.success
 import com.azhu.v2ex.ui.activity.SubjectDetailsActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import okhttp3.internal.wait
-import kotlin.random.Random
+import kotlinx.coroutines.flow.map
+import org.jsoup.nodes.Document
 
 /**
  * @description:
@@ -36,11 +31,9 @@ import kotlin.random.Random
  */
 class HomeViewModel : BaseViewModel() {
 
+    private val state = mutableStateOf(HomePageState())
     private val tabPageState: SnapshotStateMap<Int, TabPageState> = mutableStateMapOf()
     val nodesState = mutableStateListOf<NodeItem>()
-
-    //fix me. 生成测试用ID
-    private val ids = mutableSetOf<Int>()
 
     init {
         fetchNodes()
@@ -69,30 +62,45 @@ class HomeViewModel : BaseViewModel() {
         val subjects = (tabPageState.getOrPut(index) { TabPageState(node) }).subjects
         if (subjects.isEmpty()) {
 
-            http.fetch { http.service.getSubjectList("") }
-                .before { logger.debug(">>>> before") }
+            http.fetch(onRequestBefore = { logger.debug(">>>> before") }) { http.service.getSubjectList(node.key) }
+                .map { Result.success(analysisSubjectDocument(getDocument(it.getOrThrow().byteStream()))) }
                 .flowOn(Dispatchers.IO)
-                .success { logger.debug(">>>> success ${it.string()}") }
-                .error { logger.debug(">>>> error $it") }
+                .error { logger.error(it?.message ?: "error message is null") }
+                .success { subjects.addAll(it) }
                 .launchIn(viewModelScope)
 
-            repeat(40) {
-                val rId = getSubjectNextId().toString()
-                subjects.add(
-                    SubjectItem(
-                        id = rId,
-                        title = "[$rId] [${node.key}] SteamOS 为什么基于不稳定的 Arch Linux 而不是更成熟、商业化的 Debian？",
-                        node = "程序员",
-                        operator = "mikewang",
-                        time = "3分钟前",
-                        replies = Random.nextInt(0, 100)
-                    )
-                )
-            }
+//            getHtmlFromAssets("subjects.html")
+//                .map { Result.success(analysisSubjectDocument(getDocument(it.getOrThrow()))) }
+//                .flowOn(Dispatchers.IO)
+//                .error { logger.error(it?.message ?: "error message is null") }
+//                .success { subjects.addAll(it) }
+//                .launchIn(viewModelScope)
         }
     }
 
+    private fun analysisSubjectDocument(doc: Document): List<SubjectItem> {
+        val subjects = mutableListOf<SubjectItem>()
+        val elements = doc.select("div.cell.item tr")
+        for (tr in elements) {
+            val subject = SubjectItem()
+            catch {
+                subject.avatar = str { tr.select("img.avatar").attr("src") }
+                val topicInfo = tr.children()[2]  // <span class="topic_info">
+                val a = topicInfo.select("span.item_title > a")
+                subject.id = str { RegexConstant.TOPIC_ID.find(a.attr("href"))!!.value }
+                subject.title = str { a.text() }
+                subject.node = str { topicInfo.select("a.node").text() }
+                subject.operator = str { topicInfo.select("a[href^=/member/]").first()?.text() ?: "" }
+                subject.time = str { topicInfo.select("span[title]").text() }
+                subject.replies = str { tr.select("a.count_livid").text() }.toIntOrNull()
+            }
+            subjects.add(subject)
+        }
+        return subjects
+    }
+
     fun onTabPageSelectChanged(selectedIndex: Int) {
+        state.value.index = selectedIndex
         val node = nodesState[selectedIndex]
         fetchSubjectsByTabIndex(selectedIndex, node)
     }
@@ -105,11 +113,4 @@ class HomeViewModel : BaseViewModel() {
         return tabPageState[index]?.subjects ?: mutableStateListOf()
     }
 
-    private fun getSubjectNextId(): Int {
-        var next = Random.nextInt(1000, 100000)
-        while (ids.contains(next)) {
-            next = Random.nextInt(1000, 100000)
-        }
-        return next
-    }
 }

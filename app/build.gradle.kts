@@ -80,5 +80,6 @@ dependencies {
     implementation(libs.com.squareup.retrofit2)
 
     implementation(libs.jackson.databind)
+    implementation(libs.coil.compose)
 
 }

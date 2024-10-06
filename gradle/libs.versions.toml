@@ -49,6 +49,7 @@ androidx-runtime-android = { module = "androidx.compose.runtime:runtime-android"
 
 # json解析
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version = "2.18.0" }
+coil-compose = { module = "io.coil-kt:coil-compose", version = "2.7.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
