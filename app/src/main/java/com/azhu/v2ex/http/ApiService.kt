@@ -16,7 +16,7 @@ interface ApiService {
     @GET("/")
     suspend fun getSubjectList(@Query("tab") tab: String? = null): ResponseBody
 
-    @GET("/t/{id}")
-    suspend fun getSubjectDetails(@Path("id") id: Int): ResponseBody
+    @GET("/t/{sid}")
+    suspend fun getSubjectDetails(@Path("sid") sid: String): ResponseBody
 
 }

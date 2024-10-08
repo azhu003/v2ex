@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta name="Content-Type" content="text/html;charset=utf-8">
+<meta name="Referrer" content="unsafe-url">
+<meta content="True" name="HandheldFriendly">
+<meta name="theme-color" content="#18222d">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="detectify-verification" content="d0264f228155c7a1f72c3d91c17ce8fb" />
+<meta name="p:domain_verify" content="b87e3b55b409494aab88c1610b05a5f0" />
+<meta name="alexaVerifyID" content="OFc8dmwZo7ttU4UCnDh1rKDtLlY" />
+<meta name="baidu-site-verification" content="D00WizvYyr" />
+<meta name="msvalidate.01" content="D9B08FEA08E3DA402BF07ABAB61D77DE" />
+<meta property="wb:webmaster" content="f2f4cb229bda06a4" />
+<meta name="google-site-verification" content="LM_cJR94XJIqcYJeOCscGVMWdaRUvmyz6cVOqkFplaU" />
+<meta name="wwads-cn-verify" content="c8ffe9a587b126f152ed3d89a146b445" />
+<script type="text/javascript" src="https://cdn.wwads.cn/js/makemoney.js" async></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5060390720525238" crossorigin="anonymous"></script>
+<title>写了个安卓小程序，实时转发短信和未接来电 - V2EX</title>
+<link rel="dns-prefetch" href="https://static.v2ex.com/" />
+<link rel="dns-prefetch" href="https://cdn.v2ex.com/" />
+<link rel="dns-prefetch" href="https://i.v2ex.co/" />
+<link rel="dns-prefetch" href="https://www.google-analytics.com/" />
+<style>
+        body {
+            min-width: 820px;
+            font-family: "Helvetica Neue", "Luxi Sans", "Segoe UI", "Hiragino Sans GB", "Microsoft Yahei", sans-serif, "Apple Logo";
+        }
+    </style>
+<link rel="stylesheet" type="text/css" media="screen" href="/assets/041b65a587cf8204f8a8164b90cd8ceb5c14eb86-combo.css?t=1728375600">
+<link rel="stylesheet" type="text/css" media="screen" href="/assets/15cb944c4290ddc740fb131bcfe9cdfea20386a8-night.css?t=1728375600">
+<script>
+        const SITE_NIGHT = 1;
+    </script>
+<link rel="stylesheet" href="/static/css/vendor/tomorrow-night.css?v=b0e517e91324470337a008bd08305fec" type="text/css">
+<link rel="icon" sizes="192x192" href="/static/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon-180.png?v=91e795b8b5d9e2cbf2d886c3d4b7d63c">
+<link rel="shortcut icon" href="/static/favicon.ico" type="image/png">
+<link rel="manifest" href="/manifest.webmanifest">
+<script>
+        const LANG = 'zhcn';
+        const FEATURES = ['search', 'favorite-nodes-sort'];
+    </script>
+<script src="/assets/68957da5f1064cfb0f0533e1417bfa3246e41c1e-combo.js?t=1728375600" defer></script>
+<meta name="description" content="Android - @jinweijie - 手机只有单卡，带两个手机又太麻烦，趁国庆有空写了个程序转发短信和未接来电。已经用 Github Action 自动编译成 apk 了，下载安卓即用，干净，安全。[https://githu">
+<link rel="canonical" href="https://www.v2ex.com/t/1078071">
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="写了个安卓小程序，实时转发短信和未接来电 - V2EX" />
+<meta property="og:description" content="Android - @jinweijie - 手机只有单卡，带两个手机又太麻烦，趁国庆有空写了个程序转发短信和未接来电。已经用 Github Action 自动编译成 apk 了，下载安卓即用，干净，安全。[https://githu" />
+<meta property="og:url" content="https://www.v2ex.com/t/1078071" />
+<meta property="og:site_name" content="V2EX" />
+<meta property="article:tag" content="android" />
+<meta property="article:section" content="Android" />
+<meta property="article:published_time" content="2024-10-07T11:30:43Z" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="Android - @jinweijie - 手机只有单卡，带两个手机又太麻烦，趁国庆有空写了个程序转发短信和未接来电。已经用 Github Action 自动编译成 apk 了，下载安卓即用，干净，安全。[https://githu" />
+<meta name="twitter:title" content="写了个安卓小程序，实时转发短信和未接来电 - V2EX" />
+<meta name="twitter:image" content="https://cdn.v2ex.com/avatar/c61f/bef6/2636_xlarge.png?m=1653790431" />
+<meta name="twitter:site" content="@V2EX" />
+<meta name="twitter:creator" content="@V2EX" />
+<link rel="top" title="回到顶部" href="#">
+<link rel="amphtml" href="https://www.v2ex.com/amp/t/1078071" />
+<script>
+const topicId = 1078071;
+var once = "47443";
+
+document.addEventListener("DOMContentLoaded", () => {
+    protectTraffic();
+
+    const observer = new IntersectionObserver(
+        ([e]) => e.target.toggleAttribute('stuck', e.intersectionRatio < 1),
+        {threshold: [1]}
+    );
+
+    observer.observe(document.getElementById('reply-box'));
+
+    
+    hljs.initHighlightingOnLoad();
+    
+
+    $('#Main').on('click', '.no, .ago', function () {
+        location.hash = $(this).parents('.cell').prop('id');
+    });
+
+    
+
+    autosize($('#reply_content'));
+
+    $("#reply_content").textcomplete([{
+        match: /(^|\s)@(\w*)$/,
+        search: function (term, callback) {
+            term = term.toLowerCase();
+            var words = ['F7ionsy', 'Kaiyuan', 'Peace2021', 'Tiande', 'Yzh361', 'agood', 'aiman', 'andforce', 'beiyu', 'catamaran', 'dsdy216', 'eleba', 'exceldream', 'foru17', 'gazi', 'hsksg', 'iv8d', 'jinweijie', 'jiuhuicinv', 'johnwilson', 'jqtmviyu', 'kaiveyoung', 'lkk', 'lozzow', 'mathe', 'mxalbert1996', 'new123', 'oneisall8955', 'pytth', 'rulagiti', 'vvbbb', 'wayne630', 'xwit', 'zhtyytg'];
+            callback($.map(words, function (word) {
+                return word.toLowerCase().indexOf(term) === 0 ? word : null;
+            }));
+        },
+        replace: function (value) {
+            return '$1@' + value + ' ';;
+        }
+    }]);
+
+    
+
+    
+
+    
+
+    loadReplyDraft(1078071, 526173);
+
+    $("#reply_content").on('input', function(e) {
+        saveReplyDraft(1078071, 526173);
+    });
+
+    var keyPressed = 0;
+
+    $("#reply_content").keydown(function(e) {
+        keyPressed = keyPressed + 1;
+
+        if ((e.ctrlKey || e.metaKey) && e.which === 13) {
+            e.preventDefault();
+            $("#reply_content").parent().submit();
+        }
+    });
+
+    
+
+    // refresh once
+    document.addEventListener('visibilitychange', e => {
+        if (document.visibilityState === 'visible') {
+            fetchOnce().then(once => {
+                $('#once').val(once);
+            });
+        }
+    });
+
+    if (location.search.indexOf('p=') > -1) {
+    const p = Number(location.search.split('p=')[1].split('&')[0]);
+    if (p) {
+        const key = 'tp1078071';
+        if (lscache.set(key, p, 60 * 24 * 30)) { // 30 days
+            console.log(`Saved topic page number to ${key}: ` + p);
+        }
+    }
+}
+});
+</script>
+<script type="text/javascript">
+function format(tpl) {
+    var index = 1, items = arguments;
+    return (tpl || '').replace(/{(\w*)}/g, function(match, p1) {
+        return items[index++] || p1 || match;
+    });
+}
+function loadCSS(url, callback) {
+    return $('<link type="text/css" rel="stylesheet"/>')
+        .attr({ href: url })
+        .on('load', callback)
+        .appendTo(document.head);
+}
+function lazyGist(element) {
+    var $btn = $(element);
+    var $self = $(element).parent();
+    var $link = $self.find('a');
+    $btn.prop('disabled', 'disabled').text('Loading...');
+    $.getJSON(format('{}.json?callback=?', $link.prop('href').replace($link.prop('hash'), '')))
+        .done(function(data) {
+            loadCSS(data.stylesheet, function() {
+                $self.replaceWith(data.div);
+                $('.gist .gist-file .gist-meta a').filter(function() { return this.href === $link.prop('href'); }).parents('.gist-file').siblings().remove();
+            });
+        })
+        .fail(function() { $self.replaceWith($('<a>').attr('href', url).text(url)); });
+}
+</script>
+</head>
+<body>
+<div id="Top">
+<div class="content">
+<div class="site-nav">
+<a href="/" name="top" title="way to explore"><div id="Logo"></div></a>
+<div id="search-container">
+<input id="search" type="text" maxlength="128" autocomplete="off" tabindex="1">
+<div id="search-result" class="box"></div>
+</div>
+<div class="tools">
+<a href="/" class="top">首页</a>
+<a href="/member/azhu1990" class="top">azhu1990</a>
+<a href="/notes" class="top">记事本</a>
+<a href="/t" class="top">时间轴</a>
+<a href="/settings" class="top">设置</a>
+<a href="#;" onclick="if (confirm('确定要从 V2EX 登出？')) { location.href= '/signout?once=47443'; }" class="top">登出</a>
+</div>
+</div>
+</div>
+</div>
+<div id="Wrapper" class="Night">
+<div class="content">
+<div id="Leftbar"></div>
+<div id="Rightbar">
+<div class="sep20"></div>
+<div class="box">
+<div class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top"><a href="/member/azhu1990"><img src="https://cdn.v2ex.com/avatar/cf29/05f8/526173_large.png?m=1617957023" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="azhu1990" /></a></td>
+<td width="10" valign="top"></td>
+<td width="auto" align="left"><div class="fr"><a href="/settings/night/toggle?once=47443" class="light-toggle"><img src="/static/img/toggle-dark.png" align="absmiddle" height="10" alt="Dark" /></a></div><span class="bigger"><a href="/member/azhu1990">azhu1990</a></span>
+</td>
+</tr>
+</table>
+<div class="sep10"></div>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="33%" align="center"><a href="/my/nodes" class="dark" style="display: block;"><span class="bigger">0</span><div class="sep3"></div><span class="fade">节点收藏</span></a></td>
+<td width="34%" style="border-left: 1px solid rgba(100, 100, 100, 0.4); border-right: 1px solid rgba(100, 100, 100, 0.4);" align="center"><a href="/my/topics" class="dark" style="display: block;"><span class="bigger">9</span><div class="sep3"></div><span class="fade">主题收藏</span></a></td>
+<td width="33%" align="center"><a href="/my/following" class="dark" style="display: block;"><span class="bigger">0</span><div class="sep3"></div><span class="fade">特别关注</span></a></td>
+</tr>
+</table>
+</div>
+<div class="cell" id="member-activity">
+<div class="member-activity-bar">
+<div class="member-activity-start" style="width: 6%;"></div>
+</div>
+</div>
+<div class="cell flex-one-row" style="padding: 7px 10px;">
+<a href="/notifications" class="fade">0 未读提醒</a>
+<div class="flex-one-row">
+<div id="money"><a href="/balance" class="balance_area" style>28 <img src="/static/img/silver@2x.png" height="16" alt="S" border="0" /> 29 <img src="/static/img/bronze@2x.png" height="16" alt="B" border="0" /></a></div>&nbsp;&nbsp;
+<a href="/help/currency"><li class="fa fa-question-circle gray"></li></a>
+</div>
+</div>
+</div>
+<div class="sep"></div>
+<div class="box">
+<div class="cell" style="padding: 8px; line-height: 100%;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="28"><a href="/write"><img src="/static/img/essentials/compose.png?v=b9e1f045f4ad639733bf9f6dbc62ed4c" width="28" border="0" style="vertical-align: bottom;" /></a></td>
+<td width="10"></td>
+<td width="auto" valign="middle" align="left"><a href="/write">创作新主题</a></td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sep20"></div>
+<div class="box">
+<div class="inner">
+<div class="sidebar_units">
+</div>
+<span class="chevron">›</span> <a href="https://developer.android.com/sdk/index.html" target="_blank">Android Studio</a>
+</div>
+<div class="sidebar_compliance"><a href="/advertise" target="_blank">广告</a></div>
+</div>
+<div class="sep20"></div>
+<div style="box-sizing: border-box"><div class="wwads-cn wwads-vertical" data-id="98" style="max-width: 100%; padding-top: 20px; margin-top: 0px; text-align: left; box-shadow: 0 2px 3px rgb(0 0 0 / 10%); border-bottom: 1px solid var(--box-border-color); background-color: var(--box-background-color); color: var(--box-foreground-color);"></div></div>
+<style type="text/css">.wwads-text { color: var(--link-color) !important; }</style>
+<div class="sep20"></div>
+</div>
+<div id="Main">
+<div class="sep20"></div>
+<div class="box" style="border-bottom: 0px;">
+<div class="header"><div class="fr"><a href="/member/jinweijie"><img src="https://cdn.v2ex.com/avatar/c61f/bef6/2636_xlarge.png?m=1653790431" class="avatar" border="0" align="default" width="73" style="width: 73px; max-height: 73px;" alt="jinweijie" /></a></div>
+<a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/android">Android</a>
+<div class="sep10"></div>
+<h1>写了个安卓小程序，实时转发短信和未接来电</h1>
+<div id="topic_1078071_votes" class="votes">
+<a href="javascript:" onclick="upVoteTopic(1078071);" class="vote"><li class="fa fa-chevron-up"></li></a> &nbsp;<a href="javascript:" onclick="downVoteTopic(1078071);" class="vote"><li class="fa fa-chevron-down"></li></a></div> &nbsp; <small class="gray"><a href="/member/jinweijie">jinweijie</a> · <span title="2024-10-07 19:30:43 +08:00">20 小时 55 分钟前</span> · 3426 次点击 &nbsp; </small>
+</div>
+<div class="cell">
+<div class="topic_content"><div class="markdown_body"><p>手机只有单卡，带两个手机又太麻烦，趁国庆有空写了个程序转发短信和未接来电。</p>
+<p>已经用 Github Action 自动编译成 apk 了，下载安卓即用，干净，安全。
+<a href="https://github.com/jinweijie/notify-me" rel="nofollow">https://github.com/jinweijie/notify-me</a></p>
+<p>支持 Bark 服务器和 Email 两种方式</p>
+<p><img alt="image.png" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://s2.loli.net/2024/10/07/GTWwzbYpvc3ua1D.png" /></p>
+<p><img alt="image.png" class="embedded_image" loading="lazy" referrerpolicy="no-referrer" rel="noreferrer" src="https://s2.loli.net/2024/10/07/ikoUvCm8p6324hS.png" /></p>
+</div></div>
+</div>
+<div class="topic_buttons"><div class="fr topic_stats" style="padding-top: 4px;">3426 次点击 &nbsp;∙&nbsp; 73 人收藏 &nbsp; ∙&nbsp; 4 人感谢 &nbsp; </div><a href="/favorite/topic/1078071?once=47443" class="tb">加入收藏</a> &nbsp;<a href="#;" onclick="window.open('https://twitter.com/share?url=https://www.v2ex.com/t/1078071?r=azhu1990&related=v2ex&hashtags=android&text=写了个安卓小程序，实时转发短信和未接来电', '_blank', 'width=550,height=370'); recordOutboundLink(this, 'Share', 'twitter.com');" class="tb">Tweet</a> &nbsp;<a href="#;" onclick="if (confirm('确定不想再看到这个主题？')) { location.href = '/ignore/topic/1078071?once=47443'; }" class="tb">忽略主题</a> &nbsp;<div id="topic_thank"><a href="#;" onclick="if (confirm('你确定要向本主题创建者发送谢意？')) { thankTopic(1078071, '47443'); }" class="tb">感谢</a></div></div>
+</div>
+<div class="sep20"></div>
+<div class="box">
+<div class="cell"><div class="fr" style="margin: -3px -5px 0px 0px;"></div><span class="gray">42 条回复 &nbsp;<strong class="snow">•</strong> &nbsp;2024-10-08 13:52:35 +08:00</span>
+</div>
+<div id="r_15345242" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/8c8f7f818bea0f7be5e798b807f8688a?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jiuhuicinv" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345242" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jiuhuicinv 的这条回复？')) { ignoreReply(15345242, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jiuhuicinv 的这条回复发送感谢？')) { thankReply(15345242); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jiuhuicinv');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">1</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jiuhuicinv" class="dark">jiuhuicinv</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 19:31:53 +08:00">20 小时 54 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">图看不了</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345249" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/c61f/bef6/2636_large.png?m=1653790431" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jinweijie" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345249" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jinweijie 的这条回复？')) { ignoreReply(15345249, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jinweijie 的这条回复发送感谢？')) { thankReply(15345249); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jinweijie');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">2</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jinweijie" class="dark">jinweijie</a></strong> &nbsp; <div class="badges"><div class="badge op">OP</div></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 19:35:33 +08:00">20 小时 50 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/jiuhuicinv">jiuhuicinv</a> 现在可以了吗？</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345254" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/8c8f7f818bea0f7be5e798b807f8688a?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jiuhuicinv" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345254" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jiuhuicinv 的这条回复？')) { ignoreReply(15345254, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jiuhuicinv 的这条回复发送感谢？')) { thankReply(15345254); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jiuhuicinv');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">3</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jiuhuicinv" class="dark">jiuhuicinv</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 19:38:02 +08:00">20 小时 48 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">666 啊，可以自己组装 post 参数就更好了</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345262" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/c61f/bef6/2636_large.png?m=1653790431" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jinweijie" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345262" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jinweijie 的这条回复？')) { ignoreReply(15345262, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jinweijie 的这条回复发送感谢？')) { thankReply(15345262); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jinweijie');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">4</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jinweijie" class="dark">jinweijie</a></strong> &nbsp; <div class="badges"><div class="badge op">OP</div></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 19:41:35 +08:00">20 小时 44 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/jiuhuicinv">jiuhuicinv</a> 好，我有空加一下</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345279" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/f0e88e61559a7fcd31b2c57580fe1ee0?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="eleba" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345279" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @eleba 的这条回复？')) { ignoreReply(15345279, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @eleba 的这条回复发送感谢？')) { thankReply(15345279); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('eleba');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">5</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/eleba" class="dark">eleba</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 19:51:43 +08:00">20 小时 34 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">代码写的很优雅，为你点赞</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345368" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/520931b265b9b563dbf07e9141c2831b?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="beiyu" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345368" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @beiyu 的这条回复？')) { ignoreReply(15345368, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @beiyu 的这条回复发送感谢？')) { thankReply(15345368); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('beiyu');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">6</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/beiyu" class="dark">beiyu</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 20:33:57 +08:00">19 小时 52 分钟前</span> &nbsp; <span class="small fade"><img src="/static/img/heart_neue_red.png?v=16ec2dd0a880be6edda1e4a2e35754b3" width="14" align="absmiddle" alt="❤️" /> 1</span>
+<div class="sep5"></div>
+<div class="reply_content">可以参考学习下 SmsForwarder</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345392" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/e464/c332/314039_large.png?m=1718564290" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jqtmviyu" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345392" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jqtmviyu 的这条回复？')) { ignoreReply(15345392, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jqtmviyu 的这条回复发送感谢？')) { thankReply(15345392); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jqtmviyu');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">7</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jqtmviyu" class="dark">jqtmviyu</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 20:43:20 +08:00">19 小时 43 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">会考虑加功能, 看来增加 webhook 有戏?</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345412" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/5fd5/33c7/136189_large.png?m=1723538364" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="andforce" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345412" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @andforce 的这条回复？')) { ignoreReply(15345412, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @andforce 的这条回复发送感谢？')) { thankReply(15345412); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('andforce');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">8</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/andforce" class="dark">andforce</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 20:52:37 +08:00">19 小时 33 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">这个可以有</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345478" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/8e718b4ba1f98e68cd4cb55b4050446e?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="exceldream" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345478" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @exceldream 的这条回复？')) { ignoreReply(15345478, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @exceldream 的这条回复发送感谢？')) { thankReply(15345478); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('exceldream');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">9</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/exceldream" class="dark">exceldream</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 21:20:07 +08:00">19 小时 6 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">原理是什么? 监听通知栏消息么?</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345501" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/c61f/bef6/2636_large.png?m=1653790431" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jinweijie" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345501" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jinweijie 的这条回复？')) { ignoreReply(15345501, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jinweijie 的这条回复发送感谢？')) { thankReply(15345501); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jinweijie');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">10</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jinweijie" class="dark">jinweijie</a></strong> &nbsp; <div class="badges"><div class="badge op">OP</div></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 21:30:16 +08:00">18 小时 56 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/jqtmviyu">jqtmviyu</a> 好，有空加一下</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345515" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/657f/7769/346445_large.png?m=1726129881" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="pytth" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345515" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @pytth 的这条回复？')) { ignoreReply(15345515, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @pytth 的这条回复发送感谢？')) { thankReply(15345515); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('pytth');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">11</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/pytth" class="dark">pytth</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 21:36:07 +08:00">18 小时 50 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">建议:<br/>1. 加 webhook ，支持 post 和 get ，需要用户自定义一个 token 用于生成签名确保安全；<br/>2. 保活，避免被 kill 掉；最好就是加上定时检查是否被 kill ；<br/>3. 电量低提醒；</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345538" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/31ab/a7d6/678102_large.png?m=1728308626" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="mathe" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345538" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @mathe 的这条回复？')) { ignoreReply(15345538, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @mathe 的这条回复发送感谢？')) { thankReply(15345538); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('mathe');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">12</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/mathe" class="dark">mathe</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 21:46:19 +08:00">18 小时 40 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">卧槽！好东西！ 6</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345586" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/3d45/f3f4/468706_large.png?m=1720017684" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="vvbbb" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345586" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @vvbbb 的这条回复？')) { ignoreReply(15345586, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @vvbbb 的这条回复发送感谢？')) { thankReply(15345586); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('vvbbb');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">13</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/vvbbb" class="dark">vvbbb</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 22:11:39 +08:00">18 小时 14 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">支持一下 LZ</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345591" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/38c9cc9a57d45103e5965cd401d06a09?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="hsksg" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345591" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @hsksg 的这条回复？')) { ignoreReply(15345591, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @hsksg 的这条回复发送感谢？')) { thankReply(15345591); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('hsksg');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">14</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/hsksg" class="dark">hsksg</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 22:13:53 +08:00">18 小时 12 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">移动卡装个无忧行就行，电话都可以接</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345614" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/183c/045f/337226_large.png?m=1638172309" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="F7ionsy" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345614" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @F7ionsy 的这条回复？')) { ignoreReply(15345614, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @F7ionsy 的这条回复发送感谢？')) { thankReply(15345614); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('F7ionsy');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">15</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/F7ionsy" class="dark">F7ionsy</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 22:22:39 +08:00">18 小时 3 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">支持 server 酱吗</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345654" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/d43b/ac5e/78088_large.png?m=1670360050" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="Tiande" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345654" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @Tiande 的这条回复？')) { ignoreReply(15345654, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @Tiande 的这条回复发送感谢？')) { thankReply(15345654); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('Tiande');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">16</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/Tiande" class="dark">Tiande</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 22:44:43 +08:00">17 小时 41 分钟前 via Android</span> &nbsp; <span class="small fade"><img src="/static/img/heart_neue_red.png?v=16ec2dd0a880be6edda1e4a2e35754b3" width="14" align="absmiddle" alt="❤️" /> 2</span>
+<div class="sep5"></div>
+<div class="reply_content">SmsForwarder v3.3.0 免费开源 3 周年纪念版<br/><a target="_blank" href="https://github.com/pppscn/SmsForwarder/releases/tag/v3.3.0" rel="nofollow noopener">https://github.com/pppscn/SmsForwarder/releases/tag/v3.3.0</a><br/><br/>支持的老多了</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345686" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/c61f/bef6/2636_large.png?m=1653790431" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jinweijie" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345686" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jinweijie 的这条回复？')) { ignoreReply(15345686, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jinweijie 的这条回复发送感谢？')) { thankReply(15345686); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jinweijie');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">17</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jinweijie" class="dark">jinweijie</a></strong> &nbsp; <div class="badges"><div class="badge op">OP</div></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 23:00:12 +08:00">17 小时 26 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/Tiande">Tiande</a> 看名字未接来电不支持吧？:D</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345693" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/d43b/ac5e/78088_large.png?m=1670360050" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="Tiande" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345693" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @Tiande 的这条回复？')) { ignoreReply(15345693, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @Tiande 的这条回复发送感谢？')) { thankReply(15345693); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('Tiande');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">18</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/Tiande" class="dark">Tiande</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 23:08:34 +08:00">17 小时 17 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/jinweijie">jinweijie</a> 可以的，很多地方还支持正则，自定义过滤内容很方便</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345705" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/6908/75ce/22671_large.png?m=1365776114" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="foru17" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345705" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @foru17 的这条回复？')) { ignoreReply(15345705, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @foru17 的这条回复发送感谢？')) { thankReply(15345705); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('foru17');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">19</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/foru17" class="dark">foru17</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 23:17:14 +08:00">17 小时 9 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">歪个楼，现在这种转发电话和短信的，要注意下反诈相关，之前安装类似应用被警察打电话提醒，后来也看到开源应用用到黑灰产，被跨省的案例。。</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345713" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/8a8e/cfdb/111521_large.png?m=1715826091" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="lozzow" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345713" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @lozzow 的这条回复？')) { ignoreReply(15345713, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @lozzow 的这条回复发送感谢？')) { thankReply(15345713); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('lozzow');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">20</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/lozzow" class="dark">lozzow</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-07 23:21:05 +08:00">17 小时 5 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/foru17">foru17</a> 我手机半年发送不了短信</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345835" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/5122/e091/95138_large.png?m=1720326076" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="mxalbert1996" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345835" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @mxalbert1996 的这条回复？')) { ignoreReply(15345835, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @mxalbert1996 的这条回复发送感谢？')) { thankReply(15345835); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('mxalbert1996');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">21</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/mxalbert1996" class="dark">mxalbert1996</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 00:38:15 +08:00">15 小时 48 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">SmsForwarder 不仅支持短信，还支持来电和任意应用的通知，支持的发送渠道也多得很，说实话我是觉得没必要重复造轮子了，如果楼主真想继续开发，不如考虑一下如何差异化。</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345859" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/59f2/c6fa/624193_large.png?m=1688917214" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="aiman" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345859" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @aiman 的这条回复？')) { ignoreReply(15345859, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @aiman 的这条回复发送感谢？')) { thankReply(15345859); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('aiman');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">22</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/aiman" class="dark">aiman</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 01:04:40 +08:00">15 小时 21 分钟前 via iPhone</span>
+<div class="sep5"></div>
+<div class="reply_content">好几年前用过一个叫绿芽的 APP ，功能类似，很成熟了</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345903" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/9ae4/b16b/560751_large.png?m=1693710156" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="xwit" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345903" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @xwit 的这条回复？')) { ignoreReply(15345903, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @xwit 的这条回复发送感谢？')) { thankReply(15345903); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('xwit');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">23</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/xwit" class="dark">xwit</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 02:13:11 +08:00">14 小时 13 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">有个叫双卡助手的，<a target="_blank" href="https://smshelper.wisg.cn/我去日本就靠这玩意接验证码了，手机卡开不了漫游，还挺靠谱的" rel="nofollow noopener">https://smshelper.wisg.cn/我去日本就靠这玩意接验证码了，手机卡开不了漫游，还挺靠谱的</a></div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345929" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/60dc/c401/355824_large.png?m=1711427173" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="oneisall8955" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345929" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @oneisall8955 的这条回复？')) { ignoreReply(15345929, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @oneisall8955 的这条回复发送感谢？')) { thankReply(15345929); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('oneisall8955');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">24</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/oneisall8955" class="dark">oneisall8955</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 03:42:12 +08:00">12 小时 44 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">强烈建议支持 webhook</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345930" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/60dc/c401/355824_large.png?m=1711427173" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="oneisall8955" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345930" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @oneisall8955 的这条回复？')) { ignoreReply(15345930, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @oneisall8955 的这条回复发送感谢？')) { thankReply(15345930); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('oneisall8955');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">25</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/oneisall8955" class="dark">oneisall8955</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 03:43:58 +08:00">12 小时 42 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content"><a target="_blank" href="https://www.v2ex.com/t/1078110" rel="nofollow noopener">https://www.v2ex.com/t/1078110</a><br/><br/>你俩挺相似的？</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345950" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/0080/470d/539997_large.png?m=1648344274" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="Yzh361" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345950" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @Yzh361 的这条回复？')) { ignoreReply(15345950, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @Yzh361 的这条回复发送感谢？')) { thankReply(15345950); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('Yzh361');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">26</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/Yzh361" class="dark">Yzh361</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 05:13:13 +08:00">11 小时 13 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">已经用了好多年 sms forwarder 了 推送通道多，功能全</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345965" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/fb1c/446f/593955_large.png?m=1721645342" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="agood" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345965" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @agood 的这条回复？')) { ignoreReply(15345965, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @agood 的这条回复发送感谢？')) { thankReply(15345965); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('agood');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">27</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/agood" class="dark">agood</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 06:26:31 +08:00">9 小时 59 分钟前 via iPhone</span>
+<div class="sep5"></div>
+<div class="reply_content">其实最想要的是电话转发，电话可以在 iOS 端支持 CallKit 接听，iOS 端可以直接回复短信或拨打电话</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345969" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/91b719aa39551673a1e57713cdfb324e?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="rulagiti" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345969" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @rulagiti 的这条回复？')) { ignoreReply(15345969, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @rulagiti 的这条回复发送感谢？')) { thankReply(15345969); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('rulagiti');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">28</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/rulagiti" class="dark">rulagiti</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 06:40:31 +08:00">9 小时 45 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">赞一个！</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15345974" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/043b/850f/186768_large.png?m=1719979552" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="kaiveyoung" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15345974" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @kaiveyoung 的这条回复？')) { ignoreReply(15345974, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @kaiveyoung 的这条回复发送感谢？')) { thankReply(15345974); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('kaiveyoung');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">29</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/kaiveyoung" class="dark">kaiveyoung</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 06:58:21 +08:00">9 小时 28 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">电话转发最佳方案还是超级呼转吗</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15346030" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/c92c08bbd6e429defa0a8dfbc0c4eaec?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="wayne630" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15346030" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @wayne630 的这条回复？')) { ignoreReply(15346030, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @wayne630 的这条回复发送感谢？')) { thankReply(15346030); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('wayne630');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">30</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/wayne630" class="dark">wayne630</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 08:06:49 +08:00">8 小时 19 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">有没有同等功能是支持 ios 的呢？家里破苹果手机一堆，但安卓机好像真没有。只需转发短信即可，电话的话可以设置呼叫转移实现。</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15346066" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/c61f/bef6/2636_large.png?m=1653790431" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jinweijie" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15346066" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jinweijie 的这条回复？')) { ignoreReply(15346066, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jinweijie 的这条回复发送感谢？')) { thankReply(15346066); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jinweijie');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">31</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jinweijie" class="dark">jinweijie</a></strong> &nbsp; <div class="badges"><div class="badge op">OP</div></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 08:23:53 +08:00">8 小时 2 分钟前</span> &nbsp; <span class="small fade"><img src="/static/img/heart_neue_red.png?v=16ec2dd0a880be6edda1e4a2e35754b3" width="14" align="absmiddle" alt="❤️" /> 1</span>
+<div class="sep5"></div>
+<div class="reply_content">关于有人说造轮子，写这个的目的主要是考虑安全，自己写一个放心，然后功能就是稳定的转发，代码结构简单，新手也能改，Github Action 又都写好了，而且多一个选择总是好的😄 另外谢谢大家回复捧场</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15346075" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/c61f/bef6/2636_large.png?m=1653790431" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="jinweijie" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15346075" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @jinweijie 的这条回复？')) { ignoreReply(15346075, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @jinweijie 的这条回复发送感谢？')) { thankReply(15346075); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('jinweijie');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">32</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/jinweijie" class="dark">jinweijie</a></strong> &nbsp; <div class="badges"><div class="badge op">OP</div></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 08:25:43 +08:00">8 小时 0 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/wayne630">wayne630</a> 我也是两个苹果手机，据我所知电话转发是没有的，短信可以通过同一个 icloud 账号自动同步转发，还是比较可靠的</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15346082" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/2273/0636/253364_large.png?m=1721819343" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="iv8d" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15346082" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @iv8d 的这条回复？')) { ignoreReply(15346082, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @iv8d 的这条回复发送感谢？')) { thankReply(15346082); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('iv8d');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">33</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/iv8d" class="dark">iv8d</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 08:30:36 +08:00">7 小时 55 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/mxalbert1996">mxalbert1996</a> 自己开发一套，其实也是熟悉的过程。轮子也有方的圆的呢。</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15346134" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/d628/f66b/682126_large.png?m=1711502048" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="zhtyytg" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15346134" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @zhtyytg 的这条回复？')) { ignoreReply(15346134, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @zhtyytg 的这条回复发送感谢？')) { thankReply(15346134); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('zhtyytg');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">34</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/zhtyytg" class="dark">zhtyytg</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 08:49:50 +08:00">7 小时 36 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">star+1 收藏即学会</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15346353" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/cef2/64a3/592916_large.png?m=1662795826" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="gazi" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15346353" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @gazi 的这条回复？')) { ignoreReply(15346353, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @gazi 的这条回复发送感谢？')) { thankReply(15346353); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('gazi');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">35</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/gazi" class="dark">gazi</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 09:30:22 +08:00">6 小时 56 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">正好也有这个需求，star +1</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15346574" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/4b73/b48a/573197_large.png?m=1705116406" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="dsdy216" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15346574" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @dsdy216 的这条回复？')) { ignoreReply(15346574, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @dsdy216 的这条回复发送感谢？')) { thankReply(15346574); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('dsdy216');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">36</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/dsdy216" class="dark">dsdy216</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 09:59:17 +08:00">6 小时 27 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">支持作者，我又要折腾起来了</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15347535" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/2609/0083/145420_large.png?m=1718590514" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="catamaran" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15347535" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @catamaran 的这条回复？')) { ignoreReply(15347535, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @catamaran 的这条回复发送感谢？')) { thankReply(15347535); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('catamaran');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">37</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/catamaran" class="dark">catamaran</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 11:32:52 +08:00">4 小时 53 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">这么多人需要这种功能吗？现在还有单卡的手机？</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15347561" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/cd3d/f4c2/249039_large.png?m=1540215271" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="lkk" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15347561" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @lkk 的这条回复？')) { ignoreReply(15347561, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @lkk 的这条回复发送感谢？')) { thankReply(15347561); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('lkk');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">38</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/lkk" class="dark">lkk</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 11:35:53 +08:00">4 小时 50 分钟前</span> &nbsp; <span class="small fade"><img src="/static/img/heart_neue_red.png?v=16ec2dd0a880be6edda1e4a2e35754b3" width="14" align="absmiddle" alt="❤️" /> 1</span>
+<div class="sep5"></div>
+<div class="reply_content">携号转网到中国移动浙江，安装中国移动浙江 app 8.7.5 版本，开启 wifi 通话助手。然后就可以在 app 里接、打电话，接收、发送短信了，记入套餐资费。如果只是想接听和接收短信，携号转网到中国移动任意地区，安装无忧行 app ，策略路由走翻墙，也能单卡走天下。</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15347706" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/2df6/a99e/402618_large.png?m=1722569704" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="new123" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15347706" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @new123 的这条回复？')) { ignoreReply(15347706, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @new123 的这条回复发送感谢？')) { thankReply(15347706); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('new123');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">39</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/new123" class="dark">new123</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 11:53:02 +08:00">4 小时 33 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">@<a href="/member/wayne630">wayne630</a> 快捷指令 可以试试。 短信顾虑可以实现自定义服务器。可以通过服务器 再转一个推送。 这个短信转发一般涉及到个人隐私。 你们有需要我到有个好的想法。iOS 需要比较多的话，我考虑自己搞一个。</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15347853" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/973e/1fd8/509564_large.png?m=1723687985" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="johnwilson" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15347853" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @johnwilson 的这条回复？')) { ignoreReply(15347853, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @johnwilson 的这条回复发送感谢？')) { thankReply(15347853); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('johnwilson');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">40</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/johnwilson" class="dark">johnwilson</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 12:27:30 +08:00">3 小时 58 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">我要推荐一个我的产品： <a target="_blank" href="https://tempmail100.com" rel="nofollow noopener">https://tempmail100.com</a></div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15347868" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/avatar/2b8a/6159/515_large.png?m=1518639402" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="Kaiyuan" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15347868" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @Kaiyuan 的这条回复？')) { ignoreReply(15347868, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @Kaiyuan 的这条回复发送感谢？')) { thankReply(15347868); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('Kaiyuan');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">41</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/Kaiyuan" class="dark">Kaiyuan</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 12:33:35 +08:00">3 小时 52 分钟前 via Android</span>
+<div class="sep5"></div>
+<div class="reply_content">我一直用的方案是，用 SmsForwarder 转发到家里的 群晖 Chat 。</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="r_15348229" class="cell">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+<td width="48" valign="top" align="center"><img src="https://cdn.v2ex.com/gravatar/e22424baffe1a3fc2dd9fb2f27664404?s=48&d=retro" class="avatar" border="0" align="default" width="48" style="width: 48px; max-height: 48px;" alt="Peace2021" /></td>
+<td width="10" valign="top"></td>
+<td width="auto" valign="top" align="left"><div class="fr"><div id="thank_area_15348229" class="thank_area"><a href="#;" onclick="if (confirm('确认要不再显示来自 @Peace2021 的这条回复？')) { ignoreReply(15348229, '47443'); }" class="thank" style="color: #ccc;">隐藏</a> &nbsp; &nbsp; <a href="#;" onclick="if (confirm('确认花费 10 个铜币向 @Peace2021 的这条回复发送感谢？')) { thankReply(15348229); }" class="thank">感谢回复者</a></div> &nbsp; <a href="#;" onclick="replyOne('Peace2021');"><img src="/static/img/reply_neue_dark.png" align="absmiddle" border="0" alt="Reply" width="20" /></a> &nbsp;&nbsp; <span class="no">42</span></div>
+<div class="sep3"></div>
+<strong><a href="/member/Peace2021" class="dark">Peace2021</a></strong> &nbsp; <div class="badges"></div>&nbsp; &nbsp;<span class="ago" title="2024-10-08 13:52:35 +08:00">2 小时 33 分钟前</span>
+<div class="sep5"></div>
+<div class="reply_content">要是能结合 PC 浏览器的 webpush 就好了，这正是我想干的事儿</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sep20"></div>
+<div class="box" id="reply-box">
+<div class="cell flex-one-row">
+<div>添加新回复</div>
+<div><a href="javascript:undockReplyBox();" id="undock-button">取消回复框停靠</a> &nbsp; &nbsp; <a href="#" onclick="goTop()">回到顶部</a></div>
+</div>
+<div class="cell"><form method="post" action="/t/1078071">
+<textarea name="content" maxlength="10000" class="mll" id="reply_content" onfocus="setReplyBoxSticky();"></textarea>
+<div class="flex-one-row" style="margin-top: 10px;">
+<input type="submit" value="回复" class="super normal button" />
+<input type="hidden" value="47443" id="once" name="once" />
+<input type="hidden" value="1" id="return_to_page" name="return_to_page" />
+
+
+</div>
+</form></div>
+<div class="cell flex-row-end">
+<a href="/">← V2EX</a>
+</div>
+</div>
+<div class="sep20"></div>
+<div class="box">
+<div class="inner">
+<div class="fr">
+</div>
+<a href="#;" onclick="if (confirm('你确认需要报告这个主题？')) { location.href = '/report/topic/1078071?once=47443'; }">报告这个主题</a>
+&nbsp;
+</div></div>
+</div>
+</div>
+<div class="c"></div>
+<div class="sep20"></div>
+</div>
+<div id="Bottom">
+<div class="content">
+<div class="inner">
+<div class="sep10"></div>
+<div class="fr">
+<a href="https://www.digitalocean.com/?refcode=1b51f1a7651d" target="_blank"><div id="DigitalOcean"></div></a>
+</div>
+<strong><a href="/about" class="dark" target="_self">关于</a> &nbsp; <span class="snow">·</span> &nbsp; <a href="/help" class="dark" target="_self">帮助文档</a> &nbsp; <span class="snow">·</span> &nbsp; <a href="https://blog.v2ex.com/" class="dark" target="_blank">博客</a> &nbsp; <span class="snow">·</span> &nbsp; <a href="/help/api" class="dark" target="_self">API</a> &nbsp; <span class="snow">·</span> &nbsp; <a href="/faq" class="dark" target="_self">FAQ</a> &nbsp; <span class="snow">·</span> &nbsp; <a href="/tools" class="dark" target="_self">实用小工具</a> &nbsp; <span class="snow">·</span> &nbsp; 5423 人在线</strong> &nbsp; <span class="fade">最高记录 6679</span> &nbsp; <span class="snow">·</span> &nbsp; <a href="/select/language" class="f11"><img src="/static/img/language.png?v=6a5cfa731dc71a3769f6daace6784739" width="16" align="absmiddle" id="ico-select-language" /> &nbsp; Select Language</a>
+<div class="sep20"></div>
+创意工作者们的社区
+<div class="sep5"></div>
+World is powered by solitude
+<div class="sep20"></div>
+<span class="small fade">VERSION: 3.9.8.5 · 46ms · <a href="/worldclock#utc">UTC 08:26</a> · <a href="/worldclock#pvg">PVG 16:26</a> · <a href="/worldclock#lax">LAX 01:26</a> · <a href="/worldclock#jfk">JFK 04:26</a><br/>Developed with <a href="https://cl.v2ex.pro/" target="_blank">CodeLauncher</a><br/>♥ Do have faith in what you're doing.</span>
+<div class="sep10"></div>
+</div>
+</div>
+</div>
+<script src="/b/i/Pp6tV9EiNWe2VbjYympdvh8ui_n8afsgEfZ9cnu1OTZKprrwhL-QXVwCwcX42lsGin8KBE-pO3DW7JF20HMMPJgRI1uVrgRGNbby6xIwjYLMk3hS1YogTK-dp04eRWuI9LzJ_JL4tWrIUH5c0AFPSoChSqO8cZQOV2mdmVr4F2csUZJXCYQrBzAf4ld4GhNA"></script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-11940834-2', 'v2ex.com');
+      ga('send', 'pageview');
+      
+
+ga('send', 'event', 'Node', 'topic', 'android');
+
+
+
+    </script>
+</body>
+</html>

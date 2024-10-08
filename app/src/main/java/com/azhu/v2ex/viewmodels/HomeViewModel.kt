@@ -106,7 +106,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun onSubjectItemClick(context: Context, position: Int, item: SubjectItem) {
-        context.startActivityClass(SubjectDetailsActivity::class)
+        SubjectDetailsActivity.start(context, item.id)
     }
 
     fun getSubjectsByTabIndex(index: Int): SnapshotStateList<SubjectItem> {

@@ -39,11 +39,16 @@ object AppThemeProvider {
         appTheme = theme
     }
 
+    fun isDark(): Boolean {
+        return appTheme == AppTheme.Dark
+    }
+
     private fun initThemeDelegate(appTheme: AppTheme) {
         when (appTheme) {
             AppTheme.Light -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
+
             AppTheme.Dark -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }

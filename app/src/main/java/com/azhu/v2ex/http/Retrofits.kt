@@ -1,6 +1,11 @@
 package com.azhu.v2ex.http
 
 import android.content.Context
+import coil.Coil
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.memory.MemoryCache
+import coil.request.CachePolicy
 import com.azhu.v2ex.http.cookie.CookieManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,8 +44,12 @@ object Retrofits {
                 writeTimeout(TIME_OUT, TimeUnit.SECONDS)
                 readTimeout(TIME_OUT, TimeUnit.SECONDS)
                 cookieJar(CookieManager(context))
+                hostnameVerifier { _, _ -> true }
             }
             .build()
+
+        setupCoil(context, okHttpClient)
+
         return Retrofit.Builder()
             .apply {
 //                addConverterFactory(GsonConverterFactory.create())
@@ -48,6 +57,19 @@ object Retrofits {
                 client(okHttpClient)
             }
             .build()
+    }
+
+    private fun setupCoil(context: Context, okHttpClient: OkHttpClient) {
+        Coil.setImageLoader(ImageLoaderFactory {
+            val imageLoader = ImageLoader.Builder(context)
+                .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.2).build())
+                .diskCachePolicy(CachePolicy.ENABLED)  //磁盘缓策略 ENABLED、READ_ONLY、WRITE_ONLY、DISABLED
+                .crossfade(true) //淡入淡出
+                .crossfade(500)  //淡入淡出时间
+                .okHttpClient { okHttpClient }
+                .build()
+            return@ImageLoaderFactory imageLoader
+        })
     }
 
     fun <T : Any> getService(clazz: KClass<T>): T {
