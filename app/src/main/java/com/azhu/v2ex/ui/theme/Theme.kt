@@ -24,7 +24,8 @@ data class CustomColorScheme(
     val onContainerSecondary: Color = Color(0xFFB2B2B2), //用于卡片等容器上次要文字颜色
     val background: Color = Color(0xFFEDEDED), //主背景色
     val onBackground: Color = Color(0xFF171717),  //用于显示在背景上的文字颜色
-    val backgroundSecondary: Color = Color(0xFFF2F2F0),  //用于显示在背景上的文字颜色
+    val backgroundSecondary: Color = Color(0xFFF2F2F0),  //次要颜色的容器颜色
+    val highlights: Color = Color(0xFF576B95),  //用于显示在背景上的文字颜色
 )
 
 private val CustomLightColorScheme = CustomColorScheme(
@@ -33,7 +34,8 @@ private val CustomLightColorScheme = CustomColorScheme(
     onContainerSecondary = onContainerSecondaryLight,
     background = backgroundLight,
     onBackground = onBackgroundLight,
-    backgroundSecondary = backgroundSecondaryLight
+    backgroundSecondary = backgroundSecondaryLight,
+    highlights = highlightsLight
 )
 
 private val CustomDarkColorScheme = CustomColorScheme(
@@ -42,7 +44,8 @@ private val CustomDarkColorScheme = CustomColorScheme(
     onContainerSecondary = onContainerSecondaryDark,
     background = backgroundDark,
     onBackground = onBackgroundDark,
-    backgroundSecondary = onBackgroundSecondaryDark
+    backgroundSecondary = onBackgroundSecondaryDark,
+    highlights = highlightsDark
 )
 
 private val LocalCustomThemes = compositionLocalOf<CustomColorScheme> { error("No Color provided") }
@@ -56,7 +59,7 @@ private val LightColorScheme = lightColorScheme(
     primary = primaryColorLight,
     background = backgroundLight,
 
-)
+    )
 
 private val DarkColorScheme = darkColorScheme(
     primary = primaryColorDark,

@@ -9,9 +9,8 @@ import android.widget.TextView
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.azhu.basic.provider.AppThemeProvider
-import com.azhu.basic.provider.logger
-import com.azhu.v2ex.ui.theme.containerDark
-import com.azhu.v2ex.ui.theme.containerLight
+import com.azhu.v2ex.ui.theme.onContainerSecondaryDark
+import com.azhu.v2ex.ui.theme.onContainerSecondaryLight
 import java.lang.ref.WeakReference
 
 /**
@@ -24,14 +23,10 @@ class TextImageGetter(textView: TextView) : ImageGetter {
     private var mTextViewReference: WeakReference<TextView> = WeakReference(textView)
 
     override fun getDrawable(url: String?): Drawable {
-        val text = mTextViewReference.get() ?: throw NullPointerException("textview is null")
         val level = LevelListDrawable()
-//        val empty = ResourcesCompat.getDrawable(text.resources, R.drawable.img_loading, text.context.theme)
         val empty = getPlaceholder()
         level.addLevel(0, 0, empty)
         level.setBounds(0, 0, 500, 500)
-
-        logger.info("text width: ${text.measuredWidth} height: ${text.height}")
 
         if (url != null) {
             fetchAsyncImage(url, level)
@@ -79,22 +74,23 @@ class TextImageGetter(textView: TextView) : ImageGetter {
         val drawable = if (AppThemeProvider.isDark()) {
             ColorDrawable(
                 Color.argb(
-                    containerDark.alpha,
-                    containerDark.red,
-                    containerDark.green,
-                    containerDark.blue
+                    onContainerSecondaryDark.alpha,
+                    onContainerSecondaryDark.red,
+                    onContainerSecondaryDark.green,
+                    onContainerSecondaryDark.blue
                 )
             )
         } else {
             ColorDrawable(
                 Color.argb(
-                    containerLight.alpha,
-                    containerLight.red,
-                    containerLight.green,
-                    containerLight.blue
+                    onContainerSecondaryLight.alpha,
+                    onContainerSecondaryLight.red,
+                    onContainerSecondaryLight.green,
+                    onContainerSecondaryLight.blue
                 )
             )
         }
+        drawable.setBounds(0, 0, 200, 200)
         return drawable
     }
 }

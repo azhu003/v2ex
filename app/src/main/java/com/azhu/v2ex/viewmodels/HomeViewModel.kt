@@ -10,13 +10,12 @@ import androidx.lifecycle.viewModelScope
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.data.HomePageState
 import com.azhu.v2ex.data.NodeItem
-import com.azhu.v2ex.data.RegexConstant
 import com.azhu.v2ex.data.SubjectItem
 import com.azhu.v2ex.data.TabPageState
 import com.azhu.v2ex.ext.error
-import com.azhu.v2ex.ext.startActivityClass
 import com.azhu.v2ex.ext.success
 import com.azhu.v2ex.ui.activity.SubjectDetailsActivity
+import com.azhu.v2ex.utils.RegexConstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -62,7 +61,7 @@ class HomeViewModel : BaseViewModel() {
         val subjects = (tabPageState.getOrPut(index) { TabPageState(node) }).subjects
         if (subjects.isEmpty()) {
 
-            http.fetch(onRequestBefore = { logger.debug(">>>> before") }) { http.service.getSubjectList(node.key) }
+            http.fetch { http.service.getSubjectList(node.key) }
                 .map { Result.success(analysisSubjectDocument(getDocument(it.getOrThrow().byteStream()))) }
                 .flowOn(Dispatchers.IO)
                 .error { logger.error(it?.message ?: "error message is null") }
@@ -82,8 +81,8 @@ class HomeViewModel : BaseViewModel() {
         val subjects = mutableListOf<SubjectItem>()
         val elements = doc.select("div.cell.item tr")
         for (tr in elements) {
-            val subject = SubjectItem()
             catch {
+                val subject = SubjectItem()
                 subject.avatar = str { tr.select("img.avatar").attr("src") }
                 val topicInfo = tr.children()[2]  // <span class="topic_info">
                 val a = topicInfo.select("span.item_title > a")
@@ -93,8 +92,8 @@ class HomeViewModel : BaseViewModel() {
                 subject.operator = str { topicInfo.select("a[href^=/member/]").first()?.text() ?: "" }
                 subject.time = str { topicInfo.select("span[title]").text() }
                 subject.replies = str { tr.select("a.count_livid").text() }.toIntOrNull()
+                subjects.add(subject)
             }
-            subjects.add(subject)
         }
         return subjects
     }

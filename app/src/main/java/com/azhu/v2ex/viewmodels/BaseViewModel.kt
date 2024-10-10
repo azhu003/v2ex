@@ -57,10 +57,11 @@ open class BaseViewModel : ViewModel() {
         return Jsoup.parse(stream, "UTF-8", "https://www.v2ex.com/")
     }
 
-    protected inline fun str(block: () -> String): String {
+    protected inline fun str(block: () -> String?): String {
         return try {
-            block.invoke()
+            block.invoke() ?: ""
         } catch (e: Exception) {
+            logger.info("str exception -> $e")
             ""
         }
     }
@@ -69,7 +70,7 @@ open class BaseViewModel : ViewModel() {
         try {
             block.invoke()
         } catch (e: Exception) {
-            logger.info("error -> $e")
+            logger.info("catch -> $e")
         }
     }
 

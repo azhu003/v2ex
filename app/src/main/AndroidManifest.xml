@@ -15,18 +15,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.V2ex"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.activity.UserDetailsActivity"
-            android:exported="false" />
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.azhu.v2ex.action" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="localhost"
+                    android:mimeType="text/plain"
+                    android:scheme="v2ex" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.SubjectDetailsActivity"
             android:exported="false"
-            android:label="@string/title_activity_subject_details"
             android:theme="@style/Theme.V2ex" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.V2ex">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

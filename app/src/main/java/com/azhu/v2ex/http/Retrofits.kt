@@ -64,6 +64,7 @@ object Retrofits {
             val imageLoader = ImageLoader.Builder(context)
                 .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.2).build())
                 .diskCachePolicy(CachePolicy.ENABLED)  //磁盘缓策略 ENABLED、READ_ONLY、WRITE_ONLY、DISABLED
+                .networkCachePolicy(CachePolicy.ENABLED)
                 .crossfade(true) //淡入淡出
                 .crossfade(500)  //淡入淡出时间
                 .okHttpClient { okHttpClient }

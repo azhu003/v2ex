@@ -1,5 +1,6 @@
 package com.azhu.v2ex.ui.page
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +48,7 @@ import kotlinx.coroutines.launch
 fun HomePage(vm: HomeViewModel) {
     val pagerState = rememberPagerState { vm.nodesState.size }
     val coroutineScope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
 
     //监听CurrentPage值变化
     LaunchedEffect(pagerState.currentPage) {
@@ -88,7 +92,7 @@ fun HomePage(vm: HomeViewModel) {
             HorizontalPager(state = pagerState, beyondViewportPageCount = 1) { page ->
                 LazyColumn {
                     itemsIndexed(vm.getSubjectsByTabIndex(page).toList()) { index, item ->
-                        key(item.id) { SubjectItemCompose(index, item, vm) }
+                        key("$index${item.id}") { SubjectItem(index, item, vm) }
                     }
                 }
             }
@@ -97,7 +101,7 @@ fun HomePage(vm: HomeViewModel) {
 }
 
 @Composable
-fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
+fun SubjectItem(position: Int, item: SubjectItem, vm: HomeViewModel) {
     val ctx = LocalContext.current
     Row(
         modifier = Modifier
@@ -119,18 +123,28 @@ fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
                 .clip(MaterialTheme.shapes.small)
                 .size(40.dp)
         )
+//        Image(
+//            painter = painterResource(R.drawable.ic_launcher_foreground),
+//            contentDescription = null,
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier
+//                .padding(end = 20.dp)
+//                .clip(MaterialTheme.shapes.small)
+//                .size(40.dp)
+//        )
+
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = item.node,
                     textAlign = TextAlign.Left,
                     color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(10f, TextUnitType.Sp),
+                    fontSize = TextUnit(12f, TextUnitType.Sp),
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraSmall)
                         .background(MaterialTheme.custom.backgroundSecondary)
-                        .padding(5.dp, 3.dp)
+                        .padding(3.dp, 1.dp)
                 )
                 Text(
                     text = item.operator,
@@ -155,7 +169,7 @@ fun SubjectItemCompose(position: Int, item: SubjectItem, vm: HomeViewModel) {
                     )
                     item.replies?.let {
                         Text(
-                            text = stringResource(R.string.replies, it.toString()),
+                            text = stringResource(R.string.number_of_replies, it.toString()),
                             fontSize = TextUnit(12f, TextUnitType.Sp),
                             color = MaterialTheme.custom.onContainerSecondary,
                             modifier = Modifier.padding(start = 15.dp)

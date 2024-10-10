@@ -1,12 +1,11 @@
 package com.azhu.v2ex.ui.component.html
 
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ClickableSpan
+import android.text.Spannable
+import android.text.style.ImageSpan
 import android.text.style.URLSpan
-import android.view.View
-import com.azhu.basic.provider.logger
-
+import android.widget.TextView
+import androidx.core.text.getSpans
+import com.azhu.v2ex.utils.V2exUtils
 
 /**
  * @author: azhu
@@ -15,27 +14,33 @@ import com.azhu.basic.provider.logger
  */
 object ClickableSpanned {
 
-    private fun setLinkClickable(clickableHtmlBuilder: SpannableStringBuilder, urlSpan: URLSpan) {
-        val start = clickableHtmlBuilder.getSpanStart(urlSpan)
-        val end = clickableHtmlBuilder.getSpanEnd(urlSpan)
-        val flags = clickableHtmlBuilder.getSpanFlags(urlSpan)
-        val clickableSpan: ClickableSpan = object : ClickableSpan() {
-            override fun onClick(view: View) {
-                //Do something with URL here.
-                // 如获取url地址，跳转到自己指定的页面
-                logger.info("点击了链接 -> ${urlSpan.url}")
+    fun makeLinksClickable(textView: TextView) {
+        val spannable = textView.text as Spannable
+        val spans = spannable.getSpans<Any>(0, spannable.length)
+        for (span in spans) {
+            if (span is ImageSpan || span is URLSpan) {
+                val start = spannable.getSpanStart(span)
+                val end = spannable.getSpanEnd(span)
+                val flags = spannable.getSpanFlags(span)
+
+                if (span is ImageSpan) {
+                    // 替换为自定义的ClickableSpan
+                    if (!span.source.isNullOrBlank()) {
+                        spannable.setSpan(ImageClickableSpan(span.source!!), start, end, flags)
+                    }
+                } else if (span is URLSpan) {
+                    // 移除默认的URLSpan
+                    spannable.removeSpan(span)
+                    if (V2exUtils.isMemberUrl(span.url) && start > 0) {
+                        var offsetStart = start
+                        if ('@' == spannable[start - 1]) offsetStart -= 1
+                        spannable.setSpan(URLClickableSpan(span.url), offsetStart, end, flags)
+                    } else {
+                        spannable.setSpan(URLClickableSpan(span.url), start, end, flags)
+                    }
+                }
             }
         }
-        clickableHtmlBuilder.setSpan(clickableSpan, start, end, flags)
-    }
-
-    fun getClickableHtml(spannedHtml: Spanned): CharSequence {
-        val clickableHtmlBuilder = SpannableStringBuilder(spannedHtml)
-        val urls = clickableHtmlBuilder.getSpans(0, spannedHtml.length, URLSpan::class.java)
-        for (span in urls) {
-            setLinkClickable(clickableHtmlBuilder, span)
-        }
-        return clickableHtmlBuilder
     }
 
 }

@@ -12,6 +12,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 runtimeAndroid = "1.7.2"
 activity = "1.9.2"
+junitJupiter = "5.8.1"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -22,6 +23,12 @@ androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtim
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
+
+##解决Column卡顿问题?
+androidx-foundation = { module = "androidx.compose.foundation:foundation", version = "1.7.3" }
+
+androidx-browser = { module = "androidx.browser:browser", version = "1.8.0" }
+
 androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -52,6 +59,7 @@ androidx-runtime-android = { module = "androidx.compose.runtime:runtime-android"
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version = "2.18.0" }
 coil-compose = { module = "io.coil-kt:coil-compose", version = "2.7.0" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

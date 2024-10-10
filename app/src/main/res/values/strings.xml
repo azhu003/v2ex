@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">v2ex</string>
-    <string name="replies">回复 %s</string>
-    <string name="title_activity_subject_details">SubjectDetailsActivity</string>
+    <string name="number_of_replies">回复 %s</string>
+    <string name="number_of_views">阅读 %s</string>
 </resources>

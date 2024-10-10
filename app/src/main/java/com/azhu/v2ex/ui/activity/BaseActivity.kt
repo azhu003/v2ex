@@ -9,11 +9,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -112,30 +117,36 @@ abstract class BaseActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
                     if (isDisplayAppBar()) {
-                        TopAppBar(
-                            title = {
-                                Text(
-                                    title, color = MaterialTheme.custom.onContainerPrimary, fontSize = TextUnit(
-                                        20f,
-                                        TextUnitType.Sp
+                        Column {
+                            TopAppBar(
+                                title = {
+                                    Text(
+                                        title, color = MaterialTheme.custom.onContainerPrimary, fontSize = TextUnit(
+                                            20f,
+                                            TextUnitType.Sp
+                                        )
                                     )
-                                )
-                            },
-                            colors = TopAppBarColors(
-                                containerColor = MaterialTheme.custom.container,
-                                titleContentColor = MaterialTheme.custom.onContainerPrimary,
-                                scrolledContainerColor = Color.Transparent,
-                                actionIconContentColor = Color.Transparent,
-                                navigationIconContentColor = MaterialTheme.custom.onContainerPrimary,
-                            ),
-                            navigationIcon = {
-                                IconButton(onClick = {
-                                    onBackClick.invoke()
-                                }) {
-                                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                                },
+                                colors = TopAppBarColors(
+                                    containerColor = MaterialTheme.custom.container,
+                                    titleContentColor = MaterialTheme.custom.onContainerPrimary,
+                                    scrolledContainerColor = Color.Transparent,
+                                    actionIconContentColor = Color.Transparent,
+                                    navigationIconContentColor = MaterialTheme.custom.onContainerPrimary,
+                                ),
+                                navigationIcon = {
+                                    IconButton(onClick = {
+                                        onBackClick.invoke()
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
-                            }
-                        )
+                            )
+                            HorizontalDivider(thickness = 0.15.dp)
+                        }
                     }
                 }) { pv ->
                 if (isDisplayAppBar()) {
