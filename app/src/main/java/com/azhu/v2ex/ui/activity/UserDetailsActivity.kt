@@ -9,15 +9,25 @@ class UserDetailsActivity : BaseActivity() {
     companion object {
         fun start(context: Context, username: String) {
             val intent = Intent(context, UserDetailsActivity::class.java)
-            intent.putExtra("username",username)
+            intent.putExtra("username", username)
             context.startActivity(intent)
         }
     }
+
+    private lateinit var username: String
 
     override fun getContentView(): @Composable () -> Unit {
         return {
             UserDetailsPage()
         }
+    }
+
+    override fun initialize() {
+        super.initialize()
+        username = intent.getStringExtra("username") ?: ""
+        if (username.isBlank()) finish()
+
+        setAppBarTitle(username)
     }
 
 }

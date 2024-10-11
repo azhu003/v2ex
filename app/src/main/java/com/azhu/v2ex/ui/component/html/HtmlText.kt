@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.azhu.basic.provider.AppThemeProvider
+import com.azhu.basic.provider.logger
+import com.azhu.sth.SelectableTextHelper
+import com.azhu.v2ex.R
 import com.azhu.v2ex.ui.theme.onContainerPrimaryDark
 import com.azhu.v2ex.ui.theme.onContainerPrimaryLight
 
@@ -26,7 +29,7 @@ fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
             val textview = TextView(context)
             Linkify.addLinks(textview, Linkify.WEB_URLS)
             textview.movementMethod = LinkMovementMethod.getInstance()
-
+//            textview.setTextIsSelectable(true)
             val color = if (AppThemeProvider.isDark()) {
                 Color.argb(
                     onContainerPrimaryDark.alpha,
@@ -45,6 +48,12 @@ fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
             textview.setTextColor(color)
             textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
 //            view.lineHeight = 80f.dp.value.toInt()
+            logger.info("factory -> 构造TextView ")
+//            val helper = SelectableTextHelper.Builder(textview)
+//                .setSelectedColor(textview.resources.getColor(R.color.purple_200))
+//                .setCursorHandleSizeInDp(20f)
+//                .setCursorHandleColor(textview.resources.getColor(R.color.purple_500))
+//                .build()
             textview
         },
         update = {

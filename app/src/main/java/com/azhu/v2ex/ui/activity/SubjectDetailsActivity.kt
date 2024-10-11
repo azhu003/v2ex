@@ -63,6 +63,7 @@ class SubjectDetailsActivity : BaseActivity() {
         vm.state.value.sid = sid
         vm.fetchSubjectDetails()
     }
+
 }
 
 @Composable
@@ -91,7 +92,7 @@ private fun SubjectDetailsPage(vm: SubjectDetailsViewModel) {
         }
         itemsIndexed(details.reply) { index, item ->
             key("$index${item.id}") {
-                ReplyItem(item)
+                ReplyItem(vm, item)
             }
         }
     }
@@ -129,6 +130,7 @@ private fun SubjectBody(details: SubjectDetails) {
     HtmlText(
         html = details.content,
         modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 15.dp, top = 15.dp, end = 15.dp, bottom = 0.dp)
     )
     Text(
@@ -140,7 +142,8 @@ private fun SubjectBody(details: SubjectDetails) {
 }
 
 @Composable
-private fun ReplyItem(item: SubjectReplyItem) {
+private fun ReplyItem(vm: SubjectDetailsViewModel, item: SubjectReplyItem) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -154,6 +157,7 @@ private fun ReplyItem(item: SubjectReplyItem) {
                 .padding(end = 10.dp)
                 .clip(MaterialTheme.shapes.small)
                 .size(30.dp)
+                .clickable { vm.onViewUserClick(context, item) }
         )
 //        Image(
 //            painter = painterResource(R.drawable.ic_launcher_foreground),
@@ -172,7 +176,18 @@ private fun ReplyItem(item: SubjectReplyItem) {
                     color = MaterialTheme.custom.onContainerPrimary,
                     fontSize = TextUnit(14f, TextUnitType.Sp),
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
+                    modifier = Modifier.clickable { vm.onViewUserClick(context, item) }
                 )
+
+                if (item.isAuthor) {
+                    Text(
+                        text = context.resources.getString(R.string.author),
+                        fontSize = TextUnit(12f, TextUnitType.Sp),
+                        color = MaterialTheme.custom.primary,
+                        modifier = Modifier.padding(start = 5.dp)
+                    )
+                }
+
                 Text(
                     text = item.time,
                     fontSize = TextUnit(12f, TextUnitType.Sp),

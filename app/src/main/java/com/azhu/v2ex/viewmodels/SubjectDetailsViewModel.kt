@@ -1,5 +1,6 @@
 package com.azhu.v2ex.viewmodels
 
+import android.content.Context
 import android.text.TextUtils
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import com.azhu.v2ex.data.SubjectDetails
 import com.azhu.v2ex.data.SubjectReplyItem
 import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.success
+import com.azhu.v2ex.ui.activity.UserDetailsActivity
 import com.azhu.v2ex.utils.DateTimeUtils
 import com.azhu.v2ex.utils.RegexConstant
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,10 @@ import org.jsoup.nodes.Document
 class SubjectDetailsViewModel : BaseViewModel() {
 
     val state = mutableStateOf(SubjectDetails())
+
+    fun onViewUserClick(context: Context, item: SubjectReplyItem) {
+        UserDetailsActivity.start(context, item.username)
+    }
 
     fun fetchSubjectDetails() {
         val details = state.value
@@ -80,7 +86,7 @@ class SubjectDetailsViewModel : BaseViewModel() {
                 reply.avatar = str { tr.select("img.avatar").attr("src") }
                 reply.username = str { tr.select("strong a[href^=/member/]").text() }
                 reply.time = str { DateTimeUtils.ago(tr.select("span.ago[title]").attr("title")) }
-                reply.isOperator = TextUtils.equals(reply.username, details.author)
+                reply.isAuthor = TextUtils.equals(reply.username, details.author)
                 reply.content = str { tr.select("div.reply_content").html() }
                 details.reply.add(reply)
             }

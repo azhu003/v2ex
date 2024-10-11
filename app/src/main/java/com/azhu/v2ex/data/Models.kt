@@ -59,7 +59,7 @@ data class SubjectReplyItem(
     var username: String = "",
     var avatar: String = "",
     var time: String = "",
-    var isOperator: Boolean = false,
+    var isAuthor: Boolean = false,
     var content: String = "",
     var star: String? = null
 )
