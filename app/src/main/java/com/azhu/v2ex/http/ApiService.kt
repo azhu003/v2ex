@@ -19,4 +19,7 @@ interface ApiService {
     @GET("/t/{sid}")
     suspend fun getSubjectDetails(@Path("sid") sid: String): ResponseBody
 
+    @GET("/member/{username}")
+    suspend fun getMemberDetails(@Path("username") username: String): ResponseBody
+
 }

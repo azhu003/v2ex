@@ -134,7 +134,7 @@ private fun SubjectBody(details: SubjectDetails) {
             .padding(start = 15.dp, top = 15.dp, end = 15.dp, bottom = 0.dp)
     )
     Text(
-        text = context.resources.getString(R.string.number_of_views, details.clicks),
+        text = context.getString(R.string.number_of_views, details.clicks),
         color = MaterialTheme.custom.onContainerSecondary,
         fontSize = TextUnit(14f, TextUnitType.Sp),
         modifier = Modifier.padding(start = 15.dp, top = 15.dp)
@@ -181,7 +181,7 @@ private fun ReplyItem(vm: SubjectDetailsViewModel, item: SubjectReplyItem) {
 
                 if (item.isAuthor) {
                     Text(
-                        text = context.resources.getString(R.string.author),
+                        text = context.getString(R.string.author),
                         fontSize = TextUnit(12f, TextUnitType.Sp),
                         color = MaterialTheme.custom.primary,
                         modifier = Modifier.padding(start = 5.dp)

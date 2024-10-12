@@ -3,4 +3,12 @@
     <string name="number_of_replies">回复 %s</string>
     <string name="number_of_views">阅读 %s</string>
     <string name="author">作者</string>
+
+    <string name="member_no">V2EX第%s号会员</string>
+    <string name="register_at">%s 加入</string>
+    <string name="today_ranking">今日活跃度排名%s</string>
+    <string name="recently_published">最近发布</string>
+    <string name="recently_replied">最近回复</string>
+    <string name="subject_hidden_tips">根据 %s 的设置，主题列表被隐藏</string>
+
 </resources>

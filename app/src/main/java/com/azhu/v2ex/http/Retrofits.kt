@@ -52,7 +52,7 @@ object Retrofits {
 
         return Retrofit.Builder()
             .apply {
-//                addConverterFactory(GsonConverterFactory.create())
+//                addConverterFactory(ResponseCallAdapterFactory.create())
                 baseUrl(baseUrl)
                 client(okHttpClient)
             }

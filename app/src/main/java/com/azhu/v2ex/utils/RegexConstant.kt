@@ -8,7 +8,7 @@ package com.azhu.v2ex.utils
 object RegexConstant {
 
     //主题ID /t/1077894#reply5
-    val TOPIC_ID by lazy { Regex("(?<=/t/).*?(?=#reply)") }
+    val TOPIC_ID by lazy { Regex("(?<=/t/)\\d{1,8}") }
 
     //点击数 · 598 次点击
 //    val CLICKS by lazy { Regex("(?<=·\\s).*?(?=\\s次点击)") }
@@ -28,4 +28,11 @@ object RegexConstant {
 
     //用户名 "/member/username"
     val MEMBER_USERNAME by lazy { Regex("(?<=/member/).*") }
+
+    //V2EX 第 552124 号会员，加入于 2021-07-30 15:11:14 +08:00
+    val MEMBER_NO by lazy { Regex("(?<=第\\s).*?(?=\\s号会员)") }
+    val REGISTER_AT by lazy { Regex("(?<=加入于\\s).*?(?=\\s+今日活跃度)") }
+
+    //获取节点名"/go/rss"
+    val NODE_NAME by lazy { Regex("(?<=/go/).*") }
 }

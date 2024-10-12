@@ -29,14 +29,18 @@ object ClickableSpanned {
                         spannable.setSpan(ImageClickableSpan(span.source!!), start, end, flags)
                     }
                 } else if (span is URLSpan) {
+                    var url = span.url
+                    if (V2exUtils.isIntraSiteLink(span.url)) {
+                        url = V2exUtils.getRelativeURL(span.url)
+                    }
                     // 移除默认的URLSpan
                     spannable.removeSpan(span)
-                    if (V2exUtils.isMemberUrl(span.url) && start > 0) {
+                    if (V2exUtils.isMemberUrl(url) && start > 0) {
                         var offsetStart = start
                         if ('@' == spannable[start - 1]) offsetStart -= 1
-                        spannable.setSpan(URLClickableSpan(span.url), offsetStart, end, flags)
+                        spannable.setSpan(URLClickableSpan(url), offsetStart, end, flags)
                     } else {
-                        spannable.setSpan(URLClickableSpan(span.url), start, end, flags)
+                        spannable.setSpan(URLClickableSpan(url), start, end, flags)
                     }
                 }
             }

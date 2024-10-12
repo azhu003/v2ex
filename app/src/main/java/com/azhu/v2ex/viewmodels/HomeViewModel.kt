@@ -1,25 +1,21 @@
 package com.azhu.v2ex.viewmodels
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.viewModelScope
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.data.HomePageState
-import com.azhu.v2ex.data.NodeItem
+import com.azhu.v2ex.data.NodeInfo
 import com.azhu.v2ex.data.SubjectItem
 import com.azhu.v2ex.data.TabPageState
 import com.azhu.v2ex.ext.error
+import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
-import com.azhu.v2ex.ui.activity.SubjectDetailsActivity
 import com.azhu.v2ex.utils.RegexConstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import org.jsoup.nodes.Document
 
 /**
@@ -30,41 +26,40 @@ import org.jsoup.nodes.Document
  */
 class HomeViewModel : BaseViewModel() {
 
-    private val state = mutableStateOf(HomePageState())
-    private val tabPageState: SnapshotStateMap<Int, TabPageState> = mutableStateMapOf()
-    val nodesState = mutableStateListOf<NodeItem>()
+    val state = mutableStateOf(HomePageState())
 
     init {
         fetchNodes()
-        fetchSubjectsByTabIndex(0, nodesState.first())
+        fetchSubjectsByTabIndex(0, state.value.nodes.first())
     }
 
     private fun fetchNodes() {
-        nodesState.add(NodeItem("recent", "最近"))
-        nodesState.add(NodeItem("tach", "技术"))
-        nodesState.add(NodeItem("creative", "创意"))
-        nodesState.add(NodeItem("play", "好玩"))
-        nodesState.add(NodeItem("apple", "Apple"))
-        nodesState.add(NodeItem("jobs", "酷工作"))
-        nodesState.add(NodeItem("deals", "交易"))
-        nodesState.add(NodeItem("city", "城市"))
-        nodesState.add(NodeItem("qna", "问与答"))
-        nodesState.add(NodeItem("hot", "最热"))
-        nodesState.add(NodeItem("all", "全部"))
-        nodesState.add(NodeItem("r2", "R2"))
-        nodesState.add(NodeItem("xna", "VXNA"))
-        nodesState.add(NodeItem("nodes", "节点"))
-        nodesState.add(NodeItem("members", "关注"))
+        val nodes = state.value.nodes
+        nodes.add(NodeInfo("recent", "最近"))
+        nodes.add(NodeInfo("tach", "技术"))
+        nodes.add(NodeInfo("creative", "创意"))
+        nodes.add(NodeInfo("play", "好玩"))
+        nodes.add(NodeInfo("apple", "Apple"))
+        nodes.add(NodeInfo("jobs", "酷工作"))
+        nodes.add(NodeInfo("deals", "交易"))
+        nodes.add(NodeInfo("city", "城市"))
+        nodes.add(NodeInfo("qna", "问与答"))
+        nodes.add(NodeInfo("hot", "最热"))
+        nodes.add(NodeInfo("all", "全部"))
+        nodes.add(NodeInfo("r2", "R2"))
+        nodes.add(NodeInfo("xna", "VXNA"))
+        nodes.add(NodeInfo("nodes", "节点"))
+        nodes.add(NodeInfo("members", "关注"))
     }
 
-    private fun fetchSubjectsByTabIndex(index: Int, node: NodeItem) {
-        val subjects = (tabPageState.getOrPut(index) { TabPageState(node) }).subjects
+    private fun fetchSubjectsByTabIndex(index: Int, node: NodeInfo) {
+        val subjects = (state.value.tabPageMap.getOrPut(index) { TabPageState(node) }).subjects
         if (subjects.isEmpty()) {
 
             http.fetch { http.service.getSubjectList(node.key) }
-                .map { Result.success(analysisSubjectDocument(getDocument(it.getOrThrow().byteStream()))) }
+                .smap { Result.success(analysisSubjectDocument(getDocument(it.byteStream()))) }
                 .flowOn(Dispatchers.IO)
-                .error { logger.error(it?.message ?: "error message is null") }
+                .error { logger.error("请求错误 ${it?.message}") }
                 .success { subjects.addAll(it) }
                 .launchIn(viewModelScope)
 
@@ -89,7 +84,7 @@ class HomeViewModel : BaseViewModel() {
                 subject.id = str { RegexConstant.TOPIC_ID.find(a.attr("href"))!!.value }
                 subject.title = str { a.text() }
                 subject.node = str { topicInfo.select("a.node").text() }
-                subject.operator = str { topicInfo.select("a[href^=/member/]").first()?.text() ?: "" }
+                subject.author = str { topicInfo.select("a[href^=/member/]").first()?.text() ?: "" }
                 subject.time = str { topicInfo.select("span[title]").text() }
                 subject.replies = str { tr.select("a.count_livid").text() }.toIntOrNull()
                 subjects.add(subject)
@@ -100,16 +95,12 @@ class HomeViewModel : BaseViewModel() {
 
     fun onTabPageSelectChanged(selectedIndex: Int) {
         state.value.index = selectedIndex
-        val node = nodesState[selectedIndex]
+        val node = state.value.nodes[selectedIndex]
         fetchSubjectsByTabIndex(selectedIndex, node)
     }
 
-    fun onSubjectItemClick(context: Context, position: Int, item: SubjectItem) {
-        SubjectDetailsActivity.start(context, item.id)
-    }
-
     fun getSubjectsByTabIndex(index: Int): SnapshotStateList<SubjectItem> {
-        return tabPageState[index]?.subjects ?: mutableStateListOf()
+        return state.value.tabPageMap[index]?.subjects ?: mutableStateListOf()
     }
 
 }

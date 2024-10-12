@@ -1,6 +1,5 @@
 package com.azhu.v2ex.ui.page
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,15 +37,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.SubjectItem
+import com.azhu.v2ex.ui.activity.SubjectDetailsActivity
+import com.azhu.v2ex.ui.activity.UserDetailsActivity
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.HomeViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomePage(vm: HomeViewModel) {
-    val pagerState = rememberPagerState { vm.nodesState.size }
+    val pagerState = rememberPagerState { vm.state.value.nodes.size }
     val coroutineScope = rememberCoroutineScope()
-    val listState = rememberLazyListState()
 
     //监听CurrentPage值变化
     LaunchedEffect(pagerState.currentPage) {
@@ -75,7 +73,7 @@ fun HomePage(vm: HomeViewModel) {
                     )
                 }
             ) {
-                vm.nodesState.forEachIndexed { index, item ->
+                vm.state.value.nodes.forEachIndexed { index, item ->
                     Tab(
                         selected = pagerState.currentPage == index,
                         selectedContentColor = MaterialTheme.custom.primary,
@@ -92,7 +90,7 @@ fun HomePage(vm: HomeViewModel) {
             HorizontalPager(state = pagerState, beyondViewportPageCount = 1) { page ->
                 LazyColumn {
                     itemsIndexed(vm.getSubjectsByTabIndex(page).toList()) { index, item ->
-                        key("$index${item.id}") { SubjectItem(index, item, vm) }
+                        key("$index${item.id}") { SubjectItem(item) }
                     }
                 }
             }
@@ -101,16 +99,14 @@ fun HomePage(vm: HomeViewModel) {
 }
 
 @Composable
-fun SubjectItem(position: Int, item: SubjectItem, vm: HomeViewModel) {
+fun SubjectItem(item: SubjectItem) {
     val ctx = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp, 5.dp)
             .clip(MaterialTheme.shapes.medium)
-            .clickable {
-                vm.onSubjectItemClick(ctx, position, item)
-            }
+            .clickable { SubjectDetailsActivity.start(ctx, item.id) }
             .background(MaterialTheme.custom.container)
             .padding(15.dp, 15.dp, 15.dp, 8.dp)
     ) {
@@ -122,17 +118,10 @@ fun SubjectItem(position: Int, item: SubjectItem, vm: HomeViewModel) {
                 .padding(end = 20.dp)
                 .clip(MaterialTheme.shapes.small)
                 .size(40.dp)
+                .clickable {
+                    UserDetailsActivity.start(ctx, item.author)
+                }
         )
-//        Image(
-//            painter = painterResource(R.drawable.ic_launcher_foreground),
-//            contentDescription = null,
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .padding(end = 20.dp)
-//                .clip(MaterialTheme.shapes.small)
-//                .size(40.dp)
-//        )
-
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -147,7 +136,7 @@ fun SubjectItem(position: Int, item: SubjectItem, vm: HomeViewModel) {
                         .padding(3.dp, 1.dp)
                 )
                 Text(
-                    text = item.operator,
+                    text = item.author,
                     fontSize = TextUnit(12f, TextUnitType.Sp),
                     color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier.padding(start = 5.dp)
@@ -179,18 +168,4 @@ fun SubjectItem(position: Int, item: SubjectItem, vm: HomeViewModel) {
             }
         }
     }
-}
-
-//在调用 ScrollableTabRow 前调用 init 方法。
-private fun initTabMinWidthHacking() = runCatching {
-    hackTabMinWidth()
-}
-
-// ScrollableTab内部设置了单个 tab 的最小宽度 ScrollableTabRowMinimumTabWidth 为90，且属性无法自定义
-// https://issuetracker.google.com/issues/218684743 (Won't Fix)
-private fun hackTabMinWidth() {
-    val clazz = Class.forName("androidx.compose.material.TabRowKt")
-    val field = clazz.getDeclaredField("ScrollableTabRowMinimumTabWidth")
-    field.isAccessible = true
-    field.set(null, 0.0f) // set tab min width to 0
 }

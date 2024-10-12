@@ -8,6 +8,7 @@ import com.azhu.basic.provider.logger
 import com.azhu.v2ex.data.SubjectDetails
 import com.azhu.v2ex.data.SubjectReplyItem
 import com.azhu.v2ex.ext.error
+import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
 import com.azhu.v2ex.ui.activity.UserDetailsActivity
 import com.azhu.v2ex.utils.DateTimeUtils
@@ -15,7 +16,6 @@ import com.azhu.v2ex.utils.RegexConstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import org.jsoup.nodes.Document
 
 /**
@@ -41,7 +41,7 @@ class SubjectDetailsViewModel : BaseViewModel() {
 //            .error { logger.error(it?.message ?: "error message is null") }.success { setSubjectDetails(it) }
 //            .launchIn(viewModelScope)
         http.fetch { http.service.getSubjectDetails(details.sid!!) }
-            .map { Result.success(getDocument(it.getOrThrow().byteStream())) }
+            .smap { Result.success(getDocument(it.byteStream())) }
             .flowOn(Dispatchers.IO)
             .error { logger.error(it?.message ?: "error message is null") }
             .success { setSubjectDetails(it) }

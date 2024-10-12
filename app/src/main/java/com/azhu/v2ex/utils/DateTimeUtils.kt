@@ -16,7 +16,8 @@ object DateTimeUtils {
     private val DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm")
     private val SHORT_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("MM月dd日 HH:mm")
 
-    fun format(datetime: String): String {
+    fun format(datetime: String?): String {
+        if (datetime == null) return ""
         val time = OffsetDateTime.parse(datetime, DEFAULT_FORMATTER)
         return if (isThisYear(time))
             time.format(SHORT_DATETIME_FORMATTER)
