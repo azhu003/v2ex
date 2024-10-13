@@ -31,7 +31,7 @@ class UserDetailsViewModel : BaseViewModel() {
         if (TextUtils.isEmpty(state.value.username)) throw IllegalArgumentException("username is empty")
 
 //        getHtmlFromAssets("member.html")
-//            .map { Result.success(getDocument(it.getOrThrow())) }
+//            .smap { Result.success(getDocument(it)) }
 //            .flowOn(Dispatchers.IO)
 //            .error { logger.error(it?.message ?: "error message is null") }
 //            .success { setUserDetails(it) }
@@ -52,6 +52,7 @@ class UserDetailsViewModel : BaseViewModel() {
         box.first()?.let {
             details.avatar = str { it.select("img.avatar").attr("src") }
             details.username = str { it.select("h1").text() }
+            details.online = it.select("strong.online").hasText()
             val span = it.select("td").last()?.select("span.gray")
             if (span != null) {
                 details.no = str { RegexConstant.MEMBER_NO.find(span.first()?.text() ?: "")?.value }

@@ -3,9 +3,9 @@ package com.azhu.v2ex.ui.activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,14 +19,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -36,6 +39,7 @@ import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.UserDetails
 import com.azhu.v2ex.data.UserRecentlyReply
+import com.azhu.v2ex.ext.toColor
 import com.azhu.v2ex.ui.component.html.HtmlText
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.UserDetailsViewModel
@@ -85,14 +89,31 @@ private fun UserHeader(details: UserDetails) {
             .background(MaterialTheme.custom.container)
             .padding(15.dp)
     ) {
-        AsyncImage(
-            model = details.avatar,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(100.dp)
-        )
+        Column {
+            AsyncImage(
+                model = details.avatar,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(80.dp)
+            )
+            if (details.online) {
+                Text(
+                    text = "ONLINE",
+                    lineHeight = TextUnit(1f, TextUnitType.Sp),
+                    fontSize = TextUnit(8f, TextUnitType.Sp),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier
+                        .padding(top = 7.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .background(color = "#2AAE67".toColor())
+                        .padding(vertical = 1.dp, horizontal = 3.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+        }
         Column(
             Modifier
                 .padding(start = 15.dp)
@@ -114,11 +135,13 @@ private fun UserHeader(details: UserDetails) {
                 color = MaterialTheme.custom.onContainerSecondary,
                 fontSize = TextUnit(14f, TextUnitType.Sp),
             )
-            Text(
-                text = context.getString(R.string.today_ranking, details.ranking),
-                color = MaterialTheme.custom.onContainerSecondary,
-                fontSize = TextUnit(14f, TextUnitType.Sp),
-            )
+            if (details.ranking.isNotBlank()) {
+                Text(
+                    text = context.getString(R.string.today_ranking, details.ranking),
+                    color = MaterialTheme.custom.onContainerSecondary,
+                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                )
+            }
         }
     }
 }
@@ -139,7 +162,7 @@ private fun RecentlyPublishedSubject(details: UserDetails) {
                 .clickable {
                     logger.info("查看更多")
                 }
-                .padding(18.dp)
+                .padding(12.dp)
         ) {
             Text(
                 text = context.getString(R.string.recently_published),
@@ -147,19 +170,29 @@ private fun RecentlyPublishedSubject(details: UserDetails) {
                 fontSize = TextUnit(16f, TextUnitType.Sp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            Image(
+            Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                alignment = Alignment.CenterEnd
+                tint = MaterialTheme.custom.onContainerSecondary
             )
         }
         if (details.subjectHidden) {
             //主题列表被隐藏
-            Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Image(imageVector = Icons.Outlined.Lock, contentDescription = null)
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 15.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = null,
+                    tint = MaterialTheme.custom.onContainerSecondary
+                )
                 Text(
                     text = context.getString(R.string.subject_hidden_tips, details.username),
                     fontSize = TextUnit(14f, TextUnitType.Sp),
+                    color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier.padding(start = 5.dp)
                 )
             }
@@ -223,15 +256,17 @@ private fun RecentlyReply(replys: List<UserRecentlyReply>) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
-            .padding(5.dp)
+            .padding(8.dp)
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.custom.container)
-            .padding(18.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp)
+                .clickable {
+                    logger.info("查看更多回复")
+                }
+                .padding(12.dp)
         ) {
             Text(
                 text = context.getString(R.string.recently_replied),
@@ -239,15 +274,15 @@ private fun RecentlyReply(replys: List<UserRecentlyReply>) {
                 fontSize = TextUnit(16f, TextUnitType.Sp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            Image(
+            Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                alignment = Alignment.CenterEnd
+                tint = MaterialTheme.custom.onContainerSecondary
             )
         }
         val collection = replys.withIndex()
         for ((index, reply) in collection) {
-            Column(Modifier.padding(top = 10.dp)) {
+            Column(Modifier.padding(12.dp)) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -276,9 +311,11 @@ private fun RecentlyReply(replys: List<UserRecentlyReply>) {
                         text = reply.subject,
                         color = MaterialTheme.custom.onContainerPrimary,
                         fontSize = TextUnit(14f, TextUnitType.Sp),
-                        modifier = Modifier.clickable {
-                            SubjectDetailsActivity.start(context, reply.sid)
-                        }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                SubjectDetailsActivity.start(context, reply.sid)
+                            }
                     )
                 }
                 HtmlText(
@@ -300,7 +337,7 @@ private fun RecentlyReply(replys: List<UserRecentlyReply>) {
                 }
             }
             if (index != collection.count() - 1)
-                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), thickness = 0.3.dp)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp), thickness = 0.3.dp)
         }
     }
 }

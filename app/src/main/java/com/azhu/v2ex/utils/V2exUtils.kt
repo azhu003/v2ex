@@ -1,5 +1,7 @@
 package com.azhu.v2ex.utils
 
+import android.net.Uri
+
 /**
  * @author: azhu
  * @date: 2024-10-10 19:35
@@ -16,7 +18,11 @@ object V2exUtils {
     }
 
     fun isRelativeURL(path: String): Boolean {
-        return isMemberUrl(path) || isSubjectUrl(path)
+        return try {
+            Uri.parse(path).isRelative
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun isIntraSiteLink(url: String): Boolean {

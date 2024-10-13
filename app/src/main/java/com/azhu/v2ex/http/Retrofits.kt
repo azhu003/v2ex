@@ -32,30 +32,26 @@ object Retrofits {
         // OkHttp 提供的一个拦截器，用于记录和查看网络请求和响应的日志信息。
         val interceptor = HttpLoggingInterceptor()
         // 打印请求和响应的所有内容，响应状态码和执行时间等等。
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        interceptor.level = HttpLoggingInterceptor.Level.HEADERS
 
+        val cookieManager = CookieManager(context)
         val okHttpClient = OkHttpClient()
             .newBuilder()
-            .apply {
-                addInterceptor(interceptor)
-//                addInterceptor(TokenHeaderInterceptor())
-                retryOnConnectionFailure(true)
-                connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-                writeTimeout(TIME_OUT, TimeUnit.SECONDS)
-                readTimeout(TIME_OUT, TimeUnit.SECONDS)
-                cookieJar(CookieManager(context))
-                hostnameVerifier { _, _ -> true }
-            }
+            .addInterceptor(RequestHeaderInterceptor(cookieManager))
+            .addInterceptor(interceptor)
+            .retryOnConnectionFailure(true)
+            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .cookieJar(cookieManager)
+            .hostnameVerifier { _, _ -> true }
             .build()
 
         setupCoil(context, okHttpClient)
 
         return Retrofit.Builder()
-            .apply {
-//                addConverterFactory(ResponseCallAdapterFactory.create())
-                baseUrl(baseUrl)
-                client(okHttpClient)
-            }
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
             .build()
     }
 
@@ -77,7 +73,7 @@ object Retrofits {
         return getInstance().create(clazz.java)
     }
 
-    private fun getInstance(): Retrofit {
+    fun getInstance(): Retrofit {
         if (!Retrofits::defaultRetrofit.isInitialized) {
             throw NullPointerException("Retrofit is not initialized")
         }

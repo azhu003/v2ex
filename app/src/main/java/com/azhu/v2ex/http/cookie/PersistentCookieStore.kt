@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
 import android.util.Log
-import com.azhu.basic.provider.logger
 import okhttp3.Cookie
 import okhttp3.HttpUrl
 import java.io.ByteArrayInputStream
@@ -43,7 +42,6 @@ class PersistentCookieStore(context: Context) {
                         if (!cookies.containsKey(key)) {
                             cookies[key] = ConcurrentHashMap()
                         }
-//                        logger.info(" ->> name: $name value: $decodedCookie")
                         cookies[key]!![name!!] = decodedCookie
                     }
                 }

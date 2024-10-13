@@ -62,6 +62,7 @@ data class SubjectReplyItem(
 data class UserDetails(
     var username: String = "",
     var avatar: String = "",
+    var online: Boolean = false,
     var no: String = "", //注册序号
     var registerAt: String = "", //注册时间
     var ranking: String = "", //排名

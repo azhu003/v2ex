@@ -80,3 +80,7 @@ fun <T, R> Flow<Result<T>>.smap(transform: suspend (T) -> Result<R>): Flow<Resul
         }
     }
 }
+
+fun String.toColor(): Color {
+    return Color(android.graphics.Color.parseColor(this))
+}
