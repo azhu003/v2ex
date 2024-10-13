@@ -87,7 +87,7 @@ private fun SubjectDetailsPage(vm: SubjectDetailsViewModel) {
                 color = MaterialTheme.custom.onContainerSecondary,
                 modifier = Modifier
                     .padding(horizontal = 15.dp)
-                    .padding(top = 15.dp)
+                    .padding(vertical = 12.dp)
             )
         }
         itemsIndexed(details.reply) { index, item ->

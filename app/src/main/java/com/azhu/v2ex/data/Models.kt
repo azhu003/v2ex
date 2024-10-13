@@ -1,8 +1,10 @@
 package com.azhu.v2ex.data
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 
@@ -12,6 +14,8 @@ data class NodeInfo(val key: String = "", val name: String = "")
 @Stable
 data class HomePageState(
     var index: Int = 0,
+    //用于更新刷新状态，值与TabPagerState中isRefreshing保持一致
+    val isRefreshing: MutableState<Boolean> = mutableStateOf(false),
     val nodes: SnapshotStateList<NodeInfo> = mutableStateListOf(),
     val tabPageMap: SnapshotStateMap<Int, TabPageState> = mutableStateMapOf()
 )
@@ -19,6 +23,8 @@ data class HomePageState(
 @Stable
 data class TabPageState(
     val node: NodeInfo = NodeInfo(),
+    val isRefreshing: MutableState<Boolean> = mutableStateOf(false),
+    var isFirstVisible: Boolean = true,
     val subjects: SnapshotStateList<SubjectItem> = mutableStateListOf(),
 )
 

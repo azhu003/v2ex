@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.azhu.v2ex.ui.page
 
 import androidx.compose.foundation.background
@@ -12,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
@@ -19,6 +22,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
@@ -43,10 +48,12 @@ import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.HomeViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(vm: HomeViewModel) {
-    val pagerState = rememberPagerState { vm.state.value.nodes.size }
+    val pagerState = rememberPagerState { vm.state.nodes.size }
     val coroutineScope = rememberCoroutineScope()
+    val pullToRefreshState = rememberPullToRefreshState()
 
     //监听CurrentPage值变化
     LaunchedEffect(pagerState.currentPage) {
@@ -73,7 +80,7 @@ fun HomePage(vm: HomeViewModel) {
                     )
                 }
             ) {
-                vm.state.value.nodes.forEachIndexed { index, item ->
+                vm.state.nodes.forEachIndexed { index, item ->
                     Tab(
                         selected = pagerState.currentPage == index,
                         selectedContentColor = MaterialTheme.custom.primary,
@@ -87,10 +94,20 @@ fun HomePage(vm: HomeViewModel) {
                     )
                 }
             }
-            HorizontalPager(state = pagerState, beyondViewportPageCount = 1) { page ->
-                LazyColumn {
-                    itemsIndexed(vm.getSubjectsByTabIndex(page).toList()) { index, item ->
-                        key("$index${item.id}") { SubjectItem(item) }
+
+            HorizontalPager(
+                state = pagerState,
+                beyondViewportPageCount = 1,
+            ) { page ->
+                PullToRefreshBox(
+                    isRefreshing = vm.state.isRefreshing.value,
+                    onRefresh = vm::onRefresh,
+                    state = pullToRefreshState,
+                ) {
+                    LazyColumn {
+                        itemsIndexed(vm.getSubjectsByTabIndex(page)) { index, item ->
+                            key("$index${item.id}") { SubjectItem(item) }
+                        }
                     }
                 }
             }
