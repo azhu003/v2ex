@@ -11,8 +11,7 @@ object RegexConstant {
     val TOPIC_ID by lazy { Regex("(?<=/t/)\\d{1,8}") }
 
     //点击数 · 598 次点击
-//    val CLICKS by lazy { Regex("(?<=·\\s).*?(?=\\s次点击)") }
-    val CLICKS by lazy { Regex("(?<=[0前]\\s·\\s).*?(?=\\s*次点击)") }
+    val CLICKS by lazy { Regex("(?<=\\s·\\s)\\d*?(?=\\s*次点击)") }
 
     //收藏数 "598 次点击 &nbsp;∙&nbsp; 11 人收藏 &nbsp; ∙&nbsp; 5 人感谢"
     val COLLECTIONS by lazy { Regex("(?<=∙&nbsp;\\s).*?(?=\\s*人收藏)") }

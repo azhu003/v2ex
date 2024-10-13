@@ -26,7 +26,7 @@ class TextImageGetter(textView: TextView) : ImageGetter {
         val level = LevelListDrawable()
         val empty = getPlaceholder()
         level.addLevel(0, 0, empty)
-        level.setBounds(0, 0, 500, 500)
+        level.setBounds(0, 0, 100, 100)
 
         if (url != null) {
             fetchAsyncImage(url, level)
@@ -39,10 +39,13 @@ class TextImageGetter(textView: TextView) : ImageGetter {
             val request = ImageRequest.Builder(text.context)
                 .data(url)
                 .target { drawable ->
-                    resize(drawable, text.resources.displayMetrics.widthPixels.toFloat())
+                    val tWith = text.right - text.left
+                    resize(drawable, tWith.toFloat())
+                    //level=0 将占位图的大小设置为实际图片一致
+                    level.setBounds(0, 0, drawable.bounds.right, drawable.bounds.bottom)
                     level.addLevel(1, 1, drawable)
                     level.setLevel(1)
-                    level.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                    level.setBounds(0, 0, drawable.bounds.right, drawable.bounds.bottom)
                     text.invalidate()
                     //避免多图片重叠
                     val t: CharSequence = text.text

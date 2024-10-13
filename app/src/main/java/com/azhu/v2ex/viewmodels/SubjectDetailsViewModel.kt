@@ -36,7 +36,7 @@ class SubjectDetailsViewModel : BaseViewModel() {
         val details = state.value
         if (TextUtils.isEmpty(details.sid)) throw NullPointerException("sid is null")
 //        getHtmlFromAssets("subject.html")
-//            .map { Result.success(getDocument(it.getOrThrow())) }
+//            .smap { Result.success(getDocument(it)) }
 //            .flowOn(Dispatchers.IO)
 //            .error { logger.error(it?.message ?: "error message is null") }.success { setSubjectDetails(it) }
 //            .launchIn(viewModelScope)
@@ -54,7 +54,7 @@ class SubjectDetailsViewModel : BaseViewModel() {
         details.title = str { header.select("h1").text() }
         details.author = str { header.select("small.gray a[href^=/member/]").text() }
         details.clicks = str {
-            RegexConstant.CLICKS.find(header.select("small.gray").last()?.text() ?: "")?.value
+            RegexConstant.CLICKS.find(header.select("small.gray").text() ?: "")?.value
         }
 
         details.time = str {
