@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference
  * @date: 2024-10-07 12:57
  * @version: 1.0.0
  */
-class TextImageGetter(textView: TextView) : ImageGetter {
+class TextImageGetter(textView: TextView, private val with: Float) : ImageGetter {
 
     private var mTextViewReference: WeakReference<TextView> = WeakReference(textView)
 
@@ -39,13 +39,12 @@ class TextImageGetter(textView: TextView) : ImageGetter {
             val request = ImageRequest.Builder(text.context)
                 .data(url)
                 .target { drawable ->
-                    val tWith = text.right - text.left
-                    resize(drawable, tWith.toFloat())
+                    resize(drawable, with)
                     //level=0 将占位图的大小设置为实际图片一致
                     level.setBounds(0, 0, drawable.bounds.right, drawable.bounds.bottom)
                     level.addLevel(1, 1, drawable)
+                    level.setBounds(1, 1, drawable.bounds.right, drawable.bounds.bottom)
                     level.setLevel(1)
-                    level.setBounds(0, 0, drawable.bounds.right, drawable.bounds.bottom)
                     text.invalidate()
                     //避免多图片重叠
                     val t: CharSequence = text.text

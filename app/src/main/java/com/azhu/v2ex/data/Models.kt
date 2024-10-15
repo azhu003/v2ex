@@ -46,6 +46,7 @@ data class SubjectDetails(
     var author: String = "",
     var time: String = "",  //发布时间
     var content: String = "",
+    var subtitles: MutableList<SubjectDetailsSubtitle> = mutableListOf(), //附言
     var clicks: String = "",  //x次点击
     var collections: String = "",  //收藏次数
     var useful: String = "",  //x人感谢
@@ -54,14 +55,21 @@ data class SubjectDetails(
 )
 
 @Stable
+data class SubjectDetailsSubtitle(
+    var time: String = "",
+    var content: String = ""
+)
+
+@Stable
 data class SubjectReplyItem(
     var id: String = "",
     var username: String = "",
     var avatar: String = "",
     var time: String = "",
+    var no: String? = null,
     var isAuthor: Boolean = false,
     var content: String = "",
-    var star: String? = null
+    var star: String? = null,
 )
 
 @Stable

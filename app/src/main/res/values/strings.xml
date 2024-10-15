@@ -4,6 +4,8 @@
     <string name="number_of_views">阅读 %s</string>
     <string name="author">作者</string>
 
+    <string name="subtitle_text">第%d条附言</string>
+
     <string name="member_no">V2EX第%s号会员</string>
     <string name="register_at">%s 加入</string>
     <string name="today_ranking">今日活跃度排名%s</string>

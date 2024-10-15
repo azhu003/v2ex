@@ -6,7 +6,11 @@ import android.text.util.Linkify
 import android.util.TypedValue
 import android.widget.TextView
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.boundsInParent
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.azhu.basic.provider.AppThemeProvider
@@ -20,8 +24,11 @@ import com.azhu.v2ex.ui.theme.onContainerPrimaryLight
  */
 @Composable
 fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
+    val rect = remember { mutableFloatStateOf(0f) }
     AndroidView(
-        modifier = modifier,
+        modifier = modifier.onGloballyPositioned { coordinates ->
+            rect.floatValue = coordinates.boundsInParent().width
+        },
         factory = { context ->
             val textview = TextView(context)
             Linkify.addLinks(textview, Linkify.WEB_URLS)
@@ -53,7 +60,7 @@ fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
             textview
         },
         update = {
-            val spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT, TextImageGetter(it), null)
+            val spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT, TextImageGetter(it, rect.floatValue), null)
             it.text = spanned
             ClickableSpanned.makeLinksClickable(it)
         },

@@ -8,10 +8,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -19,12 +24,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +41,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.SubjectDetails
 import com.azhu.v2ex.data.SubjectReplyItem
@@ -133,6 +143,38 @@ private fun SubjectBody(details: SubjectDetails) {
             .fillMaxWidth()
             .padding(start = 15.dp, top = 15.dp, end = 15.dp, bottom = 0.dp)
     )
+    details.subtitles.forEachIndexed { index, subtitle ->
+        Row(
+            Modifier
+                .padding(top = 15.dp)
+                .padding(horizontal = 15.dp)
+                .height(IntrinsicSize.Min)
+        ) {
+            VerticalDivider(thickness = 3.dp, color = MaterialTheme.custom.background)
+            Column(Modifier.padding(horizontal = 15.dp)) {
+                Text(
+                    text = "${context.getString(R.string.subtitle_text, (index + 1))}  ${subtitle.time}",
+                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    color = MaterialTheme.custom.onContainerPrimary
+                )
+                HtmlText(
+                    html = subtitle.content,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp)
+                )
+            }
+        }
+        if (index < details.subtitles.size - 1) {
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(top = 15.dp)
+                    .padding(start = 30.dp, end = 15.dp),
+                thickness = 0.2f.dp,
+                color = MaterialTheme.custom.onContainerSecondary
+            )
+        }
+    }
     Text(
         text = context.getString(R.string.number_of_views, details.clicks),
         color = MaterialTheme.custom.onContainerSecondary,
@@ -194,10 +236,17 @@ private fun ReplyItem(vm: SubjectDetailsViewModel, item: SubjectReplyItem) {
                     color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier.padding(start = 5.dp)
                 )
+
+                Spacer(Modifier.weight(1f))
+                Text(
+                    text = "#${item.no}",
+                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                    color = MaterialTheme.custom.onContainerSecondary,
+                )
             }
             HtmlText(
                 html = item.content,
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth(),
                 fontSize = 14f
             )
         }

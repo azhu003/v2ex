@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.data.SubjectDetails
+import com.azhu.v2ex.data.SubjectDetailsSubtitle
 import com.azhu.v2ex.data.SubjectReplyItem
 import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
@@ -61,7 +62,16 @@ class SubjectDetailsViewModel : BaseViewModel() {
             val original = header.select("small.gray span[title]").attr("title")
             return@str DateTimeUtils.format(original)
         }
-        details.content = str { document.select("div.topic_content").html() }
+        val divBox = document.select("div#Main div.box")
+        divBox.first()?.let { div ->
+            details.content = str { div.select("div.cell div.topic_content").html() }
+            document.select("div.subtle").forEach {
+                val subtitle = SubjectDetailsSubtitle()
+                subtitle.time = str { DateTimeUtils.ago(it.select("span[title]").attr("title")) }
+                subtitle.content = str { it.select("div.topic_content").html() }
+                details.subtitles.add(subtitle)
+            }
+        }
         // div.topic_buttons 未渲染？
 //        catch {
 //            val stats = document.select("div.topic_stats").text()
@@ -81,11 +91,11 @@ class SubjectDetailsViewModel : BaseViewModel() {
             catch {
                 val reply = SubjectReplyItem()
                 reply.id = str { RegexConstant.REPLY_ID.find(cell.attr("id"))?.value }
-
                 val tr = cell.select("tr")
                 reply.avatar = str { tr.select("img.avatar").attr("src") }
                 reply.username = str { tr.select("strong a[href^=/member/]").text() }
                 reply.time = str { DateTimeUtils.ago(tr.select("span.ago[title]").attr("title")) }
+                reply.no = str { tr.select("div.fr span.no").text() }
                 reply.isAuthor = TextUtils.equals(reply.username, details.author)
                 reply.content = str { tr.select("div.reply_content").html() }
                 details.reply.add(reply)
