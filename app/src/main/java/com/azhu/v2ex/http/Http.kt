@@ -21,4 +21,11 @@ class Http {
                 .onSuccess { emit(Result.success(it)) }
                 .onFailure { emit(Result.failure(ApiException(it.message))) }
         }
+
+    fun <T> flows(onRequestBefore: () -> Unit = {}, doRequest: suspend () -> T) = flow<Result<T>> {
+        onRequestBefore.invoke()
+        runCatching { doRequest.invoke() }
+            .onSuccess { emit(Result.success(it)) }
+            .onFailure { emit(Result.failure(ApiException(it.message))) }
+    }
 }

@@ -14,10 +14,13 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("/")
-    suspend fun getSubjectList(@Query("tab") tab: String? = null): ResponseBody
+    suspend fun getTopicList(@Query("tab") tab: String? = null): ResponseBody
+
+    @GET("/recent")
+    suspend fun getRecentTopicList(@Query("p") page: Int = 1): ResponseBody
 
     @GET("/t/{sid}")
-    suspend fun getSubjectDetails(@Path("sid") sid: String): ResponseBody
+    suspend fun getTopicDetails(@Path("sid") sid: String): ResponseBody
 
     @GET("/member/{username}")
     suspend fun getMemberDetails(@Path("username") username: String): ResponseBody

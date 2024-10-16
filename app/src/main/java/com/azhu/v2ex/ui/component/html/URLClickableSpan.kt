@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.toArgb
 import com.azhu.basic.AppManager
 import com.azhu.basic.provider.AppThemeProvider
 import com.azhu.basic.provider.logger
-import com.azhu.v2ex.ui.activity.SubjectDetailsActivity
+import com.azhu.v2ex.ui.activity.TopicDetailsActivity
 import com.azhu.v2ex.ui.activity.UserDetailsActivity
 import com.azhu.v2ex.ui.theme.containerDark
 import com.azhu.v2ex.ui.theme.containerLight
@@ -34,8 +34,8 @@ class URLClickableSpan(private val url: String) : ClickableSpan() {
                 if (V2exUtils.isRelativeURL(url)) {
                     if (V2exUtils.isMemberUrl(url)) {
                         UserDetailsActivity.start(context, RegexConstant.MEMBER_USERNAME.find(url)?.value ?: "")
-                    } else if (V2exUtils.isSubjectUrl(url)) {
-                        SubjectDetailsActivity.start(context, RegexConstant.TOPIC_ID.find(url)?.value ?: "")
+                    } else if (V2exUtils.isTopicUrl(url)) {
+                        TopicDetailsActivity.start(context, RegexConstant.TOPIC_ID.find(url)?.value ?: "")
                     } else {
                         logger.error("未处理的站内链接跳转 -> $url")
                     }

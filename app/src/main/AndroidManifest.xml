@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.SubjectDetailsActivity"
+            android:name=".ui.activity.TopicDetailsActivity"
             android:exported="false"
             android:theme="@style/Theme.V2ex" />
         <activity

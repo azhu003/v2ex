@@ -76,7 +76,7 @@ private fun UserDetailsPage(details: UserDetails) {
     val scrollState = rememberScrollState()
     Column(Modifier.verticalScroll(scrollState)) {
         UserHeader(details)
-        RecentlyPublishedSubject(details)
+        RecentlyPublishedTopic(details)
         RecentlyReply(details.replys)
     }
 }
@@ -147,9 +147,9 @@ private fun UserHeader(details: UserDetails) {
 }
 
 @Composable
-private fun RecentlyPublishedSubject(details: UserDetails) {
+private fun RecentlyPublishedTopic(details: UserDetails) {
     val context = LocalContext.current
-    val subjects = details.subjects
+    val topics = details.topics
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -176,7 +176,7 @@ private fun RecentlyPublishedSubject(details: UserDetails) {
                 tint = MaterialTheme.custom.onContainerSecondary
             )
         }
-        if (details.subjectHidden) {
+        if (details.topicInvisible) {
             //主题列表被隐藏
             Row(
                 modifier = Modifier
@@ -190,24 +190,24 @@ private fun RecentlyPublishedSubject(details: UserDetails) {
                     tint = MaterialTheme.custom.onContainerSecondary
                 )
                 Text(
-                    text = context.getString(R.string.subject_hidden_tips, details.username),
+                    text = context.getString(R.string.topic_invisible_tips, details.username),
                     fontSize = TextUnit(14f, TextUnitType.Sp),
                     color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier.padding(start = 5.dp)
                 )
             }
         } else {
-            val collection = subjects.withIndex()
-            for ((index, subject) in collection) {
+            val collection = topics.withIndex()
+            for ((index, topic) in collection) {
                 Column(
                     Modifier
                         .clickable {
-                            SubjectDetailsActivity.start(context, subject.sid)
+                            TopicDetailsActivity.start(context, topic.sid)
                         }
                         .padding(15.dp)
                 ) {
                     Text(
-                        text = subject.title,
+                        text = topic.title,
                         color = MaterialTheme.custom.onContainerPrimary,
                         fontSize = TextUnit(16f, TextUnitType.Sp)
                     )
@@ -218,7 +218,7 @@ private fun RecentlyPublishedSubject(details: UserDetails) {
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = subject.node.name,
+                            text = topic.node.name,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.custom.onContainerPrimary,
                             fontSize = TextUnit(12f, TextUnitType.Sp),
@@ -229,15 +229,15 @@ private fun RecentlyPublishedSubject(details: UserDetails) {
                                 .padding(3.dp, 1.dp)
                         )
                         Text(
-                            text = subject.time,
+                            text = topic.time,
                             color = MaterialTheme.custom.onContainerSecondary,
                             fontSize = TextUnit(14f, TextUnitType.Sp),
                             modifier = Modifier.padding(start = 5.dp)
                         )
-                        if (subject.replyCount.isNotBlank()) {
+                        if (topic.replyCount.isNotBlank()) {
                             Spacer(Modifier.weight(1f))
                             Text(
-                                text = context.getString(R.string.number_of_replies, subject.replyCount),
+                                text = context.getString(R.string.number_of_replies, topic.replyCount),
                                 color = MaterialTheme.custom.onContainerSecondary,
                                 fontSize = TextUnit(14f, TextUnitType.Sp)
                             )
@@ -308,13 +308,13 @@ private fun RecentlyReply(replys: List<UserRecentlyReply>) {
                     }
                     HorizontalDivider(thickness = 0.3.dp)
                     Text(
-                        text = reply.subject,
+                        text = reply.topic,
                         color = MaterialTheme.custom.onContainerPrimary,
                         fontSize = TextUnit(14f, TextUnitType.Sp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                SubjectDetailsActivity.start(context, reply.sid)
+                                TopicDetailsActivity.start(context, reply.sid)
                             }
                     )
                 }

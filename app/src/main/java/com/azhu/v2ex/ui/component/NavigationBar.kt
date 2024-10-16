@@ -22,14 +22,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.azhu.v2ex.ui.main.BottomNavigationItem
 import com.azhu.v2ex.ui.main.Routes
-import com.azhu.v2ex.ui.page.HomePage
+import com.azhu.v2ex.ui.page.TabTopicPage
 import com.azhu.v2ex.ui.page.ProfilePage
 import com.azhu.v2ex.ui.page.SearchPage
 import com.azhu.v2ex.ui.theme.custom
-import com.azhu.v2ex.viewmodels.HomeViewModel
+import com.azhu.v2ex.viewmodels.TabTopicViewModel
 
 @Composable
-fun NavigationBar(homeViewModel: HomeViewModel) {
+fun NavigationBar(tabTopicViewModel: TabTopicViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -66,10 +66,10 @@ fun NavigationBar(homeViewModel: HomeViewModel) {
     ) { pv ->
         NavHost(
             navController = navController,
-            startDestination = Routes.Home.route,
+            startDestination = Routes.TabTopic.route,
             modifier = Modifier.padding(pv)
         ) {
-            composable(Routes.Home.route) { HomePage(homeViewModel) }
+            composable(Routes.TabTopic.route) { TabTopicPage(tabTopicViewModel) }
             composable(Routes.Search.route) { SearchPage() }
             composable(Routes.Profile.route) { ProfilePage() }
         }

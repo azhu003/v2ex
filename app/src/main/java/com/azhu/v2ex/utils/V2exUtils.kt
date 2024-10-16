@@ -13,7 +13,7 @@ object V2exUtils {
         return path.startsWith("/member")
     }
 
-    fun isSubjectUrl(path: String): Boolean {
+    fun isTopicUrl(path: String): Boolean {
         return path.startsWith("/t")
     }
 

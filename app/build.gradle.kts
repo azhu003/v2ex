@@ -86,8 +86,13 @@ dependencies {
     implementation(libs.com.squareup.retrofit2)
 
     implementation(libs.jackson.databind)
+    //图片加载
     implementation(libs.coil.compose)
+    //自定义浏览器标题栏
     implementation(libs.androidx.browser)
+    //分页加载
+    implementation(libs.androidx.paging.compose)
+
 
     implementation(project(":sth"))
 }
