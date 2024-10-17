@@ -85,7 +85,6 @@ dependencies {
     implementation(libs.com.squareup.okhttp3.logging.interceptor)
     implementation(libs.com.squareup.retrofit2)
 
-    implementation(libs.jackson.databind)
     //图片加载
     implementation(libs.coil.compose)
     //自定义浏览器标题栏
@@ -95,4 +94,10 @@ dependencies {
 
 
     implementation(project(":sth"))
+
+    // 极致体验的Compose刷新组件 (*必须)
+    implementation(libs.refresh)
+    // 经典样式的指示器 (可选)
+    implementation(libs.refresh.indicator.classic)
+
 }

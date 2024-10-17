@@ -52,8 +52,8 @@ abstract class BaseActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setContent(getContentView())
         initialize()
+        setContent(getContentView())
     }
 
     private fun setContent(content: @Composable () -> Unit) {

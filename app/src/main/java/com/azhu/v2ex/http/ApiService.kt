@@ -20,7 +20,7 @@ interface ApiService {
     suspend fun getRecentTopicList(@Query("p") page: Int = 1): ResponseBody
 
     @GET("/t/{sid}")
-    suspend fun getTopicDetails(@Path("sid") sid: String): ResponseBody
+    suspend fun getTopicDetails(@Path("sid") sid: String, @Query("p") page: Int = 1): ResponseBody
 
     @GET("/member/{username}")
     suspend fun getMemberDetails(@Path("username") username: String): ResponseBody

@@ -29,10 +29,14 @@ class DataRepository private constructor() {
         return TopicListResolver().resolver(body)
     }
 
-    suspend fun getTopicDetails(tid: String): TopicDetails {
+    suspend fun getTopicDetails(
+        tid: String,
+        type: TopicDetailsResolverType = TopicDetailsResolverType.ALL,
+        page: Int = 1
+    ): TopicDetails {
 //        val body = getHtmlFromAssets("topic.html")
-        val body = remote.service.getTopicDetails(tid).byteStream()
-        return TopicDetailsResolver().resolver(body)
+        val body = remote.service.getTopicDetails(tid, page).byteStream()
+        return TopicDetailsResolver(type, tid).resolver(body)
     }
 
     suspend fun getUserDetails(username: String): UserDetails {

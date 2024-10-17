@@ -6,6 +6,7 @@ import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +44,9 @@ import com.azhu.v2ex.data.TopicReplyItem
 import com.azhu.v2ex.ui.component.html.HtmlText
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.TopicDetailsViewModel
+import com.king.ultraswiperefresh.UltraSwipeRefresh
+import com.king.ultraswiperefresh.indicator.classic.ClassicRefreshFooter
+import com.king.ultraswiperefresh.rememberUltraSwipeRefreshState
 
 class TopicDetailsActivity : BaseActivity() {
 
@@ -61,39 +68,67 @@ class TopicDetailsActivity : BaseActivity() {
         super.initialize()
         val sid = intent.getStringExtra("tid")
         if (TextUtils.isEmpty(sid)) finish()
-        vm.state.value.sid = sid
+        vm.state.value.tid = sid
         vm.fetchTopicDetails()
     }
-
 }
 
 @Composable
 private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
     val listState = rememberLazyListState()
     val details = vm.state.value
-    LazyColumn(
-        state = listState,
-        modifier = Modifier.background(MaterialTheme.custom.container)
+    val hasMoreData by remember { vm.hasMore }
+
+    val state = rememberUltraSwipeRefreshState()
+    LaunchedEffect(vm.isLoadingMoreData.value) {
+        state.isLoading = vm.isLoadingMoreData.value
+    }
+
+    UltraSwipeRefresh(
+        state = state,
+        refreshEnabled = false,
+        loadMoreEnabled = hasMoreData,
+        onRefresh = {},
+        onLoadMore = { vm.fetchTopicDetails(true) },
+        footerIndicator = { ClassicRefreshFooter(it) },
     ) {
-        item {
-            TopicBody(details)
-            HorizontalDivider(
-                thickness = 5.dp,
-                color = MaterialTheme.custom.background,
-                modifier = Modifier.padding(top = 15.dp)
-            )
-            Text(
-                text = stringResource(R.string.number_of_replies, details.replyCount),
-                fontSize = TextUnit(15f, TextUnitType.Sp),
-                color = MaterialTheme.custom.onContainerSecondary,
-                modifier = Modifier
-                    .padding(horizontal = 15.dp)
-                    .padding(vertical = 12.dp)
-            )
-        }
-        itemsIndexed(details.reply) { index, item ->
-            key("$index${item.id}") {
-                ReplyItem(vm, item)
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.background(MaterialTheme.custom.container)
+        ) {
+            item {
+                TopicBody(details)
+                HorizontalDivider(
+                    thickness = 5.dp,
+                    color = MaterialTheme.custom.background,
+                    modifier = Modifier.padding(top = 15.dp)
+                )
+                Text(
+                    text = stringResource(R.string.number_of_replies, details.replyCount),
+                    fontSize = TextUnit(15f, TextUnitType.Sp),
+                    color = MaterialTheme.custom.onContainerSecondary,
+                    modifier = Modifier
+                        .padding(horizontal = 15.dp)
+                        .padding(vertical = 12.dp)
+                )
+            }
+            itemsIndexed(details.replys.data) { index, item ->
+                key("$index${item.id}") {
+                    ReplyItem(vm, item)
+                }
+            }
+
+            if (details.isInitialized && vm.hasMore.value.not()) {
+                item {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "—·—",
+                            color = MaterialTheme.custom.onContainerSecondary,
+                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                            modifier = Modifier.padding(vertical = 16.dp)
+                        )
+                    }
+                }
             }
         }
     }

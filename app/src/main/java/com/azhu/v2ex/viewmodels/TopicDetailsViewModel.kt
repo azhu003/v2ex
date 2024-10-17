@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.data.DataRepository
 import com.azhu.v2ex.data.TopicDetails
+import com.azhu.v2ex.data.TopicDetailsResolverType
 import com.azhu.v2ex.data.TopicReplyItem
 import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
@@ -25,21 +26,46 @@ import kotlinx.coroutines.flow.launchIn
 class TopicDetailsViewModel : BaseViewModel() {
 
     val state = mutableStateOf(TopicDetails())
+    val isLoadingMoreData = mutableStateOf(false)
+    val hasMore = mutableStateOf(false)
 
     fun onViewUserClick(context: Context, item: TopicReplyItem) {
         UserDetailsActivity.start(context, item.username)
     }
 
-    fun fetchTopicDetails() {
+    fun fetchTopicDetails(isLoadMore: Boolean = false) {
         val details = state.value
-        if (TextUtils.isEmpty(details.sid)) throw NullPointerException("sid is null")
-
-        http.flows { DataRepository.INSTANCE.getTopicDetails(details.sid!!) }
-            .smap { Result.success(it) }
+        if (TextUtils.isEmpty(details.tid)) {
+            logger.error("topic id is null")
+            return
+        }
+        if (isLoadMore) this.isLoadingMoreData.value = true
+        http.flows {
+            DataRepository.INSTANCE.getTopicDetails(
+                details.tid!!,
+                if (isLoadMore) TopicDetailsResolverType.ONLY_REPLY else TopicDetailsResolverType.ALL,
+                if (isLoadMore) details.replys.nextPage else 1
+            )
+        }.smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
             .error { logger.error(it?.message ?: "error message is null") }
-            .success { state.value = it }
+            .success { merge(it, isLoadMore) }
             .launchIn(viewModelScope)
+    }
+
+    private fun merge(details: TopicDetails, loadMore: Boolean) {
+        if (state.value.isInitialized && loadMore) {
+            val old = state.value.replys
+            val new = details.replys
+            old.page = new.page
+            old.total = new.total
+            old.data.addAll(new.data)
+            isLoadingMoreData.value = false
+        } else {
+            details.isInitialized = true
+            state.value = details
+        }
+        hasMore.value = details.replys.page < details.replys.total
     }
 
 }

@@ -11,7 +11,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.azhu.v2ex.data.TabPair
 import com.azhu.v2ex.data.Topic
-import com.azhu.v2ex.pagination.TopicListSource
+import com.azhu.v2ex.paging.TopicListSource
 import kotlinx.coroutines.flow.Flow
 
 /**
