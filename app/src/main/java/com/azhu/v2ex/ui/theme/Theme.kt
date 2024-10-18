@@ -26,6 +26,8 @@ data class CustomColorScheme(
     val onBackground: Color = Color(0xFF171717),  //用于显示在背景上的文字颜色
     val backgroundSecondary: Color = Color(0xFFF2F2F0),  //次要颜色的容器颜色
     val highlights: Color = Color(0xFF576B95),  //用于显示在背景上的文字颜色
+
+    val onBackgroundSecondary: Color = Color(0xFFACB3B5),
 )
 
 private val CustomLightColorScheme = CustomColorScheme(

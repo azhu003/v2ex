@@ -23,13 +23,14 @@ class TopicListSource(private val tabName: String) : PagingSource<Int, Topic>() 
             val page = params.key ?: 1
 
             val repository = DataRepository.INSTANCE
-            val pagination = if (tabName == "recent")
-                repository.getRecentTopicList(page)
-            else
-                repository.getTopicListData(tabName)
+            val pagination = when (tabName) {
+                "recent" -> repository.getRecentTopicList(page)
+                else -> repository.getTopicListData(tabName)
+            }
 
             val prevKey = if (page == 1) null else page - 1
             val nextPage = if (page < pagination.total) page + 1 else null
+
             return LoadResult.Page(pagination.data, prevKey = prevKey, nextKey = nextPage)
         } catch (e: Exception) {
             logger.warning("主题列表加载出错 $e")

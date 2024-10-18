@@ -119,3 +119,15 @@ data class UserRecentlyReply(
     //回复时间
     var time: String = "",
 )
+
+@Stable
+data class ProfileData(
+    var username: String = "",
+    var avatar: String = "",
+    var numberOfNodeCollection: Int = 0,
+    var numberOfTopicCollection: Int = 0,
+    var numberOfSpecialAttention: Int = 0,
+    var isClaimedLoginRewards: Boolean = false,
+    var balance: String = "",
+    var daysOfConsecutiveLogin: Int = 0,
+)

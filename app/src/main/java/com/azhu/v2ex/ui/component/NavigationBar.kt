@@ -26,10 +26,11 @@ import com.azhu.v2ex.ui.page.TabTopicPage
 import com.azhu.v2ex.ui.page.ProfilePage
 import com.azhu.v2ex.ui.page.SearchPage
 import com.azhu.v2ex.ui.theme.custom
+import com.azhu.v2ex.viewmodels.ProfileViewModel
 import com.azhu.v2ex.viewmodels.TabTopicViewModel
 
 @Composable
-fun NavigationBar(tabTopicViewModel: TabTopicViewModel) {
+fun NavigationBar(tabTopicVM: TabTopicViewModel, profileVM: ProfileViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -69,9 +70,9 @@ fun NavigationBar(tabTopicViewModel: TabTopicViewModel) {
             startDestination = Routes.TabTopic.route,
             modifier = Modifier.padding(pv)
         ) {
-            composable(Routes.TabTopic.route) { TabTopicPage(tabTopicViewModel) }
+            composable(Routes.TabTopic.route) { TabTopicPage(tabTopicVM) }
             composable(Routes.Search.route) { SearchPage() }
-            composable(Routes.Profile.route) { ProfilePage() }
+            composable(Routes.Profile.route) { ProfilePage(profileVM) }
         }
     }
 }

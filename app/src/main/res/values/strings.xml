@@ -13,4 +13,18 @@
     <string name="recently_replied">最近回复</string>
     <string name="topic_invisible_tips">根据 %s 的设置，主题列表被隐藏</string>
 
+    <string name="node_collection">节点收藏</string>
+    <string name="topic_collection">主题收藏</string>
+    <string name="special_attention">特别关注</string>
+    <string name="account_balance">账户余额</string>
+    <string name="claim_login_rewards">登录奖励</string>
+    <string name="claimed_login_rewards">已领取</string>
+    <string name="consecutive_login_days">已连续登录%d天</string>
+    <string name="edit_profile">编辑资料</string>
+
+    <string-array name="user_feed_tabs">
+        <item>最近主题</item>
+        <item>最近回复</item>
+    </string-array>
+
 </resources>

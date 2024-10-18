@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -60,12 +61,11 @@ fun TabTopicPage(vm: TabTopicViewModel) {
     Scaffold { pv ->
         Column {
             // 👇🏻 这个Row组件用来填充系统状态栏使状态栏和TabRow颜色保持一致
-            Row(
+            Spacer(
                 modifier = Modifier
                     .background(MaterialTheme.custom.container)
                     .fillMaxWidth()
                     .height(pv.calculateTopPadding()),
-                content = {}
             )
             ScrollableTabRow(
                 containerColor = MaterialTheme.custom.container,
