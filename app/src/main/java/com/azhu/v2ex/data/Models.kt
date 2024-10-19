@@ -2,8 +2,10 @@ package com.azhu.v2ex.data
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
 @Stable
@@ -121,13 +123,37 @@ data class UserRecentlyReply(
 )
 
 @Stable
-data class ProfileData(
+data class UserProfile(
+    val isUnlogged: Boolean,
     var username: String = "",
     var avatar: String = "",
-    var numberOfNodeCollection: Int = 0,
-    var numberOfTopicCollection: Int = 0,
-    var numberOfSpecialAttention: Int = 0,
+    var numberOfNodeCollection: Int? = 0,
+    var numberOfTopicCollection: Int? = 0,
+    var numberOfFollowing: Int? = 0,
+    /**
+     * 是否已经领取过登录奖励 已领取: true 未领取: false
+     */
     var isClaimedLoginRewards: Boolean = false,
+    /**
+     * 领取登录奖励的Nonce，已领取过时值为空
+     */
+    var claimedLoginRewardNonce: String? = null,
+    var daysOfConsecutiveLogin: Int? = 0,
     var balance: String = "",
-    var daysOfConsecutiveLogin: Int = 0,
+)
+
+//登录时的动态参数名
+@Stable
+class LoginRequestParams {
+    var username by mutableStateOf("")
+    var password by mutableStateOf("")
+    var captchaImageUrl by mutableStateOf("")
+    var captcha by mutableStateOf("")
+    var nonce by mutableStateOf("")
+}
+
+@Stable
+data class LoginResult(
+    //登录失败的错误消息
+    val error: String? = null
 )

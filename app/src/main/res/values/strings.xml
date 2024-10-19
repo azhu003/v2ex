@@ -17,14 +17,25 @@
     <string name="topic_collection">主题收藏</string>
     <string name="special_attention">特别关注</string>
     <string name="account_balance">账户余额</string>
-    <string name="claim_login_rewards">登录奖励</string>
-    <string name="claimed_login_rewards">已领取</string>
+    <string name="claim_login_rewards">领取登录奖励</string>
+    <string name="claimed_login_rewards">已领取登录奖励</string>
     <string name="consecutive_login_days">已连续登录%d天</string>
     <string name="edit_profile">编辑资料</string>
+
+    <string name="unlogged">你还没登录账号哟~</string>
+    <string name="goto_login">去登录</string>
 
     <string-array name="user_feed_tabs">
         <item>最近主题</item>
         <item>最近回复</item>
     </string-array>
+
+    <string name="loading">加载中</string>
+    <string name="reload">重新加载</string>
+
+    <string name="login">登录</string>
+    <string name="username_placeholder">请输入用户名或邮箱</string>
+    <string name="password_placeholder">请输入密码</string>
+    <string name="captcha_placeholder">请输入上图中的验证码</string>
 
 </resources>

@@ -33,4 +33,8 @@ object V2exUtils {
         return url.removePrefix("https://www.v2ex.com").removePrefix("https://v2ex.com")
     }
 
+    fun toAbsoluteURL(relativeURL: String): String {
+        return "https://www.v2ex.com$relativeURL"
+    }
+
 }

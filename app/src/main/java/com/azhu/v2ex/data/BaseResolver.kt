@@ -13,8 +13,12 @@ import java.io.InputStream
 abstract class BaseResolver<T> : DocumentResolver<T> {
 
     override fun resolver(stream: InputStream): T {
-        val document = Jsoup.parse(stream, "UTF-8", "https://www.v2ex.com/")
-        return resolver(document)
+        try {
+            val document = Jsoup.parse(stream, "UTF-8", "https://www.v2ex.com/")
+            return resolver(document)
+        } finally {
+            stream.close()
+        }
     }
 
     abstract fun resolver(document: Document): T

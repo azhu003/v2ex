@@ -3,6 +3,8 @@ package com.azhu.v2ex.ui.page
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,12 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -32,12 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -46,8 +47,11 @@ import coil.compose.AsyncImage
 import com.azhu.basic.provider.AppThemeProvider
 import com.azhu.basic.provider.nextTheme
 import com.azhu.v2ex.R
-import com.azhu.v2ex.data.ProfileData
+import com.azhu.v2ex.ext.startActivityClass
 import com.azhu.v2ex.ext.toColor
+import com.azhu.v2ex.ui.activity.LoginActivity
+import com.azhu.v2ex.ui.component.LoadingLayout
+import com.azhu.v2ex.ui.component.ObserveLifecycleLayout
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.ProfileViewModel
 import kotlinx.coroutines.launch
@@ -55,29 +59,28 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfilePage(vm: ProfileViewModel) {
     Scaffold { pv ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            UserProfile(pv.calculateTopPadding())
-            Greeting()
-            UserFeed()
+        Column(modifier = Modifier.fillMaxSize()) {
+            ObserveLifecycleLayout(observer = vm) {
+                LoadingLayout(
+                    state = vm.state,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (vm.profile.isUnlogged) {
+                        Unlogged()
+                    } else {
+                        UserProfile(vm, pv.calculateTopPadding())
+                        UserFeed()
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
-fun UserProfile(topPadding: Dp) {
+fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
     val context = LocalContext.current
-    val profile = ProfileData(
-        avatar = "https://cdn.v2ex.com/avatar/cf29/05f8/526173_large.png?m=1617957023",
-        username = "azhu1990",
-        numberOfNodeCollection = 12,
-        numberOfTopicCollection = 22,
-        numberOfSpecialAttention = 40,
-        balance = "3089",
-        daysOfConsecutiveLogin = 18,
-        isClaimedLoginRewards = true
-    )
+    val profile = vm.profile
     Column(
         modifier = Modifier
             .background(brush = Brush.verticalGradient(listOf("#20364F".toColor(), "#414947".toColor())))
@@ -99,6 +102,17 @@ fun UserProfile(topPadding: Dp) {
                 modifier = Modifier
                     .background("#CC4E616C".toColor(), MaterialTheme.shapes.large)
                     .padding(vertical = 2.dp, horizontal = 7.dp)
+            )
+            Image(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(28.dp)
+                    .padding(end = 7.dp)
+                    .clickable {
+                        val nextTheme = AppThemeProvider.appTheme.nextTheme()
+                        AppThemeProvider.onAppThemeChanged(nextTheme)
+                    }
             )
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -165,7 +179,7 @@ fun UserProfile(topPadding: Dp) {
             //特别关注
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "${profile.numberOfSpecialAttention}",
+                    text = "${profile.numberOfFollowing}",
                     color = Color.White,
                     fontSize = TextUnit(14f, TextUnitType.Sp),
                 )
@@ -239,23 +253,27 @@ fun UserFeed() {
     }
 }
 
-@Preview
 @Composable
-fun Greeting() {
-    Column(
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(horizontal = 14.dp)
-    ) {
-        Text(text = "当前主题 ${AppThemeProvider.appTheme}", color = MaterialTheme.colorScheme.onBackground)
-        Button(
-            content = {
-                Text("切换主题", color = MaterialTheme.colorScheme.onPrimary)
-            },
-            onClick = {
-                val nextTheme = AppThemeProvider.appTheme.nextTheme()
-                AppThemeProvider.onAppThemeChanged(nextTheme)
+fun Unlogged() {
+    val context = LocalContext.current
+    Box(Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.align(Alignment.Center)) {
+            Image(painter = painterResource(R.drawable.unlogged), contentDescription = null)
+            Text(
+                text = context.getString(R.string.unlogged), color = MaterialTheme.custom.onContainerPrimary,
+                fontSize = TextUnit(16f, TextUnitType.Sp),
+                modifier = Modifier.padding(vertical = 10.dp)
+            )
+            Button(
+                modifier = Modifier
+                    .height(36.dp)
+                    .align(Alignment.CenterHorizontally),
+                onClick = {
+                    context.startActivityClass(LoginActivity::class)
+                }
+            ) {
+                Text(context.getString(R.string.goto_login), color = Color.White)
             }
-        )
+        }
     }
 }

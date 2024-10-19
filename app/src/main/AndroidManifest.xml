@@ -18,29 +18,24 @@
 
         <activity
             android:name=".ui.activity.UserDetailsActivity"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.azhu.v2ex.action" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:host="localhost"
-                    android:mimeType="text/plain"
-                    android:scheme="v2ex" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".ui.activity.TopicDetailsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.V2ex" />
+            android:exported="false" />
         <activity
-            android:name=".ui.activity.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.V2ex">
+            android:name=".ui.activity.LoginActivity"
+            android:exported="true" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.V2ex">
         </activity>
     </application>
 

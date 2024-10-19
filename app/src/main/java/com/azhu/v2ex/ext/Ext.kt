@@ -36,6 +36,14 @@ fun <T> Flow<Result<T>>.error(onError: suspend (Throwable?) -> Unit): Flow<Resul
     }
 }
 
+fun <T> Flow<Result<T>>.complete(onComplete: suspend () -> Unit): Flow<Result<T>> {
+    return onEach {
+        if (it.isFailure || it.isSuccess) {
+            onComplete.invoke()
+        }
+    }
+}
+
 /**
  * @description: 对map函数做一层包装，在Result返回错误时绕过transform函数的执行
  * @author: Jerry

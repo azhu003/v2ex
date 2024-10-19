@@ -1,7 +1,10 @@
 package com.azhu.v2ex.http
 
 import okhttp3.ResponseBody
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -25,4 +28,12 @@ interface ApiService {
     @GET("/member/{username}")
     suspend fun getMemberDetails(@Path("username") username: String): ResponseBody
 
+    @GET("/mission/daily")
+    suspend fun getUserProfile(): ResponseBody
+
+    @GET("/signin")
+    suspend fun getSigninParams(): ResponseBody
+
+    @POST("/signin")
+    suspend fun signin(@FieldMap form: Map<String, String>): ResponseBody
 }

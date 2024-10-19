@@ -34,4 +34,7 @@ object RegexConstant {
 
     //获取节点名"/go/rss"
     val NODE_NAME by lazy { Regex("(?<=/go/).*") }
+
+    //连续登录天数
+    val DAYS_OF_CONSECUTIVE_LOGIN by lazy { Regex("(?<=已连续登录\\s)\\d*?(?=\\s天)") }
 }
