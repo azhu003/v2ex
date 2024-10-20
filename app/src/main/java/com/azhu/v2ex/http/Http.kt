@@ -26,6 +26,6 @@ class Http {
         onRequestBefore.invoke()
         runCatching { doRequest.invoke() }
             .onSuccess { emit(Result.success(it)) }
-            .onFailure { emit(Result.failure(ApiException(it.message))) }
+            .onFailure { emit(Result.failure(if (it is ApiException) it else ApiException(it.message))) }
     }
 }

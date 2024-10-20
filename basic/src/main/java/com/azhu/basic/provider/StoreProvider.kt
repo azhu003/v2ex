@@ -5,12 +5,26 @@ import com.tencent.mmkv.MMKV
 
 object StoreProvider {
 
-    lateinit var instance: MMKV
-        private set
+    private lateinit var instance: MMKV
 
     fun init(application: Application) {
         MMKV.initialize(application)
         instance = MMKV.defaultMMKV()
     }
 
+    fun save(key: String, value: String) {
+        instance.encode(key, value)
+    }
+
+    fun save(key: String, value: Boolean) {
+        instance.encode(key, value)
+    }
+
+    fun getString(key: String): String? {
+        return instance.decodeString(key)
+    }
+
+    fun getBool(key: String): Boolean {
+        return instance.decodeBool(key)
+    }
 }

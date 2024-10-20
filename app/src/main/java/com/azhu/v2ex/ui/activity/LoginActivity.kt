@@ -3,35 +3,35 @@ package com.azhu.v2ex.ui.activity
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
 import com.azhu.v2ex.ui.component.LoadingLayout
 import com.azhu.v2ex.ui.theme.custom
@@ -65,18 +65,15 @@ fun LoginPage(vm: LoginViewModel) {
 
     val form = vm.form
 
-    // Remember state for user inputs
-    var errorMessage by remember { mutableStateOf("") }
-
     LoadingLayout(vm.state, Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
                 .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
+            Spacer(Modifier.height(70.dp))
 
             TextField(
                 value = form.username,
@@ -84,12 +81,18 @@ fun LoginPage(vm: LoginViewModel) {
                 placeholder = { Text(text = context.getString(R.string.username_placeholder)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
+                shape = RoundedCornerShape(8.dp),
+                textStyle = TextStyle(fontSize = 14.sp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.custom.background, MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.custom.background),
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             TextField(
                 value = form.password,
@@ -97,66 +100,68 @@ fun LoginPage(vm: LoginViewModel) {
                 placeholder = { Text(text = context.getString(R.string.password_placeholder)) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AsyncImage(
-                model = vm.params.captchaImageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
+                shape = RoundedCornerShape(8.dp),
+                textStyle = TextStyle(fontSize = 14.sp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { vm.refreshCaptchaImage() },
+                    .background(MaterialTheme.custom.background),
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-            TextField(
-                value = form.captcha,
-                onValueChange = { form.captcha = it },
-                placeholder = { Text(text = context.getString(R.string.captcha_placeholder)) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.custom.background, MaterialTheme.shapes.medium)
-            )
+            Row {
 
-            Spacer(modifier = Modifier.height(16.dp))
+                AsyncImage(
+                    model = vm.params.captchaImageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Inside,
+                    clipToBounds = false,
+                    modifier = Modifier
+                        .width(140.dp)
+                        .align(Alignment.CenterVertically)
+                        .clickable { vm.refreshCaptchaImage() },
+                )
+
+                Spacer(Modifier.width(10.dp))
+
+                TextField(
+                    value = form.captcha,
+                    onValueChange = { form.captcha = it },
+                    placeholder = { Text(text = context.getString(R.string.captcha_placeholder)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    textStyle = TextStyle(fontSize = 14.sp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(MaterialTheme.custom.background),
+                )
+            }
+
+            Spacer(Modifier.height(16.dp))
 
             // Error Message
-            if (errorMessage.isNotEmpty()) {
-                Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+            if (vm.warning.isNotEmpty()) {
+                Text(
+                    text = vm.warning,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Login Button
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    when {
-                        form.username.isEmpty() -> {
-                            errorMessage = "Please enter username"
-                        }
-
-                        form.password.isEmpty() -> {
-                            errorMessage = "Please enter password"
-                        }
-
-                        form.captcha.isEmpty() -> {
-                            errorMessage = "Please enter captcha"
-                        }
-
-                        else -> {
-                            errorMessage = ""
-                            logger.info("点击了登录 ${form.username} ${form.password} ${form.captcha}")
-                            vm.login()
-                        }
-                    }
-                },
+                onClick = { vm.login() },
             ) {
                 Text(text = context.getString(R.string.login), color = Color.White)
             }

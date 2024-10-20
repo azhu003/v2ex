@@ -18,7 +18,7 @@ import com.azhu.v2ex.ui.theme.highlightsDark
 import com.azhu.v2ex.ui.theme.highlightsLight
 import com.azhu.v2ex.ui.theme.onContainerSecondaryDark
 import com.azhu.v2ex.ui.theme.onContainerSecondaryLight
-import com.azhu.v2ex.utils.RegexConstant
+import com.azhu.v2ex.utils.Constant
 import com.azhu.v2ex.utils.V2exUtils
 
 /**
@@ -33,9 +33,9 @@ class URLClickableSpan(private val url: String) : ClickableSpan() {
             try {
                 if (V2exUtils.isRelativeURL(url)) {
                     if (V2exUtils.isMemberUrl(url)) {
-                        UserDetailsActivity.start(context, RegexConstant.MEMBER_USERNAME.find(url)?.value ?: "")
+                        UserDetailsActivity.start(context, Constant.MEMBER_USERNAME.find(url)?.value ?: "")
                     } else if (V2exUtils.isTopicUrl(url)) {
-                        TopicDetailsActivity.start(context, RegexConstant.TOPIC_ID.find(url)?.value ?: "")
+                        TopicDetailsActivity.start(context, Constant.TOPIC_ID.find(url)?.value ?: "")
                     } else {
                         logger.error("未处理的站内链接跳转 -> $url")
                     }

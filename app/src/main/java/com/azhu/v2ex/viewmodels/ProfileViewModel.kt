@@ -3,7 +3,9 @@ package com.azhu.v2ex.viewmodels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.azhu.basic.provider.StoreProvider
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.data.DataRepository
 import com.azhu.v2ex.data.UserProfile
@@ -11,6 +13,7 @@ import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
 import com.azhu.v2ex.ui.component.LoadingState
+import com.azhu.v2ex.utils.Constant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -20,7 +23,7 @@ import kotlinx.coroutines.flow.launchIn
  * @date: 2024-10-18 12:01
  * @version: 1.0.0
  */
-class ProfileViewModel : LazyLifecycleViewModel() {
+class ProfileViewModel : LifecycleViewModel() {
 
     var profile by mutableStateOf(UserProfile(false))
         internal set
@@ -30,6 +33,15 @@ class ProfileViewModel : LazyLifecycleViewModel() {
 
     override fun onLazyResume() {
         fetchUserProfile()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        val logged = StoreProvider.getBool(Constant.LOGGED_KEY)
+        if (logged) {
+            state.setLoading()
+            fetchUserProfile()
+        }
     }
 
     private fun fetchUserProfile() {

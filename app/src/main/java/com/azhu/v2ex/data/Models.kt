@@ -155,5 +155,5 @@ class LoginRequestParams {
 @Stable
 data class LoginResult(
     //登录失败的错误消息
-    val error: String? = null
+    var error: String? = null
 )

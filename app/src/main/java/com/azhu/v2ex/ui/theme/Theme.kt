@@ -60,8 +60,7 @@ val MaterialTheme.custom: CustomColorScheme
 private val LightColorScheme = lightColorScheme(
     primary = primaryColorLight,
     background = backgroundLight,
-
-    )
+)
 
 private val DarkColorScheme = darkColorScheme(
     primary = primaryColorDark,

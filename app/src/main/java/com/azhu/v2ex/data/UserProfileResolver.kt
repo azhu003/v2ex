@@ -1,6 +1,6 @@
 package com.azhu.v2ex.data
 
-import com.azhu.v2ex.utils.RegexConstant
+import com.azhu.v2ex.utils.Constant
 import org.jsoup.nodes.Document
 import kotlin.math.pow
 
@@ -24,7 +24,7 @@ class UserProfileResolver : BaseResolver<UserProfile>() {
 
             val boxDiv = document.select("div#Main div.box")
             profile.daysOfConsecutiveLogin = str {
-                RegexConstant.DAYS_OF_CONSECUTIVE_LOGIN.find(boxDiv.select("div.cell").last()?.text() ?: "")?.value
+                Constant.DAYS_OF_CONSECUTIVE_LOGIN.find(boxDiv.select("div.cell").last()?.text() ?: "")?.value
             }.toIntOrNull()
             profile.isClaimedLoginRewards = document.select("div#Main div.box").text().contains("每日登录奖励已领取")
             profile.balance = str {

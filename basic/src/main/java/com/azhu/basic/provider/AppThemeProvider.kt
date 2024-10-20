@@ -21,7 +21,7 @@ object AppThemeProvider {
     }
 
     private fun getAppThemeOfDefault(context: Context): AppTheme {
-        var theme = StoreProvider.instance.decodeString(KEY_APP_THEME)
+        var theme = StoreProvider.getString(KEY_APP_THEME)
         if (theme == null) {
             val manager = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
             theme = if (manager.nightMode == UiModeManager.MODE_NIGHT_YES) {
@@ -34,7 +34,7 @@ object AppThemeProvider {
     }
 
     fun onAppThemeChanged(theme: AppTheme) {
-        StoreProvider.instance.encode(KEY_APP_THEME, theme.name)
+        StoreProvider.save(KEY_APP_THEME, theme.name)
         initThemeDelegate(theme)
         appTheme = theme
     }

@@ -2,7 +2,7 @@ package com.azhu.v2ex.data
 
 import android.text.TextUtils
 import com.azhu.v2ex.utils.DateTimeUtils
-import com.azhu.v2ex.utils.RegexConstant
+import com.azhu.v2ex.utils.Constant
 import org.jsoup.nodes.Document
 
 /**
@@ -30,7 +30,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         details.title = str { header.select("h1").text() }
         details.author = str { header.select("small.gray a[href^=/member/]").text() }
         details.clicks = str {
-            RegexConstant.CLICKS.find(header.select("small.gray").text() ?: "")?.value
+            Constant.CLICKS.find(header.select("small.gray").text() ?: "")?.value
         }
 
         details.time = str {
@@ -59,7 +59,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         details.replyCount = str {
             val cells = document.select("div.cell[id^=r_]")
             val text = cells.parents().first()?.select("span.gray")?.text() ?: ""
-            RegexConstant.REPLY_NUMBERS.find(text)?.value
+            Constant.REPLY_NUMBERS.find(text)?.value
         }
     }
 
@@ -70,7 +70,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         for (cell in cells) {
             catch {
                 val reply = TopicReplyItem()
-                reply.id = str { RegexConstant.REPLY_ID.find(cell.attr("id"))?.value }
+                reply.id = str { Constant.REPLY_ID.find(cell.attr("id"))?.value }
                 val tr = cell.select("tr")
                 reply.avatar = str { tr.select("img.avatar").attr("src") }
                 reply.username = str { tr.select("strong a[href^=/member/]").text() }

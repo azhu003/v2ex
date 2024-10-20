@@ -1,7 +1,7 @@
 package com.azhu.v2ex.data
 
 import com.azhu.v2ex.utils.DateTimeUtils
-import com.azhu.v2ex.utils.RegexConstant
+import com.azhu.v2ex.utils.Constant
 import org.jsoup.nodes.Document
 
 /**
@@ -21,7 +21,7 @@ class TopicListResolver : BaseResolver<Pagination<Topic>>() {
                 topic.avatar = str { tr.select("img.avatar").attr("src") }
                 val topicInfo = tr.children()[2]  // <span class="topic_info">
                 val a = topicInfo.select("span.item_title > a")
-                topic.id = str { RegexConstant.TOPIC_ID.find(a.attr("href"))!!.value }
+                topic.id = str { Constant.TOPIC_ID.find(a.attr("href"))!!.value }
                 topic.title = str { a.text() }
                 topic.node = str { topicInfo.select("a.node").text() }
                 topic.author = str { topicInfo.select("a[href^=/member/]").first()?.text() ?: "" }

@@ -57,7 +57,7 @@ class PersistentCookieStore(context: Context) {
         val name = getCookieToken(cookie)
 
         // 将cookies缓存到内存中，如果缓存过期，就重置此cookie
-        if (cookie.persistent) {
+        if (cookie.persistent || cookie.expiresAt > System.currentTimeMillis()) {
             if (!cookies.containsKey(url.host)) {
                 cookies[url.host] = ConcurrentHashMap()
             }

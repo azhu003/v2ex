@@ -1,6 +1,8 @@
 package com.azhu.v2ex.data
 
 import com.azhu.basic.AppManager
+import com.azhu.basic.provider.logger
+import com.azhu.v2ex.http.ApiException
 import com.azhu.v2ex.http.Http
 import java.io.IOException
 import java.io.InputStream
@@ -62,14 +64,16 @@ class DataRepository private constructor() {
         password: Pair<String, String>,
         captcha: Pair<String, String>,
         nonce: String
-    ): LoginResult {
+    ): Any {
         val form = mutableMapOf<String, String>()
         form[username.first] = username.second
         form[password.first] = password.second
         form[captcha.first] = captcha.second
         form["once"] = nonce
-        val body = getHtmlFromAssets("signin_failed.html")
-//        val body = remote.service.signin(form).byteStream()
+        form["next"] = "/mission/daily"
+//        val body = getHtmlFromAssets("signin_failed.html")
+        logger.info("form -> $form")
+        val body = remote.service.signin(form).byteStream()
         return LoginResultResolver().resolver(body)
     }
 
