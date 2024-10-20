@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -120,17 +119,21 @@ class PersistentCookieStore(context: Context) {
      * @param cookie 要序列化的cookie
      * @return 序列化之后的string
      */
-    protected fun encodeCookie(cookie: SerializableCookies?): String? {
+    private fun encodeCookie(cookie: SerializableCookies?): String? {
         if (cookie == null) return null
-        val os = ByteArrayOutputStream()
+        val byteArrayInputStream = ByteArrayOutputStream()
+        var outputStream: ObjectOutputStream? = null
         try {
-            val outputStream = ObjectOutputStream(os)
+            outputStream = ObjectOutputStream(byteArrayInputStream)
             outputStream.writeObject(cookie)
         } catch (e: IOException) {
             Log.d(LOG_TAG, "IOException in encodeCookie", e)
             return null
+        } finally {
+            outputStream?.close()
+            byteArrayInputStream.close()
         }
-        return byteArrayToHexString(os.toByteArray())
+        return byteArrayToHexString(byteArrayInputStream.toByteArray())
     }
 
     /**
@@ -139,7 +142,7 @@ class PersistentCookieStore(context: Context) {
      * @param cookieString cookies string
      * @return cookie object
      */
-    protected fun decodeCookie(cookieString: String): Cookie? {
+    private fun decodeCookie(cookieString: String): Cookie? {
         val bytes = hexStringToByteArray(cookieString)
         val byteArrayInputStream = ByteArrayInputStream(bytes)
         var cookie: Cookie? = null
@@ -150,6 +153,8 @@ class PersistentCookieStore(context: Context) {
             Log.d(LOG_TAG, "IOException in decodeCookie", e)
         } catch (e: ClassNotFoundException) {
             Log.d(LOG_TAG, "ClassNotFoundException in decodeCookie", e)
+        } finally {
+            byteArrayInputStream.close()
         }
 
         return cookie
@@ -161,16 +166,17 @@ class PersistentCookieStore(context: Context) {
      * @param bytes byte array to be converted
      * @return string containing hex values
      */
-    protected fun byteArrayToHexString(bytes: ByteArray): String {
-        val sb = StringBuilder(bytes.size * 2)
-        for (element in bytes) {
-            val v = element.toInt() and 0xff
-            if (v < 16) {
-                sb.append('0')
-            }
-            sb.append(Integer.toHexString(v))
-        }
-        return sb.toString().uppercase(Locale.US)
+    private fun byteArrayToHexString(bytes: ByteArray): String {
+//        val sb = StringBuilder(bytes.size * 2)
+//        for (element in bytes) {
+//            val v = element.toInt() and 0xff
+//            if (v < 16) {
+//                sb.append('0')
+//            }
+//            sb.append(Integer.toHexString(v))
+//        }
+//        return sb.toString().uppercase(Locale.US)
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 
     /**
@@ -179,15 +185,23 @@ class PersistentCookieStore(context: Context) {
      * @param hexString string of hex-encoded values
      * @return decoded byte array
      */
-    protected fun hexStringToByteArray(hexString: String): ByteArray {
-        val len = hexString.length
-        val data = ByteArray(len / 2)
-        var i = 0
-        while (i < len) {
-            data[i / 2] =
-                ((hexString[i].digitToIntOrNull(16) ?: (-1 shl 4)) + hexString[i + 1].digitToIntOrNull(16)!!).toByte()
-            i += 2
+    private fun hexStringToByteArray(hexString: String): ByteArray {
+//        val len = hexString.length
+//        val data = ByteArray(len / 2)
+//        var i = 0
+//        while (i < len) {
+//            data[i / 2] =
+//                ((hexString[i].digitToIntOrNull(16) ?: (-1 shl 4)) + hexString[i + 1].digitToIntOrNull(16)!!).toByte()
+//            i += 2
+//        return data
+
+        // 过滤掉可能的空格等无效字符，并确保长度为偶数
+        val hex = hexString.filterNot { it.isWhitespace() }
+        require(hex.length % 2 == 0) { "Hex string must have an even length" }
+
+        return ByteArray(hex.length / 2) { i ->
+            val index = i * 2
+            hex.substring(index, index + 2).toInt(16).toByte()
         }
-        return data
     }
 }

@@ -72,7 +72,6 @@ class DataRepository private constructor() {
         form["once"] = nonce
         form["next"] = "/mission/daily"
 //        val body = getHtmlFromAssets("signin_failed.html")
-        logger.info("form -> $form")
         val body = remote.service.signin(form).byteStream()
         return LoginResultResolver().resolver(body)
     }

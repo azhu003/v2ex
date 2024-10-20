@@ -35,7 +35,7 @@ class SerializableCookies(@Transient private var cookies: Cookie) : Serializable
         out.writeBoolean(cookies.secure)
         out.writeBoolean(cookies.httpOnly)
         out.writeBoolean(cookies.hostOnly)
-        out.writeBoolean(cookies.persistent)
+//        out.writeBoolean(cookies.persistent)
     }
 
     @Throws(IOException::class, ClassNotFoundException::class)
@@ -48,7 +48,7 @@ class SerializableCookies(@Transient private var cookies: Cookie) : Serializable
         val secure = input.readBoolean()
         val httpOnly = input.readBoolean()
         val hostOnly = input.readBoolean()
-        val persistent = input.readBoolean()
+//        val persistent = input.readBoolean()
         var builder = Cookie.Builder()
         builder = builder.name(name)
         builder = builder.value(value)

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -103,12 +104,12 @@ fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                     .background("#CC4E616C".toColor(), MaterialTheme.shapes.large)
                     .padding(vertical = 2.dp, horizontal = 7.dp)
             )
+            Spacer(Modifier.width(7.dp))
             Image(
                 imageVector = Icons.Filled.AccountCircle,
                 contentDescription = null,
                 modifier = Modifier
                     .size(28.dp)
-                    .padding(end = 7.dp)
                     .clickable {
                         val nextTheme = AppThemeProvider.appTheme.nextTheme()
                         AppThemeProvider.onAppThemeChanged(nextTheme)
