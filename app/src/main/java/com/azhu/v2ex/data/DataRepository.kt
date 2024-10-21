@@ -1,11 +1,11 @@
 package com.azhu.v2ex.data
 
 import com.azhu.basic.AppManager
-import com.azhu.basic.provider.logger
-import com.azhu.v2ex.http.ApiException
 import com.azhu.v2ex.http.Http
+import kotlinx.coroutines.delay
 import java.io.IOException
 import java.io.InputStream
+import kotlin.random.Random
 
 /**
  * @author: Jerry
@@ -74,6 +74,18 @@ class DataRepository private constructor() {
 //        val body = getHtmlFromAssets("signin_failed.html")
         val body = remote.service.signin(form).byteStream()
         return LoginResultResolver().resolver(body)
+    }
+
+    suspend fun claimLoginRewards(once: String): Any {
+        delay(Random.nextLong(2000, 3000))
+//        val body = getHtmlFromAssets("daily.html")
+        val body = remote.service.claimLoginRewards(once).byteStream()
+        return ClaimLoginRewardsResolver().resolver(body)
+    }
+
+    suspend fun logout(username: String, once: String): Any {
+        val body = remote.service.logout(once, referer = "https://www.v2ex.com/member/$username").byteStream()
+        return LogoutResolver().resolver(body)
     }
 
     private fun getHtmlFromAssets(fileName: String): InputStream {

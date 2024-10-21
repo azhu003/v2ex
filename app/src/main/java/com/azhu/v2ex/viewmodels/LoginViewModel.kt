@@ -1,5 +1,6 @@
 package com.azhu.v2ex.viewmodels
 
+import android.app.Activity
 import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -97,7 +98,8 @@ class LoginViewModel : BaseViewModel() {
             .success {
                 warning = ""
                 StoreProvider.save(Constant.LOGGED_KEY, true)
-                toast(context, context.getString(R.string.login_succeed))
+                toast(context.getString(R.string.login_succeed))
+                context.setResult(Activity.RESULT_OK)
                 context.finish()
             }
             .launchIn(viewModelScope)

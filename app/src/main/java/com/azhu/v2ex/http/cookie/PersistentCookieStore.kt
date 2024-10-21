@@ -18,17 +18,17 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Zhaopo Liu
  * @see <a href="http://www.lzhpo.com/article/158">Android拓展okhttp3.Cookie实现Cookie管理(缓存、持久化、移除...)</a>
  */
-class PersistentCookieStore(context: Context) {
+object PersistentCookieStore {
 
-    companion object {
-        const val LOG_TAG: String = "PersistentCookieStore"
-        const val COOKIE_PREFS: String = "Cookies_Prefs"
-    }
+    private const val LOG_TAG: String = "PersistentCookieStore"
+    private const val COOKIE_PREFS: String = "Cookies_Prefs"
 
     private val cookies: MutableMap<String, ConcurrentHashMap<String, Cookie>> = HashMap()
-    private val cookiePrefs: SharedPreferences = context.getSharedPreferences(COOKIE_PREFS, 0)
+    private lateinit var cookiePrefs: SharedPreferences
 
-    init {
+    fun init(context: Context) {
+        cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0)
+
         // 将持久化的cookies缓存到内存中，即 map cookies
         val prefsMap = cookiePrefs.all
         for ((key, value) in prefsMap) {
@@ -48,7 +48,7 @@ class PersistentCookieStore(context: Context) {
         }
     }
 
-    protected fun getCookieToken(cookie: Cookie): String {
+    private fun getCookieToken(cookie: Cookie): String {
         return cookie.name + "@" + cookie.domain
     }
 

@@ -34,6 +34,10 @@ class UserProfileResolver : BaseResolver<UserProfile>() {
                 balanceArray.forEachIndexed { index, b -> balance += b.toInt() * 100.0.pow(index).toInt() }
                 return@str "$balance"
             }
+            if (!profile.isClaimedLoginRewards) {
+                val input = document.select("div#Main div.box input[onclick^=location.href]").attr("onclick")
+                profile.claimedLoginRewardNonce = Constant.CLAIMED_LOGIN_REWARD_ONCE.find(input)?.value
+            }
         }
         return profile
     }

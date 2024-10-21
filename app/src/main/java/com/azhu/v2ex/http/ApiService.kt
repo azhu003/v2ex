@@ -42,4 +42,18 @@ interface ApiService {
         @Header("Origin") origin: String = "https://www.v2ex.com",
         @Header("Referer") referer: String = "https://www.v2ex.com/signin?next=/mission/daily"
     ): ResponseBody
+
+    @GET("/mission/daily/redeem")
+    suspend fun claimLoginRewards(
+        @Query("once") once: String,
+        @Header("Origin") origin: String = "https://www.v2ex.com",
+        @Header("Referer") referer: String = "https://www.v2ex.com/signin?next=/mission/daily"
+    ): ResponseBody
+
+    @GET("/signout")
+    suspend fun logout(
+        @Query("once") nonce: String,
+        @Header("Origin") origin: String = "https://www.v2ex.com",
+        @Header("Referer") referer: String = "https://www.v2ex.com/member/{username}"
+    ): ResponseBody
 }

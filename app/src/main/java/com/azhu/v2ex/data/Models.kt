@@ -90,9 +90,9 @@ data class UserDetails(
     var no: String = "", //注册序号
     var registerAt: String = "", //注册时间
     var ranking: String = "", //排名
-    var topics: MutableList<UserRecentlyTopic> = mutableListOf(),
+    var topics: SnapshotStateList<UserRecentlyTopic> = mutableStateListOf(),
     var topicInvisible: Boolean = false,
-    var replys: MutableList<UserRecentlyReply> = mutableListOf()
+    var replys: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
 )
 
 //最近发布的主题
@@ -140,6 +140,10 @@ data class UserProfile(
     var claimedLoginRewardNonce: String? = null,
     var daysOfConsecutiveLogin: Int? = 0,
     var balance: String = "",
+
+    var topicInvisible: Boolean = false,
+    var topics: SnapshotStateList<UserRecentlyTopic> = mutableStateListOf(),
+    var replys: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
 )
 
 //登录时的动态参数名
@@ -153,7 +157,6 @@ class LoginRequestParams {
 }
 
 @Stable
-data class LoginResult(
-    //登录失败的错误消息
-    var error: String? = null
+data class SettingsState(
+    var isLogoutSuccessfully: MutableState<Boolean> = mutableStateOf(false)
 )

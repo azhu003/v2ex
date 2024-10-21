@@ -7,6 +7,9 @@ package com.azhu.v2ex.utils
  */
 object Constant {
 
+    const val LOGGED_KEY = "logged"
+    const val CURRENT_LOGGED_USER = "current_logged_user"
+
     //主题ID /t/1077894#reply5
     val TOPIC_ID by lazy { Regex("(?<=/t/)\\d{1,8}") }
 
@@ -38,5 +41,7 @@ object Constant {
     //连续登录天数
     val DAYS_OF_CONSECUTIVE_LOGIN by lazy { Regex("(?<=已连续登录\\s)\\d*?(?=\\s天)") }
 
-    const val LOGGED_KEY = "logged"
+    //领取每日奖励once ClaimedLoginRewards
+    val CLAIMED_LOGIN_REWARD_ONCE by lazy { Regex("(?<=once=)\\d*") }
+
 }

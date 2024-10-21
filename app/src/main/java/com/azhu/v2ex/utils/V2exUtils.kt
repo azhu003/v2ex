@@ -1,6 +1,9 @@
 package com.azhu.v2ex.utils
 
 import android.net.Uri
+import com.azhu.basic.AppManager
+import com.azhu.basic.provider.StoreProvider
+import com.azhu.v2ex.http.cookie.PersistentCookieStore
 
 /**
  * @author: azhu
@@ -35,6 +38,28 @@ object V2exUtils {
 
     fun toAbsoluteURL(relativeURL: String): String {
         return "https://www.v2ex.com$relativeURL"
+    }
+
+    fun isLogged(): Boolean {
+        return StoreProvider.getBool(Constant.LOGGED_KEY)
+    }
+
+    fun login(username: String) {
+        StoreProvider.save(Constant.CURRENT_LOGGED_USER, username)
+        StoreProvider.save(Constant.LOGGED_KEY, true)
+    }
+
+    fun logout() {
+        val context = AppManager.getCurrentActivity()
+        if (context != null) {
+            PersistentCookieStore.removeAll()
+            StoreProvider.remove(Constant.CURRENT_LOGGED_USER)
+            StoreProvider.remove(Constant.LOGGED_KEY)
+        }
+    }
+
+    fun getCurrentUsername(): String? {
+        return StoreProvider.getString(Constant.CURRENT_LOGGED_USER)
     }
 
 }

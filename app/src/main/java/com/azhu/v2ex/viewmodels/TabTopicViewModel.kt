@@ -1,8 +1,9 @@
 package com.azhu.v2ex.viewmodels
 
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -22,8 +23,8 @@ import kotlinx.coroutines.flow.Flow
  */
 class TabTopicViewModel : BaseViewModel() {
 
-    private val _isRefreshing: MutableState<Boolean> = mutableStateOf(false)
-    val isRefreshing: Boolean get() = _isRefreshing.value
+    var isRefreshing by mutableStateOf(false)
+        internal set
 
     val tabs: SnapshotStateList<TabPair> = mutableStateListOf()
     private val mPagerMap: MutableMap<String, Flow<PagingData<Topic>>> = mutableMapOf()
@@ -56,10 +57,10 @@ class TabTopicViewModel : BaseViewModel() {
     }
 
     fun setPullRefreshState() {
-        _isRefreshing.value = true
+        isRefreshing = true
     }
 
     fun setPullRefreshComplete() {
-        _isRefreshing.value = false
+        isRefreshing = false
     }
 }

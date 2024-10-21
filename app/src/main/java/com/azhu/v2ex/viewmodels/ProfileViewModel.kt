@@ -5,13 +5,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.azhu.basic.AppManager
 import com.azhu.basic.provider.StoreProvider
 import com.azhu.basic.provider.logger
+import com.azhu.v2ex.R
 import com.azhu.v2ex.data.DataRepository
 import com.azhu.v2ex.data.UserProfile
+import com.azhu.v2ex.ext.complete
 import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
+import com.azhu.v2ex.ext.startActivityClass
 import com.azhu.v2ex.ext.success
+import com.azhu.v2ex.http.KnownApiException
+import com.azhu.v2ex.ui.activity.LoginActivity
 import com.azhu.v2ex.ui.component.LoadingState
 import com.azhu.v2ex.utils.Constant
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +37,13 @@ class ProfileViewModel : LifecycleViewModel() {
     var state by mutableStateOf(LoadingState())
         internal set
 
+    //是否点击领取连续登录奖励按钮
+    var isClaimLoginRewardsEnable by mutableStateOf(false)
+
+    var isRefreshingByUser by mutableStateOf(false)
+
+    private var isRequestLogin = false
+
     override fun onLazyResume() {
         fetchUserProfile()
     }
@@ -38,25 +51,84 @@ class ProfileViewModel : LifecycleViewModel() {
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
         val logged = StoreProvider.getBool(Constant.LOGGED_KEY)
-        if (logged) {
+        if (logged && isRequestLogin) {
+            isRequestLogin = false
             state.setLoading()
             fetchUserProfile()
         }
     }
 
-    private fun fetchUserProfile() {
+    private fun fetchUserProfile(isRefreshByUser: Boolean = false) {
         http.flows { DataRepository.INSTANCE.getUserProfile() }
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
             .error {
-                state.setLoadError("获取用户信息失败")
+                if (!isRefreshByUser) state.setLoadError("获取用户信息失败")
                 logger.warning("获取用户信息失败 $it")
             }
             .success {
                 profile = it
-                state.setLoadSuccess()
+                isClaimLoginRewardsEnable = !it.isClaimedLoginRewards
+                if (!isRefreshByUser) state.setLoadSuccess()
+
+                if (!profile.isUnlogged) {
+                    fetchRecentlyActivities()
+                }
+            }
+            .complete {
+                isRefreshingByUser = false
             }
             .launchIn(viewModelScope)
     }
 
+    private fun fetchRecentlyActivities() {
+        http.flows { DataRepository.INSTANCE.getUserDetails(profile.username) }
+            .smap { Result.success(it) }
+            .flowOn(Dispatchers.IO)
+            .error { logger.error(it?.message ?: "error message is null") }
+            .success {
+                profile.topicInvisible = it.topicInvisible
+                profile.topics.addAll(it.topics)
+                profile.replys.addAll(it.replys)
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun onRefresh() {
+        isRefreshingByUser = true
+        fetchUserProfile(true)
+    }
+
+    fun toLogin() {
+        isRequestLogin = true
+        AppManager.getCurrentActivity()?.startActivityClass(LoginActivity::class)
+    }
+
+    fun claimLoginRewards() {
+        if (profile.isClaimedLoginRewards && profile.claimedLoginRewardNonce.isNullOrBlank()) {
+            logger.info("已领取过奖励 once: ${profile.claimedLoginRewardNonce}")
+            return
+        }
+        val context = AppManager.getCurrentActivity()
+        http.flows(onRequestBefore = { isClaimLoginRewardsEnable = false }) {
+            DataRepository.INSTANCE.claimLoginRewards(profile.claimedLoginRewardNonce!!)
+        }
+            .smap { Result.success(it) }
+            .flowOn(Dispatchers.IO)
+            .error {
+                logger.warning("领取连续登录奖励失败 $it")
+                val msg = when (it) {
+                    is KnownApiException -> it.message
+                    else -> context?.getString(R.string.claim_login_rewards_failed)
+                }
+                if (msg != null) toast(msg)
+            }
+            .success {
+                context?.let { context -> toast(context.getString(R.string.claim_login_rewards_succeed)) }
+            }
+            .complete {
+                isClaimLoginRewardsEnable = !profile.isClaimedLoginRewards
+            }
+            .launchIn(viewModelScope)
+    }
 }

@@ -34,7 +34,7 @@ object Retrofits {
         // 打印请求和响应的所有内容，响应状态码和执行时间等等。
         interceptor.level = HttpLoggingInterceptor.Level.HEADERS
 
-        val cookieManager = CookieManager(context)
+        val cookieManager = CookieManager()
         val okHttpClient = OkHttpClient()
             .newBuilder()
             .addInterceptor(RequestHeaderInterceptor(cookieManager))

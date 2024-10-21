@@ -14,21 +14,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -50,15 +55,19 @@ import com.azhu.basic.provider.nextTheme
 import com.azhu.v2ex.R
 import com.azhu.v2ex.ext.startActivityClass
 import com.azhu.v2ex.ext.toColor
-import com.azhu.v2ex.ui.activity.LoginActivity
+import com.azhu.v2ex.ui.activity.SettingActivity
 import com.azhu.v2ex.ui.component.LoadingLayout
 import com.azhu.v2ex.ui.component.ObserveLifecycleLayout
+import com.azhu.v2ex.ui.component.RecentlyPublishedTopic
+import com.azhu.v2ex.ui.component.RecentlyReply
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.ProfileViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilePage(vm: ProfileViewModel) {
+    val pullToRefreshState = rememberPullToRefreshState()
     Scaffold { pv ->
         Column(modifier = Modifier.fillMaxSize()) {
             ObserveLifecycleLayout(observer = vm) {
@@ -67,10 +76,18 @@ fun ProfilePage(vm: ProfileViewModel) {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     if (vm.profile.isUnlogged) {
-                        Unlogged()
+                        Unlogged(vm)
                     } else {
-                        UserProfile(vm, pv.calculateTopPadding())
-                        UserFeed()
+                        PullToRefreshBox(
+                            isRefreshing = vm.isRefreshingByUser,
+                            onRefresh = { vm.onRefresh() },
+                            state = pullToRefreshState,
+                        ) {
+                            Column(Modifier.verticalScroll(rememberScrollState())) {
+                                UserProfile(vm, pv.calculateTopPadding())
+                                UserFeed(vm)
+                            }
+                        }
                     }
                 }
             }
@@ -79,7 +96,7 @@ fun ProfilePage(vm: ProfileViewModel) {
 }
 
 @Composable
-fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
+private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
     val context = LocalContext.current
     val profile = vm.profile
     Column(
@@ -103,6 +120,7 @@ fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                 modifier = Modifier
                     .background("#CC4E616C".toColor(), MaterialTheme.shapes.large)
                     .padding(vertical = 2.dp, horizontal = 7.dp)
+                    .clickable(vm.isClaimLoginRewardsEnable) { vm.claimLoginRewards() }
             )
             Spacer(Modifier.width(7.dp))
             Image(
@@ -213,19 +231,30 @@ fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                     .height(24.dp)
                     .border(0.3f.dp, Color.White, RoundedCornerShape(15.dp))
                     .padding(vertical = 4.dp, horizontal = 10.dp)
+                    .clickable { context.startActivityClass(SettingActivity::class) }
             )
         }
     }
+
 }
 
 @Composable
-fun UserFeed() {
+private fun UserFeed(vm: ProfileViewModel) {
     val context = LocalContext.current
+    val profile = vm.profile
     val tabs = remember { context.resources.getStringArray(R.array.user_feed_tabs).toList() }
     val pageState = rememberPagerState { tabs.size }
     val coroutineScope = rememberCoroutineScope()
 
-    TabRow(selectedTabIndex = 0) {
+    TabRow(
+        selectedTabIndex = 0,
+        divider = {},
+        indicator = { positions ->
+            TabRowDefaults.PrimaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(positions[pageState.currentPage])
+            )
+        }
+    ) {
         tabs.forEachIndexed { index, item ->
             Tab(
                 selected = pageState.currentPage == index,
@@ -243,19 +272,16 @@ fun UserFeed() {
     HorizontalPager(
         state = pageState,
         beyondViewportPageCount = 1,
-    ) { _ ->
-        LazyColumn {
-            items(20) {
-                key("item$it") {
-                    Text(text = "Hello $it", textDecoration = null)
-                }
-            }
+    ) { pager ->
+        when (pager) {
+            0 -> RecentlyPublishedTopic(profile.topics, profile.topicInvisible, profile.username)
+            1 -> RecentlyReply(profile.replys)
         }
     }
 }
 
 @Composable
-fun Unlogged() {
+private fun Unlogged(vm: ProfileViewModel) {
     val context = LocalContext.current
     Box(Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
@@ -269,9 +295,7 @@ fun Unlogged() {
                 modifier = Modifier
                     .height(36.dp)
                     .align(Alignment.CenterHorizontally),
-                onClick = {
-                    context.startActivityClass(LoginActivity::class)
-                }
+                onClick = { vm.toLogin() }
             ) {
                 Text(context.getString(R.string.goto_login), color = Color.White)
             }

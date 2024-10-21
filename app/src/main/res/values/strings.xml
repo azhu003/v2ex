@@ -38,5 +38,11 @@
     <string name="password_placeholder">请输入密码</string>
     <string name="captcha_placeholder">请输入图中的验证码</string>
     <string name="login_succeed">登录成功</string>
+    <string name="claim_login_rewards_succeed">领取成功</string>
+    <string name="claim_login_rewards_failed">领取失败，请稍后再试</string>
+
+    <string name="settings">设置</string>
+    <string name="logout">退出登录</string>
+    <string name="logout_succeed">退出登录成功</string>
 
 </resources>

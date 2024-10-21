@@ -115,7 +115,6 @@ fun LoginPage(vm: LoginViewModel) {
             Spacer(Modifier.height(16.dp))
 
             Row {
-
                 AsyncImage(
                     model = vm.params.captchaImageUrl,
                     contentDescription = null,

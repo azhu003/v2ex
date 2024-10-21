@@ -1,6 +1,7 @@
 package com.azhu.v2ex.data
 
 import com.azhu.v2ex.http.ApiException
+import com.azhu.v2ex.utils.V2exUtils
 import org.jsoup.nodes.Document
 
 /**
@@ -14,6 +15,11 @@ class LoginResultResolver : BaseResolver<Any>() {
         val error = str { document.select("div.problem li").text() }
         if (error.isNotEmpty()) {
             throw ApiException(error)
+        } else {
+            val username = document.select("div#Rightbar a[href^=/member/]").text()
+            if (username.isNotEmpty()) {
+                V2exUtils.login(username)
+            }
         }
         return Unit
     }

@@ -1,7 +1,7 @@
 package com.azhu.v2ex.viewmodels
 
-import android.content.Context
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.azhu.basic.AppManager
@@ -25,11 +25,16 @@ open class BaseViewModel : ViewModel() {
         Http()
     }
 
-    fun toast(context: Context, message: String?) {
-        if (message.isNullOrBlank()) {
-            return
+    fun toast(message: String) {
+        AppManager.getCurrentActivity().let {
+            Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
         }
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun toast(@StringRes string: Int) {
+        AppManager.getCurrentActivity().let {
+            Toast.makeText(it, string, Toast.LENGTH_SHORT).show()
+        }
     }
 
     protected fun getHtmlFromAssets(fileName: String) = flow<Result<InputStream>> {

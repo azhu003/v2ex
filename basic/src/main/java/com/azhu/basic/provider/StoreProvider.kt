@@ -27,4 +27,6 @@ object StoreProvider {
     fun getBool(key: String): Boolean {
         return instance.decodeBool(key)
     }
+
+    fun remove(key: String) = instance.remove(key)
 }
