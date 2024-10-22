@@ -161,6 +161,7 @@ fun LoginPage(vm: LoginViewModel) {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { vm.login() },
+                enabled = vm.ui.isLoading.value
             ) {
                 Text(text = context.getString(R.string.login), color = Color.White)
             }

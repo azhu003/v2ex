@@ -88,6 +88,23 @@ class DataRepository private constructor() {
         return LogoutResolver().resolver(body)
     }
 
+    suspend fun getNodesFromCollection(): List<NodeInfo> {
+        val body = remote.service.getNodesFromCollection().byteStream()
+        return NodeCollectionResolver().resolver(body)
+    }
+
+
+    suspend fun getTopicsFromCollection(): List<Topic> {
+        val body = remote.service.getTopicsFromCollection().byteStream()
+        val pagination = TopicListResolver().resolver(body)
+        return pagination.data
+    }
+
+    suspend fun getFollowings(page: Int = 1): Pagination<Topic> {
+        val body = remote.service.getFollowing(page).byteStream()
+        return TopicListResolver().resolver(body)
+    }
+
     private fun getHtmlFromAssets(fileName: String): InputStream {
         val context = AppManager.getCurrentActivity()
         var input: InputStream? = null

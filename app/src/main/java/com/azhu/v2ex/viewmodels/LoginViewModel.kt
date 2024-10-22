@@ -12,6 +12,8 @@ import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.DataRepository
 import com.azhu.v2ex.data.LoginRequestParams
+import com.azhu.v2ex.data.LoginUiState
+import com.azhu.v2ex.ext.complete
 import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
@@ -30,6 +32,8 @@ import java.time.ZoneOffset
  */
 class LoginViewModel : BaseViewModel() {
 
+    val ui = LoginUiState()
+
     var state by mutableStateOf(LoadingState())
         internal set
 
@@ -41,6 +45,7 @@ class LoginViewModel : BaseViewModel() {
     var warning by mutableStateOf("")
 
     fun fetchLoginParams() {
+        ui.isLoading.value = false
         http.flows { DataRepository.INSTANCE.getSigninParams() }
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
@@ -51,6 +56,9 @@ class LoginViewModel : BaseViewModel() {
             .success {
                 params = it
                 state.setLoadSuccess()
+            }
+            .complete {
+                ui.isLoading.value = true
             }
             .launchIn(viewModelScope)
     }
@@ -92,6 +100,7 @@ class LoginViewModel : BaseViewModel() {
             .flowOn(Dispatchers.IO)
             .error {
                 warning = it?.message ?: ""
+                fetchLoginParams()
                 refreshCaptchaImage()
                 logger.warning("登录失败 $it")
             }

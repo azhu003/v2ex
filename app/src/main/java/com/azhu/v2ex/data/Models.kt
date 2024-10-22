@@ -146,6 +146,18 @@ data class UserProfile(
     var replys: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
 )
 
+@Stable
+data class NodeInfo(
+    var name: String = "",
+    var image: String = "",
+    var comments: String = "",
+)
+
+@Stable
+data class LoginUiState(
+    val isLoading: MutableState<Boolean> = mutableStateOf(false)
+)
+
 //登录时的动态参数名
 @Stable
 class LoginRequestParams {

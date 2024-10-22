@@ -31,7 +31,7 @@ class TopicListResolver : BaseResolver<Pagination<Topic>>() {
             }
         }
         //分页数据
-        val pages = document.select("div.ps_container").first()?.select("a[href^=/recent?p]")
+        val pages = document.select("div.ps_container").first()?.select("a[href]")
         pagination.page = pages?.select("a.page_current")?.text()?.toIntOrNull() ?: 1
         pagination.total = pages?.last()?.text()?.toIntOrNull() ?: 1
         return pagination

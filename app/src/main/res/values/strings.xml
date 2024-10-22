@@ -15,7 +15,7 @@
 
     <string name="node_collection">节点收藏</string>
     <string name="topic_collection">主题收藏</string>
-    <string name="special_attention">特别关注</string>
+    <string name="following">特别关注</string>
     <string name="account_balance">账户余额</string>
     <string name="claim_login_rewards">领取登录奖励</string>
     <string name="claimed_login_rewards">已领取登录奖励</string>
@@ -28,6 +28,13 @@
     <string-array name="user_feed_tabs">
         <item>最近主题</item>
         <item>最近回复</item>
+    </string-array>
+
+    <string name="my_collection">我的收藏</string>
+    <string-array name="collection_tab">
+        <item>@string/node_collection</item>
+        <item>@string/topic_collection</item>
+        <item>@string/following</item>
     </string-array>
 
     <string name="loading">加载中</string>

@@ -56,4 +56,15 @@ interface ApiService {
         @Header("Origin") origin: String = "https://www.v2ex.com",
         @Header("Referer") referer: String = "https://www.v2ex.com/member/{username}"
     ): ResponseBody
+
+    @GET("/my/nodes")
+    suspend fun getNodesFromCollection(): ResponseBody
+
+    @GET("/my/topics")
+    suspend fun getTopicsFromCollection(): ResponseBody
+
+    @GET("/my/following")
+    suspend fun getFollowing(@Query("p") page: Int): ResponseBody
+
+
 }

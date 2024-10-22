@@ -39,11 +39,21 @@ import com.azhu.v2ex.ui.theme.custom
  */
 @Composable
 fun RecentlyPublishedTopic(details: UserDetails) {
-    RecentlyPublishedTopic(details.topics, details.topicInvisible, details.username)
+    RecentlyPublishedTopic(details.topics, details.topicInvisible, details.username, true)
 }
 
 @Composable
 fun RecentlyPublishedTopic(topics: SnapshotStateList<UserRecentlyTopic>, isInvisible: Boolean, username: String) {
+    RecentlyPublishedTopic(topics, isInvisible, username, false)
+}
+
+@Composable
+private fun RecentlyPublishedTopic(
+    topics: SnapshotStateList<UserRecentlyTopic>,
+    isInvisible: Boolean,
+    username: String,
+    showHead: Boolean
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -51,25 +61,27 @@ fun RecentlyPublishedTopic(topics: SnapshotStateList<UserRecentlyTopic>, isInvis
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.custom.container)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    logger.info("查看更多")
-                }
-                .padding(12.dp)
-        ) {
-            Text(
-                text = context.getString(R.string.recently_published),
-                color = MaterialTheme.custom.onContainerPrimary,
-                fontSize = TextUnit(16f, TextUnitType.Sp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = MaterialTheme.custom.onContainerSecondary
-            )
+        if (showHead) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        logger.info("查看更多")
+                    }
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.recently_published),
+                    color = MaterialTheme.custom.onContainerPrimary,
+                    fontSize = TextUnit(16f, TextUnitType.Sp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.custom.onContainerSecondary
+                )
+            }
         }
         if (isInvisible) {
             //主题列表被隐藏

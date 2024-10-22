@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,28 +16,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,14 +48,15 @@ import com.azhu.basic.provider.nextTheme
 import com.azhu.v2ex.R
 import com.azhu.v2ex.ext.startActivityClass
 import com.azhu.v2ex.ext.toColor
+import com.azhu.v2ex.ui.activity.CollectionActivity
 import com.azhu.v2ex.ui.activity.SettingActivity
 import com.azhu.v2ex.ui.component.LoadingLayout
 import com.azhu.v2ex.ui.component.ObserveLifecycleLayout
 import com.azhu.v2ex.ui.component.RecentlyPublishedTopic
 import com.azhu.v2ex.ui.component.RecentlyReply
+import com.azhu.v2ex.ui.component.TabPager
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.ProfileViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,10 +118,13 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
             )
             Spacer(Modifier.width(7.dp))
             Image(
-                imageVector = Icons.Filled.AccountCircle,
+                painter = painterResource(if (AppThemeProvider.isDark()) R.drawable.light_mode else R.drawable.dark_mode),
                 contentDescription = null,
+                contentScale = ContentScale.Inside,
                 modifier = Modifier
-                    .size(28.dp)
+                    .size(24.dp)
+                    .padding(2.dp)
+                    .indication(remember { MutableInteractionSource() }, null)
                     .clickable {
                         val nextTheme = AppThemeProvider.appTheme.nextTheme()
                         AppThemeProvider.onAppThemeChanged(nextTheme)
@@ -165,7 +162,10 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
         Row(Modifier.padding(top = 15.dp), verticalAlignment = Alignment.CenterVertically) {
 
             //节点收藏
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable { CollectionActivity.start(context, 0) }
+            ) {
                 Text(
                     text = "${profile.numberOfNodeCollection}",
                     color = Color.White,
@@ -181,7 +181,9 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
             //主题收藏
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(horizontal = 18.dp)
+                modifier = Modifier
+                    .padding(horizontal = 18.dp)
+                    .clickable { CollectionActivity.start(context, 1) }
             ) {
                 Text(
                     text = "${profile.numberOfTopicCollection}",
@@ -189,21 +191,24 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                     fontSize = TextUnit(14f, TextUnitType.Sp),
                 )
                 Text(
-                    text = context.getString(R.string.node_collection),
+                    text = context.getString(R.string.topic_collection),
                     color = MaterialTheme.custom.onBackgroundSecondary,
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
                     fontSize = TextUnit(10f, TextUnitType.Sp),
                 )
             }
             //特别关注
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable { CollectionActivity.start(context, 2) }
+            ) {
                 Text(
                     text = "${profile.numberOfFollowing}",
                     color = Color.White,
                     fontSize = TextUnit(14f, TextUnitType.Sp),
                 )
                 Text(
-                    text = context.getString(R.string.node_collection),
+                    text = context.getString(R.string.following),
                     color = MaterialTheme.custom.onBackgroundSecondary,
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
                     fontSize = TextUnit(10f, TextUnitType.Sp),
@@ -242,40 +247,11 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
 private fun UserFeed(vm: ProfileViewModel) {
     val context = LocalContext.current
     val profile = vm.profile
-    val tabs = remember { context.resources.getStringArray(R.array.user_feed_tabs).toList() }
-    val pageState = rememberPagerState { tabs.size }
-    val coroutineScope = rememberCoroutineScope()
 
-    TabRow(
-        selectedTabIndex = 0,
-        divider = {},
-        indicator = { positions ->
-            TabRowDefaults.PrimaryIndicator(
-                modifier = Modifier.tabIndicatorOffset(positions[pageState.currentPage])
-            )
-        }
-    ) {
-        tabs.forEachIndexed { index, item ->
-            Tab(
-                selected = pageState.currentPage == index,
-                selectedContentColor = MaterialTheme.custom.primary,
-                onClick = { coroutineScope.launch { pageState.animateScrollToPage(index) } },
-                text = {
-                    Text(
-                        text = item,
-                        color = if (pageState.currentPage == index) MaterialTheme.custom.primary else MaterialTheme.custom.onContainerPrimary
-                    )
-                },
-            )
-        }
-    }
-    HorizontalPager(
-        state = pageState,
-        beyondViewportPageCount = 1,
-    ) { pager ->
-        when (pager) {
+    TabPager(tabArray = context.resources.getStringArray(R.array.user_feed_tabs)) {
+        when (it) {
             0 -> RecentlyPublishedTopic(profile.topics, profile.topicInvisible, profile.username)
-            1 -> RecentlyReply(profile.replys)
+            1 -> RecentlyReply(profile.replys, false)
         }
     }
 }

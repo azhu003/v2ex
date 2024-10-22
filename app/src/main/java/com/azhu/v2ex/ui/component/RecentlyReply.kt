@@ -34,7 +34,7 @@ import com.azhu.v2ex.ui.theme.custom
  * @version: 1.0.0
  */
 @Composable
-fun RecentlyReply(replys: List<UserRecentlyReply>) {
+fun RecentlyReply(replys: List<UserRecentlyReply>, showHead: Boolean = true) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -42,25 +42,27 @@ fun RecentlyReply(replys: List<UserRecentlyReply>) {
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.custom.container)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    logger.info("查看更多回复")
-                }
-                .padding(12.dp)
-        ) {
-            Text(
-                text = context.getString(R.string.recently_replied),
-                color = MaterialTheme.custom.onContainerPrimary,
-                fontSize = TextUnit(16f, TextUnitType.Sp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = MaterialTheme.custom.onContainerSecondary
-            )
+        if (showHead) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        logger.info("查看更多回复")
+                    }
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.recently_replied),
+                    color = MaterialTheme.custom.onContainerPrimary,
+                    fontSize = TextUnit(16f, TextUnitType.Sp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.custom.onContainerSecondary
+                )
+            }
         }
         val collection = replys.withIndex()
         for ((index, reply) in collection) {
