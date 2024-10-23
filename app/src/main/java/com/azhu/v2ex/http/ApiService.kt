@@ -66,5 +66,8 @@ interface ApiService {
     @GET("/my/following")
     suspend fun getFollowing(@Query("p") page: Int): ResponseBody
 
+    @GET("/go/{node}")
+    suspend fun getTopicsByNode(@Path("node") node: String, @Query("p") page: Int): ResponseBody
+
 
 }

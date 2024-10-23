@@ -1,5 +1,6 @@
 package com.azhu.v2ex.data
 
+import com.azhu.v2ex.utils.Constant
 import org.jsoup.nodes.Document
 
 /**
@@ -14,9 +15,10 @@ class NodeCollectionResolver : BaseResolver<List<NodeInfo>>() {
         val array = document.select("div#my-nodes a.fav-node")
         array.forEach { a ->
             val node = NodeInfo()
-            node.name = a.select("span.fav-node-name").text()
-            node.image = a.select("img[src]").attr("src")
-            node.comments = a.select("span.f12.fade").text().trim()
+            node.key = str { Constant.NODE_NAME.find(a.select("a[href^=/go/]").attr("href"))?.value }
+            node.name = str { a.select("span.fav-node-name").text() }
+            node.image = str { a.select("img[src]").attr("src") }
+            node.comments = str { a.select("span.f12.fade").text().trim() }
             nodes.add(node)
         }
         return nodes

@@ -24,9 +24,7 @@ data class Pagination<T>(
     val data: SnapshotStateList<T> = mutableStateListOf()
 ) {
     val hasNext: MutableState<Boolean> = mutableStateOf(page < total)
-
     val nextPage: Int get() = if (page < total) page + 1 else 1
-
 }
 
 @Stable
@@ -148,6 +146,7 @@ data class UserProfile(
 
 @Stable
 data class NodeInfo(
+    var key: String = "",
     var name: String = "",
     var image: String = "",
     var comments: String = "",
@@ -171,4 +170,14 @@ class LoginRequestParams {
 @Stable
 data class SettingsState(
     var isLogoutSuccessfully: MutableState<Boolean> = mutableStateOf(false)
+)
+
+@Stable
+data class TopicByNode(
+    var nodeName: String = "",
+    var nodeImage: String = "",
+    var intro: String = "",
+    var comments: String = "",
+    var isCollected: Boolean = false,
+    var pagination: Pagination<Topic> = Pagination()
 )

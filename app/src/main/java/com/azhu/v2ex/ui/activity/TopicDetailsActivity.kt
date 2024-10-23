@@ -67,7 +67,10 @@ class TopicDetailsActivity : BaseActivity() {
     override fun initialize() {
         super.initialize()
         val sid = intent.getStringExtra("tid")
-        if (TextUtils.isEmpty(sid)) finish()
+        if (TextUtils.isEmpty(sid)) {
+            finish()
+            return
+        }
         vm.state.value.tid = sid
         vm.fetchTopicDetails()
     }

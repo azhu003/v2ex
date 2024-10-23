@@ -52,4 +52,6 @@
     <string name="logout">退出登录</string>
     <string name="logout_succeed">退出登录成功</string>
 
+    <string name="topic_total">主题总数</string>
+
 </resources>

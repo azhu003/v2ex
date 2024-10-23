@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,18 +89,23 @@ private fun CollectionPage(
 @Composable
 private fun NodeCollection(vm: NodeCollectionViewModel) {
     val nodes = vm.nodes
+    val context = LocalContext.current
     ObserveLifecycleLayout(vm) {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
+            columns = GridCells.Fixed(3),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 10.dp),
+                .padding(vertical = 5.dp, horizontal = 10.dp)
+                .background(MaterialTheme.custom.container, MaterialTheme.shapes.extraSmall)
+                .padding(10.dp)
         ) {
             items(nodes.size) { index ->
                 val node = nodes[index]
                 key(node.name) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.clickable { TopicByNodeActivity.start(context, node.key) }) {
                         AsyncImage(
                             model = node.image,
                             contentDescription = null,

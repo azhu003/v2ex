@@ -55,7 +55,10 @@ class UserDetailsActivity : BaseActivity() {
     override fun initialize() {
         super.initialize()
         val username = intent.getStringExtra("username") ?: ""
-        if (username.isBlank()) finish()
+        if (username.isBlank()) {
+            finish()
+            return
+        }
         vm.state.value.username = username
         vm.fetchData()
     }

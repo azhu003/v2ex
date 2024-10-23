@@ -4,9 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,7 +53,7 @@ fun TopicItem(item: Topic) {
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .padding(end = 20.dp)
+                .padding(end = 15.dp)
                 .clip(MaterialTheme.shapes.small)
                 .size(40.dp)
                 .clickable {
@@ -60,22 +62,24 @@ fun TopicItem(item: Topic) {
         )
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = item.node,
-                    textAlign = TextAlign.Left,
-                    color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
-                    lineHeight = TextUnit(1f, TextUnitType.Sp),
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.extraSmall)
-                        .background(MaterialTheme.custom.backgroundSecondary)
-                        .padding(3.dp, 1.dp)
-                )
+                if (item.node.isNotBlank()) {
+                    Text(
+                        text = item.node,
+                        textAlign = TextAlign.Left,
+                        color = MaterialTheme.custom.onContainerPrimary,
+                        fontSize = TextUnit(12f, TextUnitType.Sp),
+                        lineHeight = TextUnit(1f, TextUnitType.Sp),
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .background(MaterialTheme.custom.backgroundSecondary)
+                            .padding(3.dp, 1.dp)
+                    )
+                    Spacer(Modifier.width(5.dp))
+                }
                 Text(
                     text = item.author,
                     fontSize = TextUnit(12f, TextUnitType.Sp),
                     color = MaterialTheme.custom.onContainerSecondary,
-                    modifier = Modifier.padding(start = 5.dp)
                 )
             }
             Column {

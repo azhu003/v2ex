@@ -93,7 +93,6 @@ class DataRepository private constructor() {
         return NodeCollectionResolver().resolver(body)
     }
 
-
     suspend fun getTopicsFromCollection(): List<Topic> {
         val body = remote.service.getTopicsFromCollection().byteStream()
         val pagination = TopicListResolver().resolver(body)
@@ -103,6 +102,16 @@ class DataRepository private constructor() {
     suspend fun getFollowings(page: Int = 1): Pagination<Topic> {
         val body = remote.service.getFollowing(page).byteStream()
         return TopicListResolver().resolver(body)
+    }
+
+    suspend fun getTopicsByNode(
+        node: String,
+        page: Int = 1,
+        onlyNodeInfo: Boolean = false,
+        onlyTopic: Boolean = false
+    ): TopicByNode {
+        val body = remote.service.getTopicsByNode(node, page).byteStream()
+        return TopicsByNodeResolver(onlyNodeInfo, onlyTopic).resolver(body)
     }
 
     private fun getHtmlFromAssets(fileName: String): InputStream {
