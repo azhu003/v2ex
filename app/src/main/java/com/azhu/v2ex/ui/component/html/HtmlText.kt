@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.azhu.basic.provider.AppThemeProvider
@@ -60,7 +61,13 @@ fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
             textview
         },
         update = {
-            val spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT, TextImageGetter(it, rect.floatValue), null)
+            val spanned =
+                HtmlCompat.fromHtml(
+                    html,
+                    HtmlCompat.FROM_HTML_MODE_COMPACT,
+                    TextImageGetter(it, rect.floatValue, fontSize.dp),
+                    null
+                )
             it.text = spanned
             ClickableSpanned.makeLinksClickable(it)
         },

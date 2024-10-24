@@ -3,7 +3,9 @@ package com.azhu.v2ex.ext
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import com.azhu.v2ex.http.ApiException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -64,4 +66,8 @@ fun <T, R> Flow<Result<T>>.smap(transform: suspend (T) -> Result<R>): Flow<Resul
 
 fun String.toColor(): Color {
     return Color(android.graphics.Color.parseColor(this))
+}
+
+fun Dp.toPx(): Float {
+    return value * Resources.getSystem().displayMetrics.density.toInt()
 }

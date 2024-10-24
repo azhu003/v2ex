@@ -6,9 +6,12 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LevelListDrawable
 import android.text.Html.ImageGetter
 import android.widget.TextView
+import androidx.annotation.Px
+import androidx.compose.ui.unit.Dp
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.azhu.basic.provider.AppThemeProvider
+import com.azhu.v2ex.ext.toPx
 import com.azhu.v2ex.ui.theme.onContainerSecondaryDark
 import com.azhu.v2ex.ui.theme.onContainerSecondaryLight
 import java.lang.ref.WeakReference
@@ -18,7 +21,7 @@ import java.lang.ref.WeakReference
  * @date: 2024-10-07 12:57
  * @version: 1.0.0
  */
-class TextImageGetter(textView: TextView, private val with: Float) : ImageGetter {
+class TextImageGetter(textView: TextView, private val with: Float, private val fontSize: Dp) : ImageGetter {
 
     private var mTextViewReference: WeakReference<TextView> = WeakReference(textView)
 
@@ -39,7 +42,7 @@ class TextImageGetter(textView: TextView, private val with: Float) : ImageGetter
             val request = ImageRequest.Builder(text.context)
                 .data(url)
                 .target { drawable ->
-                    resize(drawable, with)
+                    resize(drawable, with, fontSize)
                     //level=0 将占位图的大小设置为实际图片一致
                     level.setBounds(0, 0, drawable.bounds.right, drawable.bounds.bottom)
                     level.addLevel(1, 1, drawable)
@@ -55,7 +58,7 @@ class TextImageGetter(textView: TextView, private val with: Float) : ImageGetter
         }
     }
 
-    private fun resize(drawable: Drawable, sw: Float) {
+    private fun resize(drawable: Drawable, sw: Float, fontSize: Dp) {
         var w = drawable.intrinsicWidth
         var h = drawable.intrinsicHeight
 
@@ -68,6 +71,12 @@ class TextImageGetter(textView: TextView, private val with: Float) : ImageGetter
             val scale = (sw / w)
             w = (scale * w).toInt()
             h = (scale * h).toInt()
+        } else if (w == h && w > 0) {
+            val fs = fontSize.toPx()
+            val max = if (w < fs) fs else sw
+            val scale = max / w
+            w = (scale * w).toInt()
+            h = w
         }
         drawable.setBounds(0, 0, w, h)
     }
