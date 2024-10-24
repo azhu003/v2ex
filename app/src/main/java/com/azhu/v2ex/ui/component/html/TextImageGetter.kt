@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LevelListDrawable
 import android.text.Html.ImageGetter
 import android.widget.TextView
-import androidx.annotation.Px
 import androidx.compose.ui.unit.Dp
 import coil.imageLoader
 import coil.request.ImageRequest

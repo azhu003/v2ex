@@ -1,8 +1,8 @@
 package com.azhu.v2ex.data
 
 import android.text.TextUtils
-import com.azhu.v2ex.utils.DateTimeUtils
 import com.azhu.v2ex.utils.Constant
+import com.azhu.v2ex.utils.DateTimeUtils
 import org.jsoup.nodes.Document
 
 /**
@@ -76,7 +76,8 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
                 reply.username = str { tr.select("strong a[href^=/member/]").text() }
                 reply.time = str { DateTimeUtils.ago(tr.select("span.ago[title]").attr("title")) }
                 reply.no = str { tr.select("div.fr span.no").text() }
-                reply.isAuthor = TextUtils.equals(reply.username, details.author)
+                val badges = tr.select("div.badges > div.badge")
+                badges.forEach { reply.badges.add(it.text()) }
                 reply.content = str { tr.select("div.reply_content").html() }
                 pagination.data.add(reply)
             }

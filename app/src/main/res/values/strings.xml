@@ -2,7 +2,6 @@
     <string name="app_name">v2ex</string>
     <string name="number_of_replies">回复 %s</string>
     <string name="number_of_views">阅读 %s</string>
-    <string name="author">作者</string>
 
     <string name="subtitle_text">第%d条附言</string>
 

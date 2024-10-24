@@ -25,14 +25,18 @@ import com.azhu.v2ex.ui.theme.onContainerPrimaryLight
  */
 @Composable
 fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
-    val rect = remember { mutableFloatStateOf(0f) }
+    val width = remember { mutableFloatStateOf(0f) }
     AndroidView(
-        modifier = modifier.onGloballyPositioned { coordinates ->
-            rect.floatValue = coordinates.boundsInParent().width
-        },
+        modifier = modifier
+            .onGloballyPositioned { coordinates ->
+                if (width.floatValue == 0f) {
+                    width.floatValue = coordinates.boundsInParent().width
+                }
+            },
         factory = { context ->
             val textview = TextView(context)
             Linkify.addLinks(textview, Linkify.WEB_URLS)
+
             textview.movementMethod = LinkMovementMethod.getInstance()
             val color = if (AppThemeProvider.isDark()) {
                 Color.argb(
@@ -63,10 +67,10 @@ fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
         update = {
             val spanned =
                 HtmlCompat.fromHtml(
-                    html,
+                    "$html ", //末尾加空字符防止内容仅一张图片时无法正常显示
                     HtmlCompat.FROM_HTML_MODE_COMPACT,
-                    TextImageGetter(it, rect.floatValue, fontSize.dp),
-                    null
+                    TextImageGetter(it, width.floatValue, fontSize.dp),
+                    IframeTagHandler()
                 )
             it.text = spanned
             ClickableSpanned.makeLinksClickable(it)

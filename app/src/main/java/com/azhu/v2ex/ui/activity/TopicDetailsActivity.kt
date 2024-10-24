@@ -5,6 +5,7 @@ import android.content.Intent
 import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -239,7 +240,7 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
 //                .clip(MaterialTheme.shapes.small)
 //                .size(30.dp)
 //        )
-        Column {
+        Column(Modifier.fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = item.username,
@@ -250,12 +251,16 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                     modifier = Modifier.clickable { vm.onViewUserClick(context, item) }
                 )
 
-                if (item.isAuthor) {
+                item.badges.forEach {
                     Text(
-                        text = context.getString(R.string.author),
-                        fontSize = TextUnit(12f, TextUnitType.Sp),
+                        text = it,
+                        fontSize = TextUnit(10f, TextUnitType.Sp),
                         color = MaterialTheme.custom.primary,
-                        modifier = Modifier.padding(start = 5.dp)
+                        lineHeight = TextUnit(10f, TextUnitType.Sp),
+                        modifier = Modifier
+                            .padding(start = 3.dp)
+                            .border(0.1f.dp, MaterialTheme.custom.primary, MaterialTheme.shapes.extraSmall)
+                            .padding(vertical = 0.5.dp, horizontal = 2.dp)
                     )
                 }
 

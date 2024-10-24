@@ -114,37 +114,34 @@ fun LoginPage(vm: LoginViewModel) {
 
             Spacer(Modifier.height(16.dp))
 
-            Row {
-                AsyncImage(
-                    model = vm.params.captchaImageUrl,
-                    contentDescription = null,
-                    contentScale = ContentScale.Inside,
-                    clipToBounds = false,
-                    modifier = Modifier
-                        .width(140.dp)
-                        .align(Alignment.CenterVertically)
-                        .clickable { vm.refreshCaptchaImage() },
-                )
+            AsyncImage(
+                model = vm.params.captchaImageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                clipToBounds = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { vm.refreshCaptchaImage() },
+            )
 
-                Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.height(16.dp))
 
-                TextField(
-                    value = form.captcha,
-                    onValueChange = { form.captcha = it },
-                    placeholder = { Text(text = context.getString(R.string.captcha_placeholder)) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    textStyle = TextStyle(fontSize = 14.sp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(MaterialTheme.custom.background),
-                )
-            }
+            TextField(
+                value = form.captcha,
+                onValueChange = { form.captcha = it },
+                placeholder = { Text(text = context.getString(R.string.captcha_placeholder)) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
+                shape = RoundedCornerShape(8.dp),
+                textStyle = TextStyle(fontSize = 14.sp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.custom.background),
+            )
 
             Spacer(Modifier.height(16.dp))
 

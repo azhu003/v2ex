@@ -5,6 +5,7 @@ package com.azhu.v2ex.ui.page
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -87,8 +88,9 @@ fun TabTopicPage(vm: TabTopicViewModel) {
                         data.refresh()
                     },
                     state = pullToRefreshState,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    LazyColumn {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
                         if (data.loadState.refresh is LoadState.NotLoading) {
                             vm.setPullRefreshComplete()
                         }

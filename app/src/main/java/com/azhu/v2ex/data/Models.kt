@@ -75,7 +75,7 @@ data class TopicReplyItem(
     var avatar: String = "",
     var time: String = "",
     var no: String? = null,
-    var isAuthor: Boolean = false,
+    var badges: MutableList<String> = mutableListOf(),
     var content: String = "",
     var star: String? = null,
 )
