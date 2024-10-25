@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">v2ex</string>
+
+    <string name="topic">主题</string>
+    <string name="node">节点</string>
+    <string name="profile">我</string>
+
     <string name="number_of_replies">回复 %s</string>
     <string name="number_of_views">阅读 %s</string>
 

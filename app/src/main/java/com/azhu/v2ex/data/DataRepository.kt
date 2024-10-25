@@ -124,6 +124,12 @@ class DataRepository private constructor() {
         return TopicsByNodeResolver(onlyNodeInfo, onlyTopic).resolver(body)
     }
 
+    suspend fun getNodeNavigation(): Map<String, List<NodeNav>> {
+        val body = remote.service.getNodeNavigation().byteStream()
+//        val body = getHtmlFromAssets("topics.html")
+        return NodeNavigationResolver().resolver(body)
+    }
+
     private fun getHtmlFromAssets(fileName: String): InputStream {
         val context = AppManager.getCurrentActivity()
         var input: InputStream? = null

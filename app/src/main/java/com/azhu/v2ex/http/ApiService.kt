@@ -75,5 +75,7 @@ interface ApiService {
     @GET("/member/{username}/replies")
     suspend fun getAllRepliesByUser(@Path("username") node: String, @Query("p") page: Int): ResponseBody
 
+    @GET("/")
+    suspend fun getNodeNavigation(): ResponseBody
 
 }

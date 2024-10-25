@@ -10,6 +10,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.azhu.v2ex.R
+import com.azhu.v2ex.data.NavigationItem
 import com.azhu.v2ex.data.TabPair
 import com.azhu.v2ex.data.Topic
 import com.azhu.v2ex.paging.TopicListSource
@@ -63,4 +65,25 @@ class TabTopicViewModel : BaseViewModel() {
     fun setPullRefreshComplete() {
         isRefreshing = false
     }
+
+    val navigations: List<NavigationItem>
+        get() {
+            return listOf(
+                NavigationItem(
+                    label = R.string.topic,
+                    icon = R.drawable.topic,
+                    route = "topic_page"
+                ),
+                NavigationItem(
+                    label = R.string.node,
+                    icon = R.drawable.node,
+                    route = "node_page"
+                ),
+                NavigationItem(
+                    label = R.string.profile,
+                    icon = R.drawable.profile,
+                    route = "profile_page"
+                ),
+            )
+        }
 }

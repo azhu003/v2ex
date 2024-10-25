@@ -1,5 +1,7 @@
 package com.azhu.v2ex.data
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -7,6 +9,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+
+@Stable
+data class NavigationItem(
+    @StringRes
+    val label: Int,
+    @DrawableRes
+    val icon: Int,
+    val route: String
+)
 
 @Stable
 data class TabPair(val key: String = "", val name: String = "")
@@ -180,4 +191,10 @@ data class TopicByNode(
     var comments: String = "",
     var isCollected: Boolean = false,
     var pagination: Pagination<Topic> = Pagination()
+)
+
+@Stable
+data class NodeNav(
+    var key: String = "",
+    var label: String = "",
 )
