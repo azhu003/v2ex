@@ -69,5 +69,11 @@ interface ApiService {
     @GET("/go/{node}")
     suspend fun getTopicsByNode(@Path("node") node: String, @Query("p") page: Int): ResponseBody
 
+    @GET("/member/{username}/topics")
+    suspend fun getAllTopicsByUser(@Path("username") node: String, @Query("p") page: Int): ResponseBody
+
+    @GET("/member/{username}/replies")
+    suspend fun getAllRepliesByUser(@Path("username") node: String, @Query("p") page: Int): ResponseBody
+
 
 }

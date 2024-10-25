@@ -20,9 +20,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.UserRecentlyReply
+import com.azhu.v2ex.ui.activity.RepliesActivity
 import com.azhu.v2ex.ui.activity.TopicDetailsActivity
 import com.azhu.v2ex.ui.activity.UserDetailsActivity
 import com.azhu.v2ex.ui.component.html.HtmlText
@@ -34,8 +34,7 @@ import com.azhu.v2ex.ui.theme.custom
  * @version: 1.0.0
  */
 @Composable
-fun RecentlyReply(replys: List<UserRecentlyReply>, showHead: Boolean = true) {
-    val context = LocalContext.current
+fun RecentlyReply(replys: List<UserRecentlyReply>, showHead: Boolean = true, username: String? = null) {
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -43,85 +42,99 @@ fun RecentlyReply(replys: List<UserRecentlyReply>, showHead: Boolean = true) {
             .background(MaterialTheme.custom.container)
     ) {
         if (showHead) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        logger.info("查看更多回复")
-                    }
-                    .padding(12.dp)
-            ) {
-                Text(
-                    text = context.getString(R.string.recently_replied),
-                    color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(16f, TextUnitType.Sp)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = MaterialTheme.custom.onContainerSecondary
-                )
-            }
+            RecentlyReplyHeader(username)
         }
         val collection = replys.withIndex()
         for ((index, reply) in collection) {
-            Column(Modifier.padding(12.dp)) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.small)
-                        .background(MaterialTheme.custom.background)
-                        .padding(10.dp, 8.dp)
-                ) {
-                    Row {
-                        Text(
-                            text = reply.author,
-                            color = MaterialTheme.custom.onContainerPrimary,
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
-                            modifier = Modifier.clickable {
-                                UserDetailsActivity.start(context, reply.author)
-                            }
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = reply.node.name,
-                            color = MaterialTheme.custom.onContainerSecondary,
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
-                        )
-                    }
-                    HorizontalDivider(thickness = 0.3.dp)
-                    Text(
-                        text = reply.topic,
-                        color = MaterialTheme.custom.onContainerPrimary,
-                        fontSize = TextUnit(14f, TextUnitType.Sp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                TopicDetailsActivity.start(context, reply.sid)
-                            }
-                    )
-                }
-                HtmlText(
-                    html = reply.content,
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.small)
-                        .padding(8.dp),
-                    fontSize = 14f
-                )
-                Row {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = reply.time,
-                        textDecoration = null,
-                        fontSize = TextUnit(12f, TextUnitType.Sp),
-                        color = MaterialTheme.custom.onContainerSecondary,
-                        lineHeight = TextUnit(1f, TextUnitType.Sp),
-                    )
-                }
-            }
-            if (index != collection.count() - 1)
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp), thickness = 0.3.dp)
+            RecentlyReplyItem(reply, index != collection.count() - 1)
         }
     }
+}
+
+@Composable
+private fun RecentlyReplyHeader(username: String?) {
+    val context = LocalContext.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                if (!username.isNullOrBlank()) {
+                    RepliesActivity.start(context, username)
+                }
+            }
+            .padding(12.dp)
+    ) {
+        Text(
+            text = context.getString(R.string.recently_replied),
+            color = MaterialTheme.custom.onContainerPrimary,
+            fontSize = TextUnit(16f, TextUnitType.Sp)
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            tint = MaterialTheme.custom.onContainerSecondary
+        )
+    }
+}
+
+@Composable
+fun RecentlyReplyItem(reply: UserRecentlyReply, isLastItem: Boolean) {
+    val context = LocalContext.current
+    Column(Modifier.padding(12.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.small)
+                .background(MaterialTheme.custom.background)
+                .padding(10.dp, 8.dp)
+        ) {
+            Row {
+                Text(
+                    text = reply.author,
+                    color = MaterialTheme.custom.onContainerPrimary,
+                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    modifier = Modifier.clickable {
+                        UserDetailsActivity.start(context, reply.author)
+                    }
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = reply.node.name,
+                    color = MaterialTheme.custom.onContainerSecondary,
+                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                )
+            }
+            HorizontalDivider(thickness = 0.3.dp)
+            Text(
+                text = reply.topic,
+                color = MaterialTheme.custom.onContainerPrimary,
+                fontSize = TextUnit(14f, TextUnitType.Sp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        TopicDetailsActivity.start(context, reply.sid)
+                    }
+            )
+        }
+        HtmlText(
+            html = reply.content,
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.small)
+                .padding(8.dp),
+            fontSize = 14f
+        )
+        Row {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = reply.time,
+                textDecoration = null,
+                fontSize = TextUnit(12f, TextUnitType.Sp),
+                color = MaterialTheme.custom.onContainerSecondary,
+                lineHeight = TextUnit(1f, TextUnitType.Sp),
+            )
+        }
+    }
+    if (!isLastItem)
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp), thickness = 0.3.dp)
 }

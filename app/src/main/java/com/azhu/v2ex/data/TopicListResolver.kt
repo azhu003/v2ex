@@ -19,8 +19,8 @@ class TopicListResolver : BaseResolver<Pagination<Topic>>() {
             catch {
                 val topic = Topic()
                 topic.avatar = str { tr.select("img.avatar").attr("src") }
-                val topicInfo = tr.children()[2]  // <span class="topic_info">
-                val a = topicInfo.select("span.item_title > a")
+                val topicInfo = tr.select("span.topic_info")  // <span class="topic_info">
+                val a = tr.select("span.item_title > a[href^=/t/]")
                 topic.id = str { Constant.TOPIC_ID.find(a.attr("href"))!!.value }
                 topic.title = str { a.text() }
                 topic.node = str { topicInfo.select("a.node").text() }

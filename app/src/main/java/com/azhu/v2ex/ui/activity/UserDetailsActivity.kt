@@ -70,7 +70,7 @@ private fun UserDetailsPage(details: UserDetails) {
     Column(Modifier.verticalScroll(scrollState)) {
         UserHeader(details)
         RecentlyPublishedTopic(details)
-        RecentlyReply(details.replys)
+        RecentlyReply(details.replys, username = details.username)
     }
 }
 

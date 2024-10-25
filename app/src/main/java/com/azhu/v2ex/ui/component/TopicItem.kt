@@ -48,18 +48,20 @@ fun TopicItem(item: Topic) {
             .background(MaterialTheme.custom.container)
             .padding(15.dp, 15.dp, 15.dp, 8.dp)
     ) {
-        AsyncImage(
-            model = item.avatar,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .padding(end = 15.dp)
-                .clip(MaterialTheme.shapes.small)
-                .size(40.dp)
-                .clickable {
-                    UserDetailsActivity.start(ctx, item.author)
-                }
-        )
+        if (item.avatar.isNotBlank()) {
+            AsyncImage(
+                model = item.avatar,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(end = 15.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .size(40.dp)
+                    .clickable {
+                        UserDetailsActivity.start(ctx, item.author)
+                    }
+            )
+        }
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (item.node.isNotBlank()) {

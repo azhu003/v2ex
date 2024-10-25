@@ -29,6 +29,9 @@
         <item>最近回复</item>
     </string-array>
 
+    <string name="all_topic">全部主题</string>
+    <string name="all_reply">全部回复</string>
+
     <string name="my_collection">我的收藏</string>
     <string-array name="collection_tab">
         <item>@string/node_collection</item>

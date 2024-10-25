@@ -104,6 +104,16 @@ class DataRepository private constructor() {
         return TopicListResolver().resolver(body)
     }
 
+    suspend fun getAllTopicByUser(username: String, page: Int = 1): Pagination<Topic> {
+        val body = remote.service.getAllTopicsByUser(username, page).byteStream()
+        return TopicListResolver().resolver(body)
+    }
+
+    suspend fun getAllRepliesByUser(username: String, page: Int = 1): Pagination<UserRecentlyReply> {
+        val body = remote.service.getAllRepliesByUser(username, page).byteStream()
+        return RepliesByUserResolver().resolver(body)
+    }
+
     suspend fun getTopicsByNode(
         node: String,
         page: Int = 1,

@@ -1,19 +1,21 @@
-package com.azhu.v2ex.ui.component
+package com.azhu.v2ex.viewmodels
 
 import androidx.paging.PagingSource
+import com.azhu.v2ex.paging.AllTopicListSource
 import com.azhu.v2ex.data.Topic
 import com.azhu.v2ex.data.ListViewModel
-import com.azhu.v2ex.paging.FollowingTopicListSource
 
 /**
  * @author: Jerry
- * @date: 2024-10-22 16:05
+ * @date: 2024-10-25 17:39
  * @version: 1.0.0
  */
-class FollowingViewModel : ListViewModel<Topic>() {
+class AllViewModel : ListViewModel<Topic>() {
+
+    var username: String = ""
 
     override fun getPagingSource(): PagingSource<Int, Topic> {
-        return FollowingTopicListSource()
+        return AllTopicListSource(username)
     }
 
     override fun getPageSize(): Int {

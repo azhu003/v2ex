@@ -29,6 +29,7 @@ import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.UserDetails
 import com.azhu.v2ex.data.UserRecentlyTopic
+import com.azhu.v2ex.ui.activity.AllTopicActivity
 import com.azhu.v2ex.ui.activity.TopicDetailsActivity
 import com.azhu.v2ex.ui.theme.custom
 
@@ -65,9 +66,7 @@ private fun RecentlyPublishedTopic(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        logger.info("查看更多")
-                    }
+                    .clickable { if (!isInvisible) AllTopicActivity.start(context, username) }
                     .padding(12.dp)
             ) {
                 Text(
@@ -108,9 +107,7 @@ private fun RecentlyPublishedTopic(
             for ((index, topic) in collection) {
                 Column(
                     Modifier
-                        .clickable {
-                            TopicDetailsActivity.start(context, topic.sid)
-                        }
+                        .clickable { TopicDetailsActivity.start(context, topic.sid) }
                         .padding(15.dp)
                 ) {
                     Text(
