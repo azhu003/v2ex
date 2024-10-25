@@ -2,7 +2,6 @@ package com.azhu.v2ex.data
 
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.utils.Constant
-import com.azhu.v2ex.utils.DateTimeUtils
 import org.jsoup.nodes.Document
 
 /**

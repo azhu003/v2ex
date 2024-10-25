@@ -38,6 +38,7 @@ object Retrofits {
         val okHttpClient = OkHttpClient()
             .newBuilder()
             .addInterceptor(RequestHeaderInterceptor(cookieManager))
+            .addInterceptor(RequestSchemeInterceptor())
             .addInterceptor(interceptor)
             .retryOnConnectionFailure(true)
             .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
