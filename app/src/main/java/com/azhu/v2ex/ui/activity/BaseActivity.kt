@@ -116,10 +116,8 @@ abstract class BaseActivity : ComponentActivity() {
                             TopAppBar(
                                 title = {
                                     Text(
-                                        title, color = MaterialTheme.custom.onContainerPrimary, fontSize = TextUnit(
-                                            20f,
-                                            TextUnitType.Sp
-                                        )
+                                        title, color = MaterialTheme.custom.onContainerPrimary,
+                                        fontSize = TextUnit(20f, TextUnitType.Sp)
                                     )
                                 },
                                 colors = TopAppBarColors(
@@ -155,7 +153,8 @@ abstract class BaseActivity : ComponentActivity() {
                         FpsMonitor(
                             Modifier
                                 .align(Alignment.TopEnd)
-                                .padding(top = pv.calculateTopPadding()))
+                                .padding(top = pv.calculateTopPadding())
+                        )
                     }
                 }
             }

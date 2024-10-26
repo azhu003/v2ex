@@ -27,6 +27,7 @@ class DataRepository private constructor() {
     }
 
     suspend fun getRecentTopicList(page: Int = 1): Pagination<Topic> {
+//        val body = getHtmlFromAssets("topics.html")
         val body = remote.service.getRecentTopicList(page).byteStream()
         return TopicListResolver().resolver(body)
     }

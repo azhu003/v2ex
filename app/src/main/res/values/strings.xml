@@ -61,4 +61,6 @@
 
     <string name="topic_total">主题总数</string>
 
+    <string name="node_navigation">节点导航</string>
+
 </resources>

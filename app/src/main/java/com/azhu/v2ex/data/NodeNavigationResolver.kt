@@ -19,7 +19,7 @@ class NodeNavigationResolver : BaseResolver<Map<String, List<NodeNav>>>() {
             val aEls = cell.select("a[href^=/go/]")
             aEls.forEach { aEl ->
                 val key = Constant.NODE_NAME.find(aEl.attr("href"))?.value
-                val label = Constant.NODE_NAME.find(aEl.attr("href"))?.value
+                val label = aEl.text()
                 if (!key.isNullOrEmpty() && !label.isNullOrEmpty()) {
                     nodes.add(NodeNav(key, label))
                 }
