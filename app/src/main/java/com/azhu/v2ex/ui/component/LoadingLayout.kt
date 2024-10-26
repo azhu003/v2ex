@@ -31,7 +31,7 @@ import com.azhu.v2ex.ui.theme.custom
 fun LoadingLayout(
     state: LoadingState,
     modifier: Modifier = Modifier,
-    onRetry: (() -> Unit) = { },
+    onRetry: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
@@ -65,12 +65,13 @@ fun LoadingLayout(
                 color = MaterialTheme.custom.onContainerSecondary,
                 modifier = Modifier.padding(top = 10.dp)
             )
-            if (state.state == LoadState.ERROR) {
+            if (state.state == LoadState.ERROR && onRetry != null) {
                 Text(
                     text = context.getString(R.string.reload),
                     color = MaterialTheme.custom.onContainerPrimary,
                     modifier = Modifier
                         .padding(top = 10.dp)
+                        .padding(horizontal = 3.dp, vertical = 2.dp)
                         .clickable { onRetry.invoke() }
                 )
             }
@@ -107,6 +108,10 @@ class LoadingState(state: LoadState = LoadState.LOADING) {
 
     fun setState(state: LoadState) {
         this.state = state
+    }
+
+    fun isLoading(): Boolean {
+        return this.state == LoadState.LOADING
     }
 }
 

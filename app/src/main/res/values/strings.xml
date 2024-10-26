@@ -5,6 +5,7 @@
     <string name="node">节点</string>
     <string name="profile">我</string>
 
+    <string name="topic_details">主题详情</string>
     <string name="number_of_replies">回复 %s</string>
     <string name="number_of_views">阅读 %s</string>
 
@@ -46,6 +47,7 @@
 
     <string name="loading">加载中</string>
     <string name="reload">重新加载</string>
+    <string name="load_failed">加载失败</string>
 
     <string name="login">登录</string>
     <string name="username_placeholder">请输入用户名或邮箱</string>

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,7 @@ import coil.compose.AsyncImage
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.TopicDetails
 import com.azhu.v2ex.data.TopicReplyItem
+import com.azhu.v2ex.ui.component.LoadingLayout
 import com.azhu.v2ex.ui.component.html.HtmlText
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.TopicDetailsViewModel
@@ -72,6 +74,7 @@ class TopicDetailsActivity : BaseActivity() {
             finish()
             return
         }
+        setAppBarTitle(getString(R.string.topic_details))
         vm.state.value.tid = sid
         vm.fetchTopicDetails()
     }
@@ -88,49 +91,52 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
         state.isLoading = vm.isLoadingMoreData.value
     }
 
-    UltraSwipeRefresh(
-        state = state,
-        refreshEnabled = false,
-        loadMoreEnabled = hasMoreData,
-        onRefresh = {},
-        onLoadMore = { vm.fetchTopicDetails(true) },
-        footerIndicator = { ClassicRefreshFooter(it) },
-    ) {
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.background(MaterialTheme.custom.container)
-        ) {
-            item {
-                TopicBody(details)
-                HorizontalDivider(
-                    thickness = 5.dp,
-                    color = MaterialTheme.custom.background,
-                    modifier = Modifier.padding(top = 15.dp)
-                )
-                Text(
-                    text = stringResource(R.string.number_of_replies, details.replyCount),
-                    fontSize = TextUnit(15f, TextUnitType.Sp),
-                    color = MaterialTheme.custom.onContainerSecondary,
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .padding(vertical = 12.dp)
-                )
-            }
-            itemsIndexed(details.replys.data) { index, item ->
-                key("$index${item.id}") {
-                    ReplyItem(vm, item)
-                }
-            }
+    LoadingLayout(vm.loading, modifier = Modifier.fillMaxSize(), onRetry = vm::fetchTopicDetails) {
 
-            if (details.isInitialized && vm.hasMore.value.not()) {
+        UltraSwipeRefresh(
+            state = state,
+            refreshEnabled = false,
+            loadMoreEnabled = hasMoreData,
+            onRefresh = {},
+            onLoadMore = { vm.fetchTopicDetails(true) },
+            footerIndicator = { ClassicRefreshFooter(it) },
+        ) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.background(MaterialTheme.custom.container)
+            ) {
                 item {
-                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "—·—",
-                            color = MaterialTheme.custom.onContainerSecondary,
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
-                            modifier = Modifier.padding(vertical = 16.dp)
-                        )
+                    TopicBody(details)
+                    HorizontalDivider(
+                        thickness = 5.dp,
+                        color = MaterialTheme.custom.background,
+                        modifier = Modifier.padding(top = 15.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.number_of_replies, details.replyCount),
+                        fontSize = TextUnit(15f, TextUnitType.Sp),
+                        color = MaterialTheme.custom.onContainerSecondary,
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .padding(vertical = 12.dp)
+                    )
+                }
+                itemsIndexed(details.replys.data) { index, item ->
+                    key("$index${item.id}") {
+                        ReplyItem(vm, item)
+                    }
+                }
+
+                if (details.isInitialized && vm.hasMore.value.not()) {
+                    item {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "—·—",
+                                color = MaterialTheme.custom.onContainerSecondary,
+                                fontSize = TextUnit(14f, TextUnitType.Sp),
+                                modifier = Modifier.padding(vertical = 16.dp)
+                            )
+                        }
                     }
                 }
             }

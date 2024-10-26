@@ -2,9 +2,12 @@ package com.azhu.v2ex.viewmodels
 
 import android.content.Context
 import android.text.TextUtils
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.azhu.basic.AppManager
 import com.azhu.basic.provider.logger
+import com.azhu.v2ex.R
 import com.azhu.v2ex.data.DataRepository
 import com.azhu.v2ex.data.TopicDetails
 import com.azhu.v2ex.data.TopicDetailsResolverType
@@ -13,6 +16,7 @@ import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
 import com.azhu.v2ex.ui.activity.UserDetailsActivity
+import com.azhu.v2ex.ui.component.LoadingState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -25,6 +29,7 @@ import kotlinx.coroutines.flow.launchIn
  */
 class TopicDetailsViewModel : BaseViewModel() {
 
+    val loading by mutableStateOf(LoadingState())
     val state = mutableStateOf(TopicDetails())
     val isLoadingMoreData = mutableStateOf(false)
     val hasMore = mutableStateOf(false)
@@ -40,6 +45,8 @@ class TopicDetailsViewModel : BaseViewModel() {
             return
         }
         if (isLoadMore) this.isLoadingMoreData.value = true
+        else loading.setLoading()
+
         http.flows {
             DataRepository.INSTANCE.getTopicDetails(
                 details.tid!!,
@@ -48,8 +55,18 @@ class TopicDetailsViewModel : BaseViewModel() {
             )
         }.smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
-            .error { logger.error(it?.message ?: "error message is null") }
-            .success { merge(it, isLoadMore) }
+            .error {
+                logger.error(it?.message ?: "error message is null")
+                if (loading.isLoading()) {
+                    AppManager.getCurrentActivity()?.let { context ->
+                        loading.setLoadError(context.getString(R.string.load_failed))
+                    }
+                }
+            }
+            .success {
+                merge(it, isLoadMore)
+                if (loading.isLoading()) loading.setLoadSuccess()
+            }
             .launchIn(viewModelScope)
     }
 
