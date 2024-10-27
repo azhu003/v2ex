@@ -62,4 +62,10 @@ object V2exUtils {
         return StoreProvider.getString(Constant.CURRENT_LOGGED_USER)
     }
 
+    fun fixUrl(url: String): String {
+        if (url.startsWith("//")) {
+            return "https:$url"
+        }
+        return url
+    }
 }

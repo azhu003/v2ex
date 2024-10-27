@@ -253,13 +253,21 @@ private fun UserFeed(vm: ProfileViewModel) {
         when (it) {
             0 -> {
                 if (vm.isTopicEmpty) EmptyComponent() else RecentlyPublishedTopic(
-                    profile.topics,
-                    profile.topicInvisible,
-                    profile.username
+                    topics = profile.topics,
+                    isInvisible = profile.topicInvisible,
+                    username = profile.username,
+                    showFooter = true
                 )
             }
 
-            1 -> if (vm.isRepliesEmpty) EmptyComponent() else RecentlyReply(profile.replies, false)
+            1 -> {
+                if (vm.isRepliesEmpty) EmptyComponent() else RecentlyReply(
+                    replys = profile.replies,
+                    showHead = false,
+                    showFooter = true,
+                    username = profile.username
+                )
+            }
         }
     }
 }

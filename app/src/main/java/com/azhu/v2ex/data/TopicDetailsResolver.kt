@@ -1,6 +1,5 @@
 package com.azhu.v2ex.data
 
-import android.text.TextUtils
 import com.azhu.v2ex.utils.Constant
 import com.azhu.v2ex.utils.DateTimeUtils
 import org.jsoup.nodes.Document

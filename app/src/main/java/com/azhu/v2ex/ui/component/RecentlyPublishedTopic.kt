@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -29,6 +30,7 @@ import com.azhu.v2ex.R
 import com.azhu.v2ex.data.UserDetails
 import com.azhu.v2ex.data.UserRecentlyTopic
 import com.azhu.v2ex.ui.activity.AllTopicActivity
+import com.azhu.v2ex.ui.activity.RepliesActivity
 import com.azhu.v2ex.ui.activity.TopicDetailsActivity
 import com.azhu.v2ex.ui.theme.custom
 
@@ -43,16 +45,12 @@ fun RecentlyPublishedTopic(details: UserDetails) {
 }
 
 @Composable
-fun RecentlyPublishedTopic(topics: SnapshotStateList<UserRecentlyTopic>, isInvisible: Boolean, username: String) {
-    RecentlyPublishedTopic(topics, isInvisible, username, false)
-}
-
-@Composable
-private fun RecentlyPublishedTopic(
+fun RecentlyPublishedTopic(
     topics: SnapshotStateList<UserRecentlyTopic>,
     isInvisible: Boolean,
     username: String,
-    showHead: Boolean
+    showHead: Boolean = false,
+    showFooter: Boolean = false
 ) {
     val context = LocalContext.current
     Column(
@@ -149,6 +147,17 @@ private fun RecentlyPublishedTopic(
                 }
                 if (index != collection.count() - 1)
                     HorizontalDivider(thickness = 0.3.dp, modifier = Modifier.padding(horizontal = 15.dp))
+            }
+            if (showFooter && topics.isNotEmpty()) {
+                Text(
+                    text = context.getString(R.string.view_more),
+                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    color = MaterialTheme.custom.onContainerSecondary,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .clickable { AllTopicActivity.start(context, username) }
+                )
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }

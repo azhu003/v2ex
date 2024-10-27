@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -14,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -34,7 +36,13 @@ import com.azhu.v2ex.ui.theme.custom
  * @version: 1.0.0
  */
 @Composable
-fun RecentlyReply(replys: List<UserRecentlyReply>, showHead: Boolean = true, username: String? = null) {
+fun RecentlyReply(
+    replys: List<UserRecentlyReply>,
+    showHead: Boolean = true,
+    showFooter: Boolean = false,
+    username: String? = null
+) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -47,6 +55,17 @@ fun RecentlyReply(replys: List<UserRecentlyReply>, showHead: Boolean = true, use
         val collection = replys.withIndex()
         for ((index, reply) in collection) {
             RecentlyReplyItem(reply, index == collection.count() - 1)
+        }
+        if (showFooter && replys.isNotEmpty()) {
+            Text(
+                text = context.getString(R.string.view_more),
+                fontSize = TextUnit(14f, TextUnitType.Sp),
+                color = MaterialTheme.custom.onContainerSecondary,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .clickable { if (!username.isNullOrEmpty()) RepliesActivity.start(context, username) }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

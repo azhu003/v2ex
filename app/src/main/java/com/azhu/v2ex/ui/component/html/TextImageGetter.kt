@@ -13,6 +13,7 @@ import com.azhu.basic.provider.AppThemeProvider
 import com.azhu.v2ex.ext.toPx
 import com.azhu.v2ex.ui.theme.onContainerSecondaryDark
 import com.azhu.v2ex.ui.theme.onContainerSecondaryLight
+import com.azhu.v2ex.utils.V2exUtils
 import java.lang.ref.WeakReference
 
 /**
@@ -30,7 +31,7 @@ class TextImageGetter(textView: TextView, private val with: Float, private val f
         level.addLevel(0, 0, empty)
         level.setBounds(0, 0, 100, 100)
 
-        if (url != null) {
+        if (!url.isNullOrEmpty()) {
             fetchAsyncImage(url, level)
         }
         return level
@@ -39,7 +40,7 @@ class TextImageGetter(textView: TextView, private val with: Float, private val f
     private fun fetchAsyncImage(url: String, level: LevelListDrawable) {
         mTextViewReference.get()?.let { text ->
             val request = ImageRequest.Builder(text.context)
-                .data(url)
+                .data(V2exUtils.fixUrl(url))
                 .target { drawable ->
                     resize(drawable, with, fontSize)
                     //level=0 将占位图的大小设置为实际图片一致
