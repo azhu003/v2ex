@@ -15,6 +15,15 @@ abstract class BaseResolver<T> : DocumentResolver<T> {
     override fun resolver(stream: InputStream): T {
         stream.use {
             val document = Jsoup.parse(it, "UTF-8", "https://www.v2ex.com/")
+            catch {
+                document.select("a[data-cfemail]").forEach { a ->
+                    val data = a.attr("data-cfemail")
+                    val email = getUnprotectMail(data)
+                    if (email != null) {
+                        a.attr("href", "mailto:$email").text(email)
+                    }
+                }
+            }
             return resolver(document)
         }
     }
@@ -38,4 +47,20 @@ abstract class BaseResolver<T> : DocumentResolver<T> {
         }
     }
 
+    /**
+     * 对邮箱地址进行解密
+     */
+    private fun getUnprotectMail(data: String?): String? {
+        if (!data.isNullOrEmpty()) {
+            val r = data.substring(0, 2).toInt(16)
+            var i: Int
+            val email = StringBuilder()
+            for (n in 2 until data.length step 2) {
+                i = data.substring(n, n + 2).toInt(16).xor(r)
+                email.append(i.toChar())
+            }
+            if (email.isNotEmpty()) return email.toString()
+        }
+        return null
+    }
 }

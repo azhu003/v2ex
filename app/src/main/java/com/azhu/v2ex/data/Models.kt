@@ -101,7 +101,7 @@ data class UserDetails(
     var ranking: String = "", //排名
     var topics: SnapshotStateList<UserRecentlyTopic> = mutableStateListOf(),
     var topicInvisible: Boolean = false,
-    var replys: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
+    var replies: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
 )
 
 //最近发布的主题
@@ -152,7 +152,7 @@ data class UserProfile(
 
     var topicInvisible: Boolean = false,
     var topics: SnapshotStateList<UserRecentlyTopic> = mutableStateListOf(),
-    var replys: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
+    var replies: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
 )
 
 @Stable

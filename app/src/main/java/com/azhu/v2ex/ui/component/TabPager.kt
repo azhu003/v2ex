@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.azhu.v2ex.ui.theme.custom
 import kotlinx.coroutines.launch
@@ -25,9 +26,9 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun TabPager(
+    modifier: Modifier = Modifier,
     tabArray: Array<String>,
     selectedTabIndex: Int = 0,
-    modifier: Modifier = Modifier,
     pageContent: @Composable PagerScope.(page: Int) -> Unit
 ) {
     val tabs = remember { tabArray }
@@ -65,7 +66,7 @@ fun TabPager(
                 )
             }
         }
-        HorizontalPager(state = pageState, beyondViewportPageCount = 1) { index ->
+        HorizontalPager(state = pageState, beyondViewportPageCount = 1, verticalAlignment = Alignment.Top) { index ->
             pageContent(index)
         }
     }

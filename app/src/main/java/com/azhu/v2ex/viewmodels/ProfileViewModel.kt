@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.launchIn
  */
 class ProfileViewModel : LifecycleViewModel() {
 
+    private var isRequestLogin = false
+
     var profile by mutableStateOf(UserProfile(false))
         internal set
 
@@ -42,7 +44,10 @@ class ProfileViewModel : LifecycleViewModel() {
 
     var isRefreshingByUser by mutableStateOf(false)
 
-    private var isRequestLogin = false
+    var isRepliesEmpty by mutableStateOf(false)
+        internal set
+    var isTopicEmpty by mutableStateOf(false)
+        internal set
 
     override fun onLazyResume() {
         fetchUserProfile()
@@ -89,7 +94,10 @@ class ProfileViewModel : LifecycleViewModel() {
             .success {
                 profile.topicInvisible = it.topicInvisible
                 profile.topics.addAll(it.topics)
-                profile.replys.addAll(it.replys)
+                profile.replies.addAll(it.replies)
+
+                isTopicEmpty = profile.topics.isEmpty()
+                isRepliesEmpty = profile.replies.isEmpty()
             }
             .launchIn(viewModelScope)
     }

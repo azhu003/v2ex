@@ -50,6 +50,7 @@ import com.azhu.v2ex.ext.startActivityClass
 import com.azhu.v2ex.ext.toColor
 import com.azhu.v2ex.ui.activity.CollectionActivity
 import com.azhu.v2ex.ui.activity.SettingActivity
+import com.azhu.v2ex.ui.component.EmptyComponent
 import com.azhu.v2ex.ui.component.LoadingLayout
 import com.azhu.v2ex.ui.component.ObserveLifecycleLayout
 import com.azhu.v2ex.ui.component.RecentlyPublishedTopic
@@ -250,8 +251,15 @@ private fun UserFeed(vm: ProfileViewModel) {
 
     TabPager(tabArray = context.resources.getStringArray(R.array.user_feed_tabs)) {
         when (it) {
-            0 -> RecentlyPublishedTopic(profile.topics, profile.topicInvisible, profile.username)
-            1 -> RecentlyReply(profile.replys, false)
+            0 -> {
+                if (vm.isTopicEmpty) EmptyComponent() else RecentlyPublishedTopic(
+                    profile.topics,
+                    profile.topicInvisible,
+                    profile.username
+                )
+            }
+
+            1 -> if (vm.isRepliesEmpty) EmptyComponent() else RecentlyReply(profile.replies, false)
         }
     }
 }

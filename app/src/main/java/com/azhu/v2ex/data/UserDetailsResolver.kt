@@ -74,7 +74,7 @@ class UserDetailsResolver : BaseResolver<UserDetails>() {
                     }
                     reply.content = replyArray[index].html()
                     reply.time = str { DateTimeUtils.ago(td.select("div.fr span.fade").attr("title")) }
-                    details.replys.add(reply)
+                    details.replies.add(reply)
                 }
             }
         }

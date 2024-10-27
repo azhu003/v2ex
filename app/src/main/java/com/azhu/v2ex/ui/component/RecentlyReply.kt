@@ -46,7 +46,7 @@ fun RecentlyReply(replys: List<UserRecentlyReply>, showHead: Boolean = true, use
         }
         val collection = replys.withIndex()
         for ((index, reply) in collection) {
-            RecentlyReplyItem(reply, index != collection.count() - 1)
+            RecentlyReplyItem(reply, index == collection.count() - 1)
         }
     }
 }

@@ -36,6 +36,8 @@ fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
         factory = { context ->
             val textview = TextView(context)
             Linkify.addLinks(textview, Linkify.WEB_URLS)
+            Linkify.addLinks(textview, Linkify.EMAIL_ADDRESSES)
+            Linkify.addLinks(textview, Linkify.PHONE_NUMBERS)
 
             textview.movementMethod = LinkMovementMethod.getInstance()
             val color = if (AppThemeProvider.isDark()) {
@@ -70,7 +72,9 @@ fun HtmlText(html: String, modifier: Modifier, fontSize: Float = 16f) {
                     "$html ", //末尾加空字符防止内容仅一张图片时无法正常显示
                     HtmlCompat.FROM_HTML_MODE_COMPACT,
                     TextImageGetter(it, width.floatValue, fontSize.dp),
-                    IframeTagHandler()
+                    ElementTagHandler.Builder()
+                        .addHandler("iframe", IframeElementHandler())
+                        .build()
                 )
             it.text = spanned
             ClickableSpanned.makeLinksClickable(it)
