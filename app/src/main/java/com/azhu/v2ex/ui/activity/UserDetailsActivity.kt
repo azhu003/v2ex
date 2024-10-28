@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.UserDetails
 import com.azhu.v2ex.ext.toColor
@@ -112,11 +116,30 @@ private fun UserHeader(details: UserDetails) {
                 .padding(start = 15.dp)
                 .fillMaxWidth()
         ) {
-            Text(
-                text = details.username,
-                color = MaterialTheme.custom.onContainerPrimary,
-                fontSize = TextUnit(22f, TextUnitType.Sp)
-            )
+            Row {
+                Text(
+                    text = details.username,
+                    color = MaterialTheme.custom.onContainerPrimary,
+                    fontSize = TextUnit(22f, TextUnitType.Sp)
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    text = if (details.isFollowed) context.getString(R.string.followed) else "+ ${context.getString(R.string.following_of_user)}",
+                    fontSize = TextUnit(10f, TextUnitType.Sp),
+                    lineHeight = TextUnit(10f, TextUnitType.Sp),
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 3.dp)
+                        .background(
+                            MaterialTheme.custom.background,
+                            MaterialTheme.shapes.extraSmall
+                        )
+                        .clickable(details.isFollowed.not()) {
+                            logger.info("点击了关注按钮")
+                        }
+                        .padding(vertical = 2.dp, horizontal = 3.dp)
+                )
+            }
             Text(
                 text = context.getString(R.string.member_no, details.no),
                 color = MaterialTheme.custom.onContainerSecondary,

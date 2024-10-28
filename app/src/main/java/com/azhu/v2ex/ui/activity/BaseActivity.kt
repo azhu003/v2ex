@@ -117,7 +117,7 @@ abstract class BaseActivity : ComponentActivity() {
                                 title = {
                                     Text(
                                         title, color = MaterialTheme.custom.onContainerPrimary,
-                                        fontSize = TextUnit(20f, TextUnitType.Sp)
+                                        fontSize = TextUnit(18f, TextUnitType.Sp)
                                     )
                                 },
                                 colors = TopAppBarColors(
@@ -136,7 +136,7 @@ abstract class BaseActivity : ComponentActivity() {
                                             contentDescription = null
                                         )
                                     }
-                                }
+                                },
                             )
                             HorizontalDivider(thickness = 0.15.dp)
                         }

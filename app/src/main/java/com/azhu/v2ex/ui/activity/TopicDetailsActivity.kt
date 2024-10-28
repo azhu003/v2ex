@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,9 +18,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,8 +37,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -43,6 +48,7 @@ import coil.compose.AsyncImage
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.TopicDetails
 import com.azhu.v2ex.data.TopicReplyItem
+import com.azhu.v2ex.ui.component.ImageWrapper
 import com.azhu.v2ex.ui.component.LoadingLayout
 import com.azhu.v2ex.ui.component.html.HtmlText
 import com.azhu.v2ex.ui.theme.custom
@@ -75,7 +81,7 @@ class TopicDetailsActivity : BaseActivity() {
             return
         }
         setAppBarTitle(getString(R.string.topic_details))
-        vm.state.value.tid = sid
+        vm.details.value.tid = sid
         vm.fetchTopicDetails()
     }
 }
@@ -83,7 +89,7 @@ class TopicDetailsActivity : BaseActivity() {
 @Composable
 private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
     val listState = rememberLazyListState()
-    val details = vm.state.value
+    val details = vm.details.value
     val hasMoreData by remember { vm.hasMore }
 
     val state = rememberUltraSwipeRefreshState()
@@ -93,52 +99,59 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
 
     LoadingLayout(vm.loading, modifier = Modifier.fillMaxSize(), onRetry = vm::fetchTopicDetails) {
 
-        UltraSwipeRefresh(
-            state = state,
-            refreshEnabled = false,
-            loadMoreEnabled = hasMoreData,
-            onRefresh = {},
-            onLoadMore = { vm.fetchTopicDetails(true) },
-            footerIndicator = { ClassicRefreshFooter(it) },
-        ) {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier.background(MaterialTheme.custom.container)
+        Column {
+            UltraSwipeRefresh(
+                state = state,
+                refreshEnabled = false,
+                loadMoreEnabled = hasMoreData,
+                onRefresh = {},
+                onLoadMore = { vm.fetchTopicDetails(true) },
+                footerIndicator = { ClassicRefreshFooter(it) },
+                modifier = Modifier.weight(1f)
             ) {
-                item {
-                    TopicBody(details)
-                    HorizontalDivider(
-                        thickness = 5.dp,
-                        color = MaterialTheme.custom.background,
-                        modifier = Modifier.padding(top = 15.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.number_of_replies, details.replyCount),
-                        fontSize = TextUnit(15f, TextUnitType.Sp),
-                        color = MaterialTheme.custom.onContainerSecondary,
-                        modifier = Modifier
-                            .padding(horizontal = 15.dp)
-                            .padding(vertical = 12.dp)
-                    )
-                }
-                itemsIndexed(details.replys.data) { index, item ->
-                    key("$index${item.id}") {
-                        ReplyItem(vm, item)
-                    }
-                }
-
-                if (details.isInitialized && vm.hasMore.value.not()) {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.background(MaterialTheme.custom.container)
+                ) {
                     item {
-                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = "—·—",
-                                color = MaterialTheme.custom.onContainerSecondary,
-                                fontSize = TextUnit(14f, TextUnitType.Sp),
-                                modifier = Modifier.padding(vertical = 16.dp)
-                            )
+                        TopicBody(details)
+                        HorizontalDivider(
+                            thickness = 5.dp,
+                            color = MaterialTheme.custom.background,
+                            modifier = Modifier.padding(top = 15.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.number_of_replies, details.replyCount ?: "0"),
+                            fontSize = TextUnit(15f, TextUnitType.Sp),
+                            color = MaterialTheme.custom.onContainerSecondary,
+                            modifier = Modifier
+                                .padding(horizontal = 15.dp)
+                                .padding(vertical = 12.dp)
+                        )
+                    }
+                    itemsIndexed(details.replys.data) { index, item ->
+                        key("$index${item.id}") {
+                            ReplyItem(vm, item)
+                        }
+                    }
+
+                    if (details.isInitialized && vm.hasMore.value.not()) {
+                        item {
+                            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "—·—",
+                                    color = MaterialTheme.custom.onContainerSecondary,
+                                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                                    modifier = Modifier.padding(vertical = 16.dp)
+                                )
+                            }
                         }
                     }
                 }
+            }
+            if (vm.isLogged) {
+                HorizontalDivider(Modifier.fillMaxWidth(), Dp.Hairline, color = MaterialTheme.custom.background)
+                FooterBar(vm)
             }
         }
     }
@@ -277,6 +290,16 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                     modifier = Modifier.padding(start = 5.dp)
                 )
 
+                if (!item.heart.isNullOrEmpty()) {
+                    Text(
+                        text = "❤\uFE0F ${item.heart!!}",
+                        fontSize = TextUnit(12f, TextUnitType.Sp),
+                        color = MaterialTheme.custom.onContainerSecondary,
+                        lineHeight = TextUnit(1f, TextUnitType.Sp),
+                        modifier = Modifier.padding(start = 5.dp)
+                    )
+                }
+
                 Spacer(Modifier.weight(1f))
                 Text(
                     text = "#${item.no}",
@@ -288,6 +311,103 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                 html = item.content,
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 14f
+            )
+        }
+    }
+}
+
+@Composable
+private fun FooterBar(vm: TopicDetailsViewModel) {
+    val context = LocalContext.current
+    val details = vm.details.value
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.custom.container)
+            .padding(15.dp),
+    ) {
+        AsyncImage(
+            model = details.avatar,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(24.dp)
+                .clickable { }
+        )
+        Text(
+            text = details.author, fontSize = TextUnit(12f, TextUnitType.Sp),
+            modifier = Modifier
+                .padding(start = 3.dp)
+                .align(Alignment.CenterVertically)
+        )
+        Spacer(Modifier.weight(1f))
+        //thanks
+        Column(
+            Modifier
+                .align(Alignment.CenterVertically)
+                .clickable {
+                    vm.toast("点击了Tanks按钮")
+                }
+        ) {
+            Text(
+                text = "❤\uFE0F",
+                fontSize = TextUnit(10f, TextUnitType.Sp),
+                color = MaterialTheme.custom.onContainerSecondary,
+                lineHeight = TextUnit(1f, TextUnitType.Sp),
+                modifier = Modifier.padding(start = 5.dp)
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = "${details.thanks ?: 0}",
+                fontSize = TextUnit(10f, TextUnitType.Sp),
+                color = MaterialTheme.custom.onContainerSecondary,
+                lineHeight = TextUnit(1f, TextUnitType.Sp),
+                modifier = Modifier
+                    .padding(start = 5.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
+        Spacer(Modifier.width(10.dp))
+        //Collect
+        Column(
+            Modifier
+                .align(Alignment.CenterVertically)
+                .clickable(details.isCollected.value.not()) {
+                    vm.toast("点击了关注按钮")
+                }
+        ) {
+            ImageWrapper(
+                selected = details.isCollected.value,
+                selectedRes = R.drawable.collect_selected,
+                unselectedRes = R.drawable.collect_normal,
+                contentDescription = context.getString(R.string.collect),
+                modifier = Modifier.size(12.dp)
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = "${details.collections ?: 0}",
+                fontSize = TextUnit(10f, TextUnitType.Sp),
+                color = MaterialTheme.custom.onContainerSecondary,
+                lineHeight = TextUnit(1f, TextUnitType.Sp),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+        Spacer(Modifier.width(10.dp))
+        //Reply
+        Column(Modifier.align(Alignment.CenterVertically)) {
+            Image(
+                painter = painterResource(R.drawable.reply),
+                contentDescription = null,
+                modifier = Modifier.size(14.dp)
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = "${details.replyCount ?: 0}",
+                fontSize = TextUnit(10f, TextUnitType.Sp),
+                color = MaterialTheme.custom.onContainerSecondary,
+                lineHeight = TextUnit(1f, TextUnitType.Sp),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
     }

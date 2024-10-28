@@ -8,6 +8,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 /**
  * @description:
@@ -78,4 +79,6 @@ interface ApiService {
     @GET("/")
     suspend fun getNodeNavigation(): ResponseBody
 
+    @GET
+    suspend fun href(@Url url: String): ResponseBody
 }

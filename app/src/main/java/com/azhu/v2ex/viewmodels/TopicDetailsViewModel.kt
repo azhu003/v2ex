@@ -17,6 +17,7 @@ import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
 import com.azhu.v2ex.ui.activity.UserDetailsActivity
 import com.azhu.v2ex.ui.component.LoadingState
+import com.azhu.v2ex.utils.V2exUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -30,16 +31,19 @@ import kotlinx.coroutines.flow.launchIn
 class TopicDetailsViewModel : BaseViewModel() {
 
     val loading by mutableStateOf(LoadingState())
-    val state = mutableStateOf(TopicDetails())
+    val details = mutableStateOf(TopicDetails())
     val isLoadingMoreData = mutableStateOf(false)
     val hasMore = mutableStateOf(false)
+
+    //todo check re-login
+    val isLogged by mutableStateOf(V2exUtils.isLogged())
 
     fun onViewUserClick(context: Context, item: TopicReplyItem) {
         UserDetailsActivity.start(context, item.username)
     }
 
     fun fetchTopicDetails(isLoadMore: Boolean = false) {
-        val details = state.value
+        val details = details.value
         if (TextUtils.isEmpty(details.tid)) {
             logger.error("topic id is null")
             return
@@ -71,8 +75,8 @@ class TopicDetailsViewModel : BaseViewModel() {
     }
 
     private fun merge(details: TopicDetails, loadMore: Boolean) {
-        if (state.value.isInitialized && loadMore) {
-            val old = state.value.replys
+        if (this.details.value.isInitialized && loadMore) {
+            val old = this.details.value.replys
             val new = details.replys
             old.page = new.page
             old.total = new.total
@@ -80,7 +84,7 @@ class TopicDetailsViewModel : BaseViewModel() {
             isLoadingMoreData.value = false
         } else {
             details.isInitialized = true
-            state.value = details
+            this.details.value = details
         }
         hasMore.value = details.replys.page < details.replys.total
     }

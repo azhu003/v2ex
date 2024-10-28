@@ -17,10 +17,10 @@ object Constant {
     val CLICKS by lazy { Regex("(?<=\\s·\\s)\\d*?(?=\\s*次点击)") }
 
     //收藏数 "598 次点击 &nbsp;∙&nbsp; 11 人收藏 &nbsp; ∙&nbsp; 5 人感谢"
-    val COLLECTIONS by lazy { Regex("(?<=∙&nbsp;\\s).*?(?=\\s*人收藏)") }
+    val COLLECTIONS by lazy { Regex("(?<=\\s)\\d*?(?=\\s*人收藏)") }
 
     //感谢数
-    val USEFUL by lazy { Regex("(?<=人收藏 &nbsp; ∙&nbsp;\\s).*?(?=\\s*人感谢)") }
+    val THANKS by lazy { Regex("(?<=\\s)\\d*?(?=\\s*人感谢)") }
 
     //主题回复ID
     val REPLY_ID by lazy { Regex("(?<=r_)\\d+") }
@@ -33,7 +33,10 @@ object Constant {
 
     //V2EX 第 552124 号会员，加入于 2021-07-30 15:11:14 +08:00
     val MEMBER_NO by lazy { Regex("(?<=第\\s).*?(?=\\s号会员)") }
-    val REGISTER_AT by lazy { Regex("(?<=加入于\\s).*?(?=\\s+今日活跃度)") }
+    val REGISTER_AT by lazy { Regex("(?<=加入于\\s).*?(?=\\s+(今日活跃度|具有))") }
+
+    //location.href URL: if (confirm('确认要开始关注 xxx？')) { location.href = '/follow/xxx?once=90018'; }
+    val LOCATION_HREF by lazy { Regex("(?<=location.href\\s=\\s').*?(?=')") }
 
     //获取节点名"/go/rss"
     val NODE_NAME by lazy { Regex("(?<=/go/).*") }

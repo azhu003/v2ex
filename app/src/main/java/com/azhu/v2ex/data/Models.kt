@@ -55,14 +55,15 @@ data class TopicDetails(
     var tid: String? = null,
     var title: String = "",  //标题
     var author: String = "",
+    var avatar: String = "",
     var time: String = "",  //发布时间
     var content: String = "",
     var subtitles: MutableList<TopicDetailsSubtitle> = mutableListOf(), //附言
     var clicks: String = "",  //x次点击
-    var collections: String = "",  //收藏次数
-    var useful: String = "",  //x人感谢
-    var replyCount: String = "",
-
+    var collections: String? = null,  //收藏次数
+    var thanks: String? = null,  //x人感谢
+    var replyCount: String? = null,
+    var isCollected: MutableState<Boolean> = mutableStateOf(false),  //已收藏
     var replys: Pagination<TopicReplyItem> = Pagination(),
 )
 
@@ -88,7 +89,7 @@ data class TopicReplyItem(
     var no: String? = null,
     var badges: MutableList<String> = mutableListOf(),
     var content: String = "",
-    var star: String? = null,
+    var heart: String? = null,
 )
 
 @Stable
@@ -101,8 +102,17 @@ data class UserDetails(
     var ranking: String = "", //排名
     var topics: SnapshotStateList<UserRecentlyTopic> = mutableStateListOf(),
     var topicInvisible: Boolean = false,
-    var replies: SnapshotStateList<UserRecentlyReply> = mutableStateListOf()
-)
+    var replies: SnapshotStateList<UserRecentlyReply> = mutableStateListOf(),
+    var isFollowed: Boolean = false,
+    var isBlocked: Boolean = false,
+    var action: Actions = Actions(),
+) {
+    @Stable
+    data class Actions(
+        var flow: String? = null,
+        var block: String? = null,
+    )
+}
 
 //最近发布的主题
 @Stable

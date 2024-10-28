@@ -19,13 +19,19 @@ class UserDetailsResolver : BaseResolver<UserDetails>() {
         box.first()?.let {
             details.avatar = str { it.select("img.avatar").attr("src") }
             details.username = str { it.select("h1").text() }
+            details.isFollowed = it.select("input[value=取消特别关注]").isNotEmpty()
+            details.isBlocked = it.select("input[value=Unblock]").isNotEmpty()
+            details.action.flow = Constant.LOCATION_HREF.find(it.select("input[value~=取消特别关注|加入特别关注]").attr("onclick"))?.value
+            details.action.block =  Constant.LOCATION_HREF.find(it.select("input[value~=Unblock|Block]").attr("onclick"))?.value
+
+//            logger.info("flow=${details.action.flow}\nblock=${details.action.block}")
+
             details.online = it.select("strong.online").hasText()
             val span = it.select("td").last()?.select("span.gray")
             if (span != null) {
-                details.no = str { Constant.MEMBER_NO.find(span.first()?.text() ?: "")?.value }
-                details.registerAt = str {
-                    DateTimeUtils.format(Constant.REGISTER_AT.find(span.first()?.text() ?: "")?.value)
-                }
+                val text = span.first()?.text() ?: ""
+                details.no = str { Constant.MEMBER_NO.find(text)?.value }
+                details.registerAt = str { DateTimeUtils.format(Constant.REGISTER_AT.find(text)?.value) }
                 details.ranking = str { span.select("a[href=/top/dau]").text() }
             }
         }

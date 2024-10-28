@@ -28,6 +28,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         val header = document.select("div.header")
         details.title = str { header.select("h1").text() }
         details.author = str { header.select("small.gray a[href^=/member/]").text() }
+        details.avatar = str { header.select("img.avatar").attr("src") }
         details.clicks = str {
             Constant.CLICKS.find(header.select("small.gray").text() ?: "")?.value
         }
@@ -46,19 +47,19 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
                 details.subtitles.add(subtitle)
             }
         }
-        // div.topic_buttons 未渲染？
-//        catch {
-//            val stats = document.select("div.topic_stats").text()
-//            details.clicks = RegexConstant.CLICKS.find(stats)?.value ?: ""
-//            details.collections = RegexConstant.COLLECTIONS.find(stats)?.value ?: ""
-//            details.useful = RegexConstant.USEFUL.find(stats)?.value ?: ""
-//        }
+        //div.topic_buttons 未登录时没有这个div
+        val buttons = document.select("div.topic_buttons")
+        details.isCollected.value = buttons.select("> a[href^=/unfavorite/topic/]").isNotEmpty()
+        val stats = buttons.select("div.topic_stats").text()
+        details.collections = Constant.COLLECTIONS.find(stats)?.value
+        details.thanks = Constant.THANKS.find(stats)?.value
 
         //回复数
         details.replyCount = str {
             val cells = document.select("div.cell[id^=r_]")
             val text = cells.parents().first()?.select("span.gray")?.text() ?: ""
-            Constant.REPLY_NUMBERS.find(text)?.value
+            val count = Constant.REPLY_NUMBERS.find(text)?.value
+            if (count.isNullOrEmpty()) null else count
         }
     }
 
@@ -74,6 +75,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
                 reply.avatar = str { tr.select("img.avatar").attr("src") }
                 reply.username = str { tr.select("strong a[href^=/member/]").text() }
                 reply.time = str { DateTimeUtils.ago(tr.select("span.ago[title]").attr("title")) }
+                reply.heart = str { tr.select("span.small.fade").text().trim() }
                 reply.no = str { tr.select("div.fr span.no").text() }
                 val badges = tr.select("div.badges > div.badge")
                 badges.forEach { reply.badges.add(it.text()) }

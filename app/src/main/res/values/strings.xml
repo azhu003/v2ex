@@ -8,6 +8,11 @@
     <string name="topic_details">主题详情</string>
     <string name="number_of_replies">回复 %s</string>
     <string name="number_of_views">阅读 %s</string>
+    <string name="following_of_user">关注</string>
+    <string name="followed">已关注</string>
+    <string name="collect">收藏</string>
+    <string name="thanks">感谢</string>
+    <string name="replay">回复</string>
 
     <string name="subtitle_text">第%d条附言</string>
 
