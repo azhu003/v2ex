@@ -188,6 +188,7 @@ private fun TopicBody(details: TopicDetails) {
     }
     HtmlText(
         html = details.content,
+        isMarkdown = details.isMarkdown,
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 15.dp, top = 15.dp, end = 15.dp, bottom = 0.dp)
@@ -332,13 +333,13 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .clip(CircleShape)
-                .size(24.dp)
+                .size(36.dp)
                 .clickable { }
         )
         Text(
-            text = details.author, fontSize = TextUnit(12f, TextUnitType.Sp),
+            text = details.author, fontSize = TextUnit(14f, TextUnitType.Sp),
             modifier = Modifier
-                .padding(start = 3.dp)
+                .padding(start = 6.dp)
                 .align(Alignment.CenterVertically)
         )
         Spacer(Modifier.weight(1f))
@@ -352,7 +353,7 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
         ) {
             Text(
                 text = "❤\uFE0F",
-                fontSize = TextUnit(10f, TextUnitType.Sp),
+                fontSize = TextUnit(14f, TextUnitType.Sp),
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier.padding(start = 5.dp)
@@ -360,7 +361,7 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
             Spacer(Modifier.height(2.dp))
             Text(
                 text = "${details.thanks ?: 0}",
-                fontSize = TextUnit(10f, TextUnitType.Sp),
+                fontSize = TextUnit(14f, TextUnitType.Sp),
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier
@@ -368,7 +369,7 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
                     .align(Alignment.CenterHorizontally)
             )
         }
-        Spacer(Modifier.width(10.dp))
+        Spacer(Modifier.width(15.dp))
         //Collect
         Column(
             Modifier
@@ -382,29 +383,30 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
                 selectedRes = R.drawable.collect_selected,
                 unselectedRes = R.drawable.collect_normal,
                 contentDescription = context.getString(R.string.collect),
-                modifier = Modifier.size(12.dp)
+                modifier = Modifier.size(16.dp)
             )
             Spacer(Modifier.height(2.dp))
             Text(
                 text = "${details.collections ?: 0}",
-                fontSize = TextUnit(10f, TextUnitType.Sp),
+                fontSize = TextUnit(14f, TextUnitType.Sp),
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
-        Spacer(Modifier.width(10.dp))
+        Spacer(Modifier.width(15.dp))
         //Reply
         Column(Modifier.align(Alignment.CenterVertically)) {
             Image(
                 painter = painterResource(R.drawable.reply),
                 contentDescription = null,
-                modifier = Modifier.size(14.dp)
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(20.dp)
             )
             Spacer(Modifier.height(2.dp))
             Text(
                 text = "${details.replyCount ?: 0}",
-                fontSize = TextUnit(10f, TextUnitType.Sp),
+                fontSize = TextUnit(14f, TextUnitType.Sp),
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)

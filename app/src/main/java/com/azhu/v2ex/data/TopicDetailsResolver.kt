@@ -2,6 +2,7 @@ package com.azhu.v2ex.data
 
 import com.azhu.v2ex.utils.Constant
 import com.azhu.v2ex.utils.DateTimeUtils
+import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter
 import org.jsoup.nodes.Document
 
 /**
@@ -39,7 +40,16 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         }
         val divBox = document.select("div#Main div.box")
         divBox.first()?.let { div ->
-            details.content = str { div.select("div.cell div.topic_content").html() }
+            val context = div.select("div.cell div.topic_content")
+            details.isMarkdown = context.select("> div.markdown_body").isNotEmpty()
+            details.content = str {
+                val content = context.html()
+                return@str if (details.isMarkdown) {
+                    FlexmarkHtmlConverter.builder().build().convert(content)
+                } else {
+                    content
+                }
+            }
             document.select("div.subtle").forEach {
                 val subtitle = TopicDetailsSubtitle()
                 subtitle.time = str { DateTimeUtils.ago(it.select("span[title]").attr("title")) }

@@ -58,6 +58,7 @@ data class TopicDetails(
     var avatar: String = "",
     var time: String = "",  //发布时间
     var content: String = "",
+    var isMarkdown: Boolean = false,
     var subtitles: MutableList<TopicDetailsSubtitle> = mutableListOf(), //附言
     var clicks: String = "",  //x次点击
     var collections: String? = null,  //收藏次数

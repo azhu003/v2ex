@@ -11,7 +11,6 @@ android {
     defaultConfig {
         applicationId = "com.azhu.v2ex"
         minSdk = 28
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -20,7 +19,9 @@ android {
             useSupportLibrary = true
         }
     }
-
+    lint {
+        targetSdk = 34
+    }
     buildTypes {
         debug {
             isMinifyEnabled = true
@@ -62,6 +63,7 @@ android {
 }
 
 dependencies {
+    implementation(fileTree(mapOf("include" to listOf("*.jar", "*.aar"), "dir" to "libs")))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -110,4 +112,10 @@ dependencies {
     // 经典样式的指示器 (可选)
     implementation(libs.refresh.indicator.classic)
 
+//    implementation(files("./libs/markdown.aar"))
+    implementation(project(":submodules:markdown:library")){
+        exclude(group = "br.tiagohm.markdownview", module = "library")
+    }
+//    implementation("com.github.tiagohm.MarkdownView:library:0.19.0")
+    implementation(libs.flexmark.html2md.converter)
 }

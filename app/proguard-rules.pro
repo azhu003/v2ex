@@ -46,6 +46,10 @@
 #-dontwarn butterknife.internal.**
 #-keep class **$$ViewBinder { *; }
 
+-keep class br.tiagohm.markdownview.MarkdownView {*;}
+-keep class br.tiagohm.markdownview.MarkdownView$CustomAttributeProvider1 {*;}
+-keep class br.tiagohm.markdownview.MarkdownView$NodeRendererFactoryImpl {*;}
+
 #-------------------------3.与js互相调用的类------------------------
 
 
@@ -157,6 +161,7 @@
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
 -keep public class * extends android.preference.Preference
+-keep public class * extends android.view.View
 
 # ============忽略警告，否则打包可能会不成功=============
 -ignorewarnings

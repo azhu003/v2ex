@@ -8,6 +8,7 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /.idea/deploymentTargetSelector.xml
+/.idea/vcs.xml
 /.idea/*.xml
 /.kotlin
 .DS_Store

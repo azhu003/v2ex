@@ -17,6 +17,7 @@ refreshIndicatorClassic = "1.3.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+flexmark-html2md-converter = { module = "com.vladsch.flexmark:flexmark-html2md-converter", version = "0.64.8" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
@@ -61,6 +62,8 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.r
 
 refresh = { module = "com.github.jenly1314.UltraSwipeRefresh:refresh", version.ref = "refresh" }
 refresh-indicator-classic = { module = "com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic", version.ref = "refreshIndicatorClassic" }
+
+#markdown = { module = "com.github.tiagohm.MarkdownView:library", version = "0.19.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
