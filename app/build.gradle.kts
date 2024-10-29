@@ -62,6 +62,7 @@ android {
     }
 }
 
+//noinspection UseTomlInstead
 dependencies {
     implementation(fileTree(mapOf("include" to listOf("*.jar", "*.aar"), "dir" to "libs")))
 
@@ -98,12 +99,14 @@ dependencies {
     implementation(libs.com.squareup.retrofit2)
 
     //图片加载
+    implementation(libs.coil)
     implementation(libs.coil.compose)
+//    implementation(libs.coil.network.okhttp)
+
     //自定义浏览器标题栏
     implementation(libs.androidx.browser)
     //分页加载
     implementation(libs.androidx.paging.compose)
-
 
     implementation(project(":sth"))
 
@@ -112,10 +115,14 @@ dependencies {
     // 经典样式的指示器 (可选)
     implementation(libs.refresh.indicator.classic)
 
-//    implementation(files("./libs/markdown.aar"))
-    implementation(project(":submodules:markdown:library")){
-        exclude(group = "br.tiagohm.markdownview", module = "library")
-    }
-//    implementation("com.github.tiagohm.MarkdownView:library:0.19.0")
     implementation(libs.flexmark.html2md.converter)
+
+    implementation("io.noties.markwon:core:4.6.2")
+    implementation("io.noties.markwon:ext-tables:4.6.2")
+    implementation("io.noties.markwon:linkify:4.6.2")
+    implementation("io.noties.markwon:image:4.6.2")
+    implementation("io.noties.markwon:image-coil:4.6.2")
+    implementation("io.noties.markwon:syntax-highlight:4.6.2") {
+        exclude(group = "org.jetbrains", module = "annotations-java5")
+    }
 }

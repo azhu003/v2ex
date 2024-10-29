@@ -6,11 +6,11 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.6"
-androidx-activity-compose = "1.9.2"
-composeBom = "2024.09.03"
+androidx-activity-compose = "1.9.3"
+composeBom = "2024.10.00"
 appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.9.2"
+activity = "1.9.3"
 junitJupiter = "5.8.1"
 refresh = "1.3.0"
 refreshIndicatorClassic = "1.3.0"
@@ -24,10 +24,8 @@ androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", vers
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
-androidx-ui = { module = "androidx.compose.ui:ui" }
 
-##解决Column卡顿问题?
-androidx-foundation = { module = "androidx.compose.foundation:foundation", version = "1.7.3" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation", version = "1.7.4" }
 
 androidx-browser = { module = "androidx.browser:browser", version = "1.8.0" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version = "3.3.2" }
@@ -38,12 +36,12 @@ androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
-androidx-runtime-android = { module = "androidx.compose.runtime:runtime-android", version = "1.7.3" }
+androidx-runtime-android = { module = "androidx.compose.runtime:runtime-android", version = "1.7.4" }
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 
-android-navigation-compose = { module = "androidx.navigation:navigation-compose", version = "2.8.2" }
+android-navigation-compose = { module = "androidx.navigation:navigation-compose", version = "2.8.3" }
 
 # 网络
 com-squareup-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
@@ -56,14 +54,15 @@ com-tencent-mmkv = { module = "com.tencent:mmkv", version = "1.3.9" }
 # html解析 https://github.com/jhy/jsoup
 org-jsoup = { module = "org.jsoup:jsoup", version = "1.18.1" }
 
+coil = { module = "io.coil-kt:coil", version = "2.7.0" }
 coil-compose = { module = "io.coil-kt:coil-compose", version = "2.7.0" }
+#coil-network-okhttp = { module = "io.coil-kt.coil:coil-network-okhttp", version = "2.7.0" }
+
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 refresh = { module = "com.github.jenly1314.UltraSwipeRefresh:refresh", version.ref = "refresh" }
 refresh-indicator-classic = { module = "com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic", version.ref = "refreshIndicatorClassic" }
-
-#markdown = { module = "com.github.tiagohm.MarkdownView:library", version = "0.19.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

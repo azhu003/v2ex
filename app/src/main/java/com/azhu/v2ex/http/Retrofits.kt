@@ -3,7 +3,6 @@ package com.azhu.v2ex.http
 import android.content.Context
 import coil.Coil
 import coil.ImageLoader
-import coil.ImageLoaderFactory
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import com.azhu.v2ex.http.cookie.CookieManager
@@ -23,6 +22,8 @@ object Retrofits {
 
     private const val TIME_OUT = 15L
     private lateinit var defaultRetrofit: Retrofit
+
+    lateinit var imageLoader: ImageLoader
 
     fun init(context: Context, baseUrl: String) {
         defaultRetrofit = create(context, baseUrl)
@@ -57,24 +58,22 @@ object Retrofits {
     }
 
     private fun setupCoil(context: Context, okHttpClient: OkHttpClient) {
-        Coil.setImageLoader(ImageLoaderFactory {
-            val imageLoader = ImageLoader.Builder(context)
-                .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.2).build())
-                .diskCachePolicy(CachePolicy.ENABLED)  //磁盘缓策略 ENABLED、READ_ONLY、WRITE_ONLY、DISABLED
-                .networkCachePolicy(CachePolicy.ENABLED)
-                .crossfade(true) //淡入淡出
-                .crossfade(500)  //淡入淡出时间
-                .okHttpClient { okHttpClient }
-                .build()
-            return@ImageLoaderFactory imageLoader
-        })
+        imageLoader = ImageLoader.Builder(context)
+            .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.2).build())
+            .diskCachePolicy(CachePolicy.ENABLED)  //磁盘缓策略 ENABLED、READ_ONLY、WRITE_ONLY、DISABLED
+            .networkCachePolicy(CachePolicy.ENABLED)
+            .crossfade(true) //淡入淡出
+            .crossfade(500)  //淡入淡出时间
+            .okHttpClient(okHttpClient)
+            .build()
+        Coil.setImageLoader(imageLoader)
     }
 
     fun <T : Any> getService(clazz: KClass<T>): T {
         return getInstance().create(clazz.java)
     }
 
-    fun getInstance(): Retrofit {
+    private fun getInstance(): Retrofit {
         if (!Retrofits::defaultRetrofit.isInitialized) {
             throw NullPointerException("Retrofit is not initialized")
         }

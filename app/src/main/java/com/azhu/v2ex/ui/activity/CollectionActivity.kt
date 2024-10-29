@@ -106,12 +106,14 @@ private fun NodeCollection(vm: NodeCollectionViewModel) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.clickable { TopicByNodeActivity.start(context, node.key) }) {
+
                         AsyncImage(
                             model = node.image,
                             contentDescription = null,
                             contentScale = ContentScale.Inside,
                             modifier = Modifier.size(40.dp)
                         )
+
                         Text(
                             text = node.name,
                             color = MaterialTheme.custom.onContainerPrimary,

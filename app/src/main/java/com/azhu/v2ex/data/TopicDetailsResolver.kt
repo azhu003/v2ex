@@ -69,7 +69,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
             val cells = document.select("div.cell[id^=r_]")
             val text = cells.parents().first()?.select("span.gray")?.text() ?: ""
             val count = Constant.REPLY_NUMBERS.find(text)?.value
-            if (count.isNullOrEmpty()) null else count
+            count ?: "0"
         }
     }
 
