@@ -39,24 +39,6 @@ import io.noties.prism4j.Prism4j
  * @date: 2024-10-07 12:50
  * @version: 1.0.0
  */
-private val textColor by lazy {
-    return@lazy if (AppThemeProvider.isDark()) {
-        Color.argb(
-            onContainerPrimaryDark.alpha,
-            onContainerPrimaryDark.red,
-            onContainerPrimaryDark.green,
-            onContainerPrimaryDark.blue
-        )
-    } else {
-        Color.argb(
-            onContainerPrimaryLight.alpha,
-            onContainerPrimaryLight.red,
-            onContainerPrimaryLight.green,
-            onContainerPrimaryLight.blue
-        )
-    }
-}
-
 @Composable
 fun HtmlText(modifier: Modifier, html: String, isMarkdown: Boolean = false, fontSize: Float = 16f) {
     val width = remember { mutableFloatStateOf(0f) }
@@ -73,7 +55,7 @@ fun HtmlText(modifier: Modifier, html: String, isMarkdown: Boolean = false, font
             Linkify.addLinks(textview, Linkify.EMAIL_ADDRESSES)
             Linkify.addLinks(textview, Linkify.PHONE_NUMBERS)
             textview.movementMethod = LinkMovementMethod.getInstance()
-            textview.setTextColor(textColor)
+            textview.setTextColor(getTextColor())
             textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
 //            view.lineHeight = 80f.dp.value.toInt()
 //            logger.info("factory -> 构造TextView ")
@@ -117,4 +99,22 @@ private fun getMarkdown(context: Context): Markwon {
             )
         )
         .build()
+}
+
+private fun getTextColor(): Int {
+    return if (AppThemeProvider.isDark()) {
+        Color.argb(
+            onContainerPrimaryDark.alpha,
+            onContainerPrimaryDark.red,
+            onContainerPrimaryDark.green,
+            onContainerPrimaryDark.blue
+        )
+    } else {
+        Color.argb(
+            onContainerPrimaryLight.alpha,
+            onContainerPrimaryLight.red,
+            onContainerPrimaryLight.green,
+            onContainerPrimaryLight.blue
+        )
+    }
 }

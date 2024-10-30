@@ -4,6 +4,7 @@ import android.net.Uri
 import com.azhu.basic.AppManager
 import com.azhu.basic.provider.StoreProvider
 import com.azhu.v2ex.http.cookie.PersistentCookieStore
+import java.util.Locale
 
 /**
  * @author: azhu
@@ -67,5 +68,21 @@ object V2exUtils {
             return "https:$url"
         }
         return url
+    }
+
+    /**
+     * 格式化bytes
+     * @param bytes 字节长度
+     */
+    fun formatBytes(bytes: Long): String {
+        val kb = 1024L
+        val mb = kb * 1024
+        val gb = mb * 1024
+        return when {
+            bytes >= gb -> String.format(Locale.ROOT, "%.2f GB", bytes.toDouble() / gb)
+            bytes >= mb -> String.format(Locale.ROOT, "%.2f MB", bytes.toDouble() / mb)
+            bytes >= kb -> String.format(Locale.ROOT, "%.2f KB", bytes.toDouble() / kb)
+            else -> "$bytes Bytes"
+        }
     }
 }

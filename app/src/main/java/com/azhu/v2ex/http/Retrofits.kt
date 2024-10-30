@@ -23,7 +23,9 @@ object Retrofits {
     private const val TIME_OUT = 15L
     private lateinit var defaultRetrofit: Retrofit
 
-    lateinit var imageLoader: ImageLoader
+    private lateinit var _imageLoader: ImageLoader
+    val imageLoader: ImageLoader
+        get() = _imageLoader
 
     fun init(context: Context, baseUrl: String) {
         defaultRetrofit = create(context, baseUrl)
@@ -58,7 +60,7 @@ object Retrofits {
     }
 
     private fun setupCoil(context: Context, okHttpClient: OkHttpClient) {
-        imageLoader = ImageLoader.Builder(context)
+        _imageLoader = ImageLoader.Builder(context)
             .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.2).build())
             .diskCachePolicy(CachePolicy.ENABLED)  //磁盘缓策略 ENABLED、READ_ONLY、WRITE_ONLY、DISABLED
             .networkCachePolicy(CachePolicy.ENABLED)
@@ -66,7 +68,7 @@ object Retrofits {
             .crossfade(500)  //淡入淡出时间
             .okHttpClient(okHttpClient)
             .build()
-        Coil.setImageLoader(imageLoader)
+        Coil.setImageLoader(_imageLoader)
     }
 
     fun <T : Any> getService(clazz: KClass<T>): T {

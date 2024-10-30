@@ -6,10 +6,12 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LevelListDrawable
 import android.text.Html.ImageGetter
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.ui.unit.Dp
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.azhu.basic.provider.AppThemeProvider
+import com.azhu.v2ex.R
 import com.azhu.v2ex.ext.toPx
 import com.azhu.v2ex.ui.theme.onContainerSecondaryDark
 import com.azhu.v2ex.ui.theme.onContainerSecondaryLight
@@ -41,21 +43,33 @@ class TextImageGetter(textView: TextView, private val with: Float, private val f
         mTextViewReference.get()?.let { text ->
             val request = ImageRequest.Builder(text.context)
                 .data(V2exUtils.fixUrl(url))
-                .target { drawable ->
-                    resize(drawable, with, fontSize)
-                    //level=0 将占位图的大小设置为实际图片一致
-                    level.setBounds(0, 0, drawable.bounds.right, drawable.bounds.bottom)
-                    level.addLevel(1, 1, drawable)
-                    level.setBounds(1, 1, drawable.bounds.right, drawable.bounds.bottom)
-                    level.setLevel(1)
-                    text.invalidate()
-                    //避免多图片重叠
-                    val t: CharSequence = text.text
-                    text.text = t
-                }
+                .error(R.drawable.img_error)
+                .target(
+                    onError = { drawable ->
+                        if (drawable != null) {
+                            drawable.setBounds(0, 0, 100, 100)
+                            setDrawable(drawable, level, text)
+                        }
+                    }, onSuccess = { drawable ->
+                        resize(drawable, with, fontSize)
+                        setDrawable(drawable, level, text)
+                    }
+                )
                 .build()
             return@let text.context.imageLoader.enqueue(request)
         }
+    }
+
+    private fun setDrawable(drawable: Drawable, level: LevelListDrawable, text: TextView) {
+        //level=0 将占位图的大小设置为实际图片一致
+        level.setBounds(0, 0, drawable.bounds.right, drawable.bounds.bottom)
+        level.addLevel(1, 1, drawable)
+        level.setBounds(1, 1, drawable.bounds.right, drawable.bounds.bottom)
+        level.setLevel(1)
+        text.invalidate()
+        //避免多图片重叠
+        val t: CharSequence = text.text
+        text.text = t
     }
 
     private fun resize(drawable: Drawable, sw: Float, fontSize: Dp) {
@@ -82,24 +96,29 @@ class TextImageGetter(textView: TextView, private val with: Float, private val f
     }
 
     private fun getPlaceholder(): Drawable {
-        val drawable = if (AppThemeProvider.isDark()) {
-            ColorDrawable(
-                Color.argb(
-                    onContainerSecondaryDark.alpha,
-                    onContainerSecondaryDark.red,
-                    onContainerSecondaryDark.green,
-                    onContainerSecondaryDark.blue
+        var drawable = mTextViewReference.get()?.let { text ->
+            AppCompatResources.getDrawable(text.context, R.drawable.img_loading)
+        }
+        if (drawable == null) {
+            drawable = if (AppThemeProvider.isDark()) {
+                ColorDrawable(
+                    Color.argb(
+                        onContainerSecondaryDark.alpha,
+                        onContainerSecondaryDark.red,
+                        onContainerSecondaryDark.green,
+                        onContainerSecondaryDark.blue
+                    )
                 )
-            )
-        } else {
-            ColorDrawable(
-                Color.argb(
-                    onContainerSecondaryLight.alpha,
-                    onContainerSecondaryLight.red,
-                    onContainerSecondaryLight.green,
-                    onContainerSecondaryLight.blue
+            } else {
+                ColorDrawable(
+                    Color.argb(
+                        onContainerSecondaryLight.alpha,
+                        onContainerSecondaryLight.red,
+                        onContainerSecondaryLight.green,
+                        onContainerSecondaryLight.blue
+                    )
                 )
-            )
+            }
         }
         drawable.setBounds(0, 0, 200, 200)
         return drawable

@@ -17,6 +17,7 @@ import com.azhu.v2ex.ext.complete
 import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
+import com.azhu.v2ex.ui.component.LoadingDialogState
 import com.azhu.v2ex.ui.component.LoadingState
 import com.azhu.v2ex.utils.Constant
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,8 @@ class LoginViewModel : BaseViewModel() {
     var form by mutableStateOf(LoginRequestParams())
 
     var warning by mutableStateOf("")
+
+    val loadingDialog = LoadingDialogState()
 
     fun fetchLoginParams() {
         ui.isLoading.value = false
@@ -87,7 +90,7 @@ class LoginViewModel : BaseViewModel() {
             }
         }
         if (warning.isNotEmpty()) return
-
+        loadingDialog.show()
         http.flows {
             DataRepository.INSTANCE.signin(
                 Pair(params.username, form.username),
@@ -111,6 +114,7 @@ class LoginViewModel : BaseViewModel() {
                 context.setResult(Activity.RESULT_OK)
                 context.finish()
             }
+            .complete { loadingDialog.dismiss() }
             .launchIn(viewModelScope)
     }
 

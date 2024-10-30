@@ -65,6 +65,8 @@
     <string name="settings">设置</string>
     <string name="logout">退出登录</string>
     <string name="logout_succeed">退出登录成功</string>
+    <string name="clear_catch">清除缓存</string>
+    <string name="operation_successful">操作成功</string>
 
     <string name="topic_total">主题总数</string>
 
@@ -72,4 +74,8 @@
 
     <string name="no_data">暂无数据</string>
     <string name="view_more">查看更多</string>
+
+    <string name="canceled">取消</string>
+    <string name="positive">确定</string>
+
 </resources>

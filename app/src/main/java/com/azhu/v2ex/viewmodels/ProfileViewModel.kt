@@ -74,7 +74,7 @@ class ProfileViewModel : LifecycleViewModel() {
             .success {
                 profile = it
                 isClaimLoginRewardsEnable = !it.isClaimedLoginRewards
-                if (!isRefreshByUser) state.setLoadSuccess()
+                if (state.isNotSuccess()) state.setLoadSuccess()
 
                 if (!profile.isUnlogged) {
                     fetchRecentlyActivities()

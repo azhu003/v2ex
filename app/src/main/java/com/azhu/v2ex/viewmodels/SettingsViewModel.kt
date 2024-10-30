@@ -1,15 +1,22 @@
 package com.azhu.v2ex.viewmodels
 
-import com.azhu.basic.provider.logger
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
+import coil.annotation.ExperimentalCoilApi
 import com.azhu.v2ex.R
-import com.azhu.v2ex.data.DataRepository
 import com.azhu.v2ex.data.SettingsState
-import com.azhu.v2ex.ext.error
 import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
+import com.azhu.v2ex.http.Retrofits
+import com.azhu.v2ex.ui.component.LoadingDialogState
+import com.azhu.v2ex.ui.component.MessageDialogState
 import com.azhu.v2ex.utils.V2exUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 
 /**
  * @author: Jerry
@@ -19,6 +26,14 @@ import kotlinx.coroutines.flow.flowOn
 class SettingsViewModel : BaseViewModel() {
 
     val state = SettingsState()
+    val messageDialog = MessageDialogState()
+    val loadingDialog = LoadingDialogState()
+    var cachedSize by mutableStateOf("")
+        internal set
+
+    fun fetchData() {
+        fetchCatchSize()
+    }
 
     fun logout() {
         if (!V2exUtils.isLogged() && V2exUtils.getCurrentUsername().isNullOrBlank()) return
@@ -38,5 +53,28 @@ class SettingsViewModel : BaseViewModel() {
 //                state.isLogoutSuccessfully.value = true
 //            }
     }
+
+    @OptIn(ExperimentalCoilApi::class)
+    fun cleanCache() {
+        http.flows {
+            Retrofits.imageLoader.memoryCache?.clear()
+            Retrofits.imageLoader.diskCache?.clear()
+            delay(50)
+        }
+            .smap { Result.success(it) }
+            .flowOn(Dispatchers.IO)
+            .success {
+                fetchCatchSize()
+                toast(R.string.operation_successful)
+            }
+            .launchIn(viewModelScope)
+    }
+
+    @OptIn(ExperimentalCoilApi::class)
+    private fun fetchCatchSize() {
+        val size = Retrofits.imageLoader.diskCache?.size ?: 0
+        cachedSize = V2exUtils.formatBytes(size)
+    }
+
 
 }

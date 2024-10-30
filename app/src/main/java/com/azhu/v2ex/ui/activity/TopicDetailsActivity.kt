@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -99,7 +100,7 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
 
     LoadingLayout(vm.loading, modifier = Modifier.fillMaxSize(), onRetry = vm::fetchTopicDetails) {
 
-        Column {
+        Column(Modifier.fillMaxHeight()) {
             UltraSwipeRefresh(
                 state = state,
                 refreshEnabled = false,
@@ -251,15 +252,6 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                 .size(30.dp)
                 .clickable { vm.onViewUserClick(context, item) }
         )
-//        Image(
-//            painter = painterResource(R.drawable.ic_launcher_foreground),
-//            contentDescription = null,
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .padding(end = 10.dp)
-//                .clip(MaterialTheme.shapes.small)
-//                .size(30.dp)
-//        )
         Column(Modifier.fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -334,13 +326,14 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
             modifier = Modifier
                 .clip(CircleShape)
                 .size(36.dp)
-                .clickable { }
+                .clickable { UserDetailsActivity.start(context, details.author) }
         )
         Text(
             text = details.author, fontSize = TextUnit(14f, TextUnitType.Sp),
             modifier = Modifier
                 .padding(start = 6.dp)
                 .align(Alignment.CenterVertically)
+                .clickable { UserDetailsActivity.start(context, details.author) }
         )
         Spacer(Modifier.weight(1f))
         //thanks

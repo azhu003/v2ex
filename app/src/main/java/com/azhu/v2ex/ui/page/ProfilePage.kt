@@ -68,7 +68,8 @@ fun ProfilePage(vm: ProfileViewModel) {
             ObserveLifecycleLayout(observer = vm) {
                 LoadingLayout(
                     state = vm.state,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    onRetry = vm::onRefresh
                 ) {
                     if (vm.profile.isUnlogged) {
                         Unlogged(vm)

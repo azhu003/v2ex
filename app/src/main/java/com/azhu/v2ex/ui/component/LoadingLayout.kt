@@ -72,7 +72,10 @@ fun LoadingLayout(
                     modifier = Modifier
                         .padding(top = 10.dp)
                         .padding(horizontal = 3.dp, vertical = 2.dp)
-                        .clickable { onRetry.invoke() }
+                        .clickable {
+                            state.setLoading()
+                            onRetry.invoke()
+                        }
                 )
             }
         }
@@ -112,6 +115,10 @@ class LoadingState(state: LoadState = LoadState.LOADING) {
 
     fun isLoading(): Boolean {
         return this.state == LoadState.LOADING
+    }
+
+    fun isNotSuccess(): Boolean {
+        return this.state != LoadState.SUCCESS
     }
 }
 

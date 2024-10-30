@@ -37,8 +37,8 @@ class DataRepository private constructor() {
         type: TopicDetailsResolverType = TopicDetailsResolverType.ALL,
         page: Int = 1
     ): TopicDetails {
-        val body = getHtmlFromAssets("topic.html")
-//        val body = remote.service.getTopicDetails(tid, page).byteStream()
+//        val body = getHtmlFromAssets("topic.html")
+        val body = remote.service.getTopicDetails(tid, page).byteStream()
         return TopicDetailsResolver(type, tid).resolver(body)
     }
 
