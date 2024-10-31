@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -93,7 +92,7 @@ fun <T : DialogState> DialogWrapper(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .background(MaterialTheme.custom.container, MaterialTheme.shapes.small)
-                    .defaultMinSize(width ?: (context.resources.displayMetrics.widthPixels * 0.7f).dp, height ?: Dp.Unspecified),
+                    .defaultMinSize(width ?: (context.resources.displayMetrics.widthPixels * 0.6f).dp, height ?: Dp.Unspecified),
             ) {
                 if (state.title.isNotEmpty()) {
                     Text(
@@ -152,7 +151,7 @@ private fun DialogActions(state: DialogState) {
             shape = MaterialTheme.shapes.small,
             colors = ButtonColors(
                 containerColor = Color.Transparent,
-                contentColor = MaterialTheme.custom.primary,
+                contentColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
                 disabledContentColor = MaterialTheme.custom.onContainerPrimary
             ),
@@ -160,7 +159,7 @@ private fun DialogActions(state: DialogState) {
             Text(
                 context.getString(R.string.positive),
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.White
+                color = MaterialTheme.custom.primary
             )
         }
     }
@@ -174,7 +173,7 @@ open class DialogState {
     var onNegativeClick: ((state: DialogState) -> Unit)? = null
     var onPositiveClick: ((state: DialogState) -> Unit)? = null
 
-    open fun <T : DialogState> show(
+    protected fun <T : DialogState> show(
         title: String? = null,
         @StringRes titleRes: Int? = null,
         onDismiss: (() -> Unit)? = null,
@@ -200,20 +199,23 @@ class MessageDialogState : DialogState() {
     var message by mutableStateOf("")
 
     fun show(
-        message: String,
+        message: String? = null,
+        @StringRes messageRes: Int? = null,
         title: String? = null,
+        @StringRes titleRes: Int? = null,
         onDismiss: (() -> Unit)? = null,
         onNegativeClick: ((state: MessageDialogState) -> Unit)? = null,
         onPositiveClick: ((state: MessageDialogState) -> Unit)? = null,
     ) {
         super.show(
             title = title,
-            titleRes = null,
+            titleRes = titleRes,
             onDismiss = onDismiss,
             onNegativeClick = onNegativeClick,
             onPositiveClick = onPositiveClick
         )
-        this.message = message
+        if (!message.isNullOrEmpty()) this.message = message
+        else if (messageRes != null) this.message = AppManager.getCurrentActivity()?.getString(messageRes) ?: ""
     }
 
     override fun dismiss() {

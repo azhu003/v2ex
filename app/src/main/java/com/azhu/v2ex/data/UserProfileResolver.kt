@@ -36,7 +36,7 @@ class UserProfileResolver : BaseResolver<UserProfile>() {
             }
             if (!profile.isClaimedLoginRewards) {
                 val input = document.select("div#Main div.box input[onclick^=location.href]").attr("onclick")
-                profile.claimedLoginRewardNonce = Constant.CLAIMED_LOGIN_REWARD_ONCE.find(input)?.value
+                profile.claimedLoginRewardNonce = Constant.ONCE.find(input)?.value
             }
         }
         return profile

@@ -44,7 +44,7 @@ object Constant {
     //连续登录天数
     val DAYS_OF_CONSECUTIVE_LOGIN by lazy { Regex("(?<=已连续登录\\s)\\d*?(?=\\s天)") }
 
-    //领取每日奖励once ClaimedLoginRewards
-    val CLAIMED_LOGIN_REWARD_ONCE by lazy { Regex("(?<=once=)\\d*") }
+    //获取URL中的once参数
+    val ONCE by lazy { Regex("(?<=once=)\\d*") }
 
 }

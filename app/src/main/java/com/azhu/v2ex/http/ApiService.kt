@@ -8,7 +8,6 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 /**
  * @description:
@@ -26,6 +25,25 @@ interface ApiService {
 
     @GET("/t/{sid}")
     suspend fun getTopicDetails(@Path("sid") sid: String, @Query("p") page: Int = 1): ResponseBody
+
+    @GET("/favorite/topic/{tid}")
+    suspend fun favorite(@Path("tid") tid: String, @Query("once") once: String, @Header("Referer") referer: String): ResponseBody
+
+    @GET("/unfavorite/topic/{tid}")
+    suspend fun unfavorite(
+        @Path("tid") tid: String,
+        @Query("once") once: String,
+        @Header("Referer") referer: String
+    ): ResponseBody
+
+    @GET("/ignore/topic/{tid}")
+    suspend fun ignore(@Path("tid") tid: String, @Query("once") once: String, @Header("Referer") referer: String): ResponseBody
+
+    @POST("/thank/topic/{tid}")
+    suspend fun thank(@Path("tid") tid: String, @Query("once") once: String): ResponseBody
+
+    @POST("/thank/reply/{rid}")
+    suspend fun thankReply(@Path("rid") rid: String, @Query("once") once: String): ResponseBody
 
     @GET("/member/{username}")
     suspend fun getMemberDetails(@Path("username") username: String): ResponseBody
@@ -47,15 +65,13 @@ interface ApiService {
     @GET("/mission/daily/redeem")
     suspend fun claimLoginRewards(
         @Query("once") once: String,
-        @Header("Origin") origin: String = "https://www.v2ex.com",
         @Header("Referer") referer: String = "https://www.v2ex.com/signin?next=/mission/daily"
     ): ResponseBody
 
     @GET("/signout")
     suspend fun logout(
         @Query("once") nonce: String,
-        @Header("Origin") origin: String = "https://www.v2ex.com",
-        @Header("Referer") referer: String = "https://www.v2ex.com/member/{username}"
+        @Header("Referer") referer: String
     ): ResponseBody
 
     @GET("/my/nodes")
@@ -78,7 +94,4 @@ interface ApiService {
 
     @GET("/")
     suspend fun getNodeNavigation(): ResponseBody
-
-    @GET
-    suspend fun href(@Url url: String): ResponseBody
 }

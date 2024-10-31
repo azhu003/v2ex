@@ -62,11 +62,14 @@ data class TopicDetails(
     var subtitles: MutableList<TopicDetailsSubtitle> = mutableListOf(), //附言
     var clicks: String = "",  //x次点击
     var collections: String? = null,  //收藏次数
-    var thanks: String? = null,  //x人感谢
     var replyCount: String? = null,
-    var isCollected: MutableState<Boolean> = mutableStateOf(false),  //已收藏
+    var isCollected: Boolean = false,  //已收藏
+    var once: String? = null,
     var replys: Pagination<TopicReplyItem> = Pagination(),
-)
+) {
+    var thanks by mutableStateOf("")  //x人感谢
+    var isThanked by mutableStateOf(false)  //感谢已发送?
+}
 
 @Stable
 enum class TopicDetailsResolverType {
@@ -90,8 +93,9 @@ data class TopicReplyItem(
     var no: String? = null,
     var badges: MutableList<String> = mutableListOf(),
     var content: String = "",
-    var heart: String? = null,
-)
+) {
+    var thanks by mutableStateOf("")
+}
 
 @Stable
 data class UserDetails(
@@ -208,4 +212,11 @@ data class TopicByNode(
 data class NodeNav(
     var key: String = "",
     var label: String = "",
+)
+
+@Stable
+data class JsonResult(
+    var success: Boolean? = null,
+    var once: Int? = null,
+    var message: String? = null
 )

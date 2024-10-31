@@ -1,8 +1,11 @@
 package com.azhu.v2ex.data
 
 import com.azhu.basic.AppManager
+import com.azhu.basic.provider.logger
 import com.azhu.v2ex.http.Http
+import com.azhu.v2ex.http.Referer
 import kotlinx.coroutines.delay
+import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 import kotlin.random.Random
@@ -40,6 +43,35 @@ class DataRepository private constructor() {
 //        val body = getHtmlFromAssets("topic.html")
         val body = remote.service.getTopicDetails(tid, page).byteStream()
         return TopicDetailsResolver(type, tid).resolver(body)
+    }
+
+    suspend fun favorite(tid: String, once: String): TopicDetails {
+        val body = remote.service.favorite(tid, once, Referer.Favorite.getReferer("tid", tid)).byteStream()
+        return TopicDetailsResolver(TopicDetailsResolverType.ONLY_TOPIC_BODY, tid).resolver(body)
+    }
+
+    suspend fun unfavorite(tid: String, once: String): TopicDetails {
+        val body = remote.service.unfavorite(tid, once, Referer.UnFavorite.getReferer("tid", tid)).byteStream()
+        return TopicDetailsResolver(TopicDetailsResolverType.ONLY_TOPIC_BODY, tid).resolver(body)
+    }
+
+    suspend fun ignore(tid: String, once: String): TopicDetails {
+        val body = remote.service.ignore(tid, once, Referer.Ignore.getReferer("tid", tid)).byteStream()
+        return TopicDetailsResolver(TopicDetailsResolverType.ONLY_TOPIC_BODY, tid).resolver(body)
+    }
+
+    suspend fun thank(tid: String, once: String): JsonResult {
+        val body = remote.service.thank(tid, once).string()
+        val result = toJsonResult(body)
+        logger.info("thank has sent. result: tid=$tid once=$once -> $result")
+        return result
+    }
+
+    suspend fun thankReplay(rid: String, once: String): JsonResult {
+        val body = remote.service.thankReply(rid, once).string()
+        val result = toJsonResult(body)
+        logger.info("thank has sent. result: rid=$rid once=$once -> $result")
+        return result
     }
 
     suspend fun getUserDetails(username: String): UserDetails {
@@ -85,7 +117,7 @@ class DataRepository private constructor() {
     }
 
     suspend fun logout(username: String, once: String): Any {
-        val body = remote.service.logout(once, referer = "https://www.v2ex.com/member/$username").byteStream()
+        val body = remote.service.logout(once, Referer.SignOut.getReferer("username", username)).byteStream()
         return LogoutResolver().resolver(body)
     }
 
@@ -129,6 +161,15 @@ class DataRepository private constructor() {
         val body = remote.service.getNodeNavigation().byteStream()
 //        val body = getHtmlFromAssets("topics.html")
         return NodeNavigationResolver().resolver(body)
+    }
+
+    private fun toJsonResult(body: String): JsonResult {
+        val json = JSONObject(body)
+        val result = JsonResult()
+        result.success = json.getBoolean("success")
+        result.once = json.getInt("once")
+        result.message = json.getString("message")
+        return result
     }
 
     private fun getHtmlFromAssets(fileName: String): InputStream {

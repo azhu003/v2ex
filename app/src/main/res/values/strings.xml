@@ -13,6 +13,11 @@
     <string name="collect">收藏</string>
     <string name="thanks">感谢</string>
     <string name="replay">回复</string>
+    <string name="thanks_topic_tips">你确定要向本主题创建者发送谢意？</string>
+    <string name="thanked_tips">您已发送过谢意</string>
+    <string name="thank_has_sent">感谢已发送</string>
+    <string name="ignore_topic_tips">确定不想再看到这个主题？</string>
+    <string name="thanks_reply_tips">确认花费 10 个铜币向 @%s 的这条回复发送感谢？</string>
 
     <string name="subtitle_text">第%d条附言</string>
 
@@ -67,6 +72,7 @@
     <string name="logout_succeed">退出登录成功</string>
     <string name="clear_catch">清除缓存</string>
     <string name="operation_successful">操作成功</string>
+    <string name="operation_failed">操作失败</string>
 
     <string name="topic_total">主题总数</string>
 
@@ -75,6 +81,7 @@
     <string name="no_data">暂无数据</string>
     <string name="view_more">查看更多</string>
 
+    <string name="tips">提示</string>
     <string name="canceled">取消</string>
     <string name="positive">确定</string>
 

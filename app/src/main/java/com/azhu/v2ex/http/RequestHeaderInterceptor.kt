@@ -14,16 +14,18 @@ class RequestHeaderInterceptor(private val cookieManager: CookieManager) : Inter
 
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        if (V2exUtils.isIntraSiteLink(request.url.toUri().toString())) {
+        val uri = request.url
+        if (V2exUtils.isIntraSiteLink(uri.toString())) {
             val cookies = cookieManager.loadForRequest(request.url)
             val sb = StringBuilder()
             cookies.forEachIndexed { index, cookie ->
                 sb.append("${cookie.name}=${cookie.value}")
                 if (index < cookies.size - 1) sb.append(";")
             }
-            request = request.newBuilder()
+            request.newBuilder()
                 .addHeader("User-Agent", UserAgentUtils.UA)
                 .addHeader("Cookie", sb.toString())
+                .addHeader("Origin", "https://www.v2ex.com")
                 .build()
         } else {
             request = request.newBuilder().build()

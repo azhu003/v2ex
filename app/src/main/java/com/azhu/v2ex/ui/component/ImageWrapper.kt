@@ -3,9 +3,6 @@ package com.azhu.v2ex.ui.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -28,9 +25,8 @@ fun ImageWrapper(
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null
 ) {
-    val state by remember { mutableStateOf(selected) }
     Image(
-        painter = painterResource(if (state) selectedRes else unselectedRes),
+        painter = painterResource(if (selected) selectedRes else unselectedRes),
         contentDescription = contentDescription,
         modifier = modifier,
         alignment = alignment,

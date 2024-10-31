@@ -30,9 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,7 +48,9 @@ import com.azhu.v2ex.R
 import com.azhu.v2ex.data.TopicDetails
 import com.azhu.v2ex.data.TopicReplyItem
 import com.azhu.v2ex.ui.component.ImageWrapper
+import com.azhu.v2ex.ui.component.LoadingDialog
 import com.azhu.v2ex.ui.component.LoadingLayout
+import com.azhu.v2ex.ui.component.MessageDialog
 import com.azhu.v2ex.ui.component.html.HtmlText
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.TopicDetailsViewModel
@@ -82,7 +82,7 @@ class TopicDetailsActivity : BaseActivity() {
             return
         }
         setAppBarTitle(getString(R.string.topic_details))
-        vm.details.value.tid = sid
+        vm.details.tid = sid
         vm.fetchTopicDetails()
     }
 }
@@ -90,21 +90,26 @@ class TopicDetailsActivity : BaseActivity() {
 @Composable
 private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
     val listState = rememberLazyListState()
-    val details = vm.details.value
-    val hasMoreData by remember { vm.hasMore }
+    val details = vm.details
 
     val state = rememberUltraSwipeRefreshState()
-    LaunchedEffect(vm.isLoadingMoreData.value) {
-        state.isLoading = vm.isLoadingMoreData.value
+    LaunchedEffect(vm.isLoadingMoreData) {
+        state.isLoading = vm.isLoadingMoreData
     }
 
     LoadingLayout(vm.loading, modifier = Modifier.fillMaxSize(), onRetry = vm::fetchTopicDetails) {
 
         Column(Modifier.fillMaxHeight()) {
+            if (vm.loadingDialogState.isDisplay) {
+                LoadingDialog(vm.loadingDialogState)
+            }
+            if (vm.messageDialogState.isDisplay) {
+                MessageDialog(vm.messageDialogState)
+            }
             UltraSwipeRefresh(
                 state = state,
                 refreshEnabled = false,
-                loadMoreEnabled = hasMoreData,
+                loadMoreEnabled = vm.hasMore,
                 onRefresh = {},
                 onLoadMore = { vm.fetchTopicDetails(true) },
                 footerIndicator = { ClassicRefreshFooter(it) },
@@ -136,7 +141,7 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
                         }
                     }
 
-                    if (details.isInitialized && vm.hasMore.value.not()) {
+                    if (details.isInitialized && vm.hasMore.not()) {
                         item {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
                                 Text(
@@ -242,16 +247,23 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
             .fillMaxWidth()
             .padding(15.dp)
     ) {
-        AsyncImage(
-            model = item.avatar,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .padding(end = 10.dp)
-                .clip(MaterialTheme.shapes.small)
-                .size(30.dp)
-                .clickable { vm.onViewUserClick(context, item) }
-        )
+        Column(Modifier.padding(end = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            AsyncImage(
+                model = item.avatar,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.small)
+                    .size(30.dp)
+                    .clickable { vm.onViewUserClick(context, item) }
+            )
+            Text(
+                text = "#${item.no}",
+                fontSize = TextUnit(12f, TextUnitType.Sp),
+                color = MaterialTheme.custom.onContainerSecondary,
+                modifier = Modifier.padding(top = 3.dp)
+            )
+        }
         Column(Modifier.fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -283,21 +295,42 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                     modifier = Modifier.padding(start = 5.dp)
                 )
 
-                if (!item.heart.isNullOrEmpty()) {
-                    Text(
-                        text = "❤\uFE0F ${item.heart!!}",
-                        fontSize = TextUnit(12f, TextUnitType.Sp),
-                        color = MaterialTheme.custom.onContainerSecondary,
-                        lineHeight = TextUnit(1f, TextUnitType.Sp),
-                        modifier = Modifier.padding(start = 5.dp)
-                    )
+                if (item.thanks.isNotEmpty()) {
+                    Row(Modifier.padding(start = 5.dp)) {
+                        Image(
+                            painter = painterResource(R.drawable.heart_fill),
+                            contentDescription = context.getString(R.string.thanks),
+                            modifier = Modifier
+                                .size(16.dp)
+                                .align(Alignment.CenterVertically)
+                        )
+                        Text(
+                            text = item.thanks,
+                            fontSize = TextUnit(12f, TextUnitType.Sp),
+                            color = MaterialTheme.custom.onContainerSecondary,
+                            lineHeight = TextUnit(1f, TextUnitType.Sp),
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                    }
                 }
-
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = "#${item.no}",
+                    text = context.getString(R.string.replay),
                     fontSize = TextUnit(12f, TextUnitType.Sp),
                     color = MaterialTheme.custom.onContainerSecondary,
+                    modifier = Modifier
+                        .clickable { vm.replayAtUser(item.username) }
+                        .padding(horizontal = 3.dp)
+                )
+                ImageWrapper(
+                    selected = false,
+                    selectedRes = R.drawable.heart_fill,
+                    unselectedRes = R.drawable.heart_outline,
+                    contentDescription = context.getString(R.string.thanks),
+                    modifier = Modifier
+                        .clickable(item.id.isNotEmpty()) { vm.thanksReply(item) }
+                        .padding(5.dp)
+                        .size(16.dp)
                 )
             }
             HtmlText(
@@ -312,7 +345,7 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
 @Composable
 private fun FooterBar(vm: TopicDetailsViewModel) {
     val context = LocalContext.current
-    val details = vm.details.value
+    val details = vm.details
     Row(
         Modifier
             .fillMaxWidth()
@@ -340,43 +373,43 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
         Column(
             Modifier
                 .align(Alignment.CenterVertically)
-                .clickable {
-                    vm.toast("点击了Tanks按钮")
-                }
+                .width(36.dp)
+                .clickable { vm.thanks() }
         ) {
-            Text(
-                text = "❤\uFE0F",
-                fontSize = TextUnit(14f, TextUnitType.Sp),
-                color = MaterialTheme.custom.onContainerSecondary,
-                lineHeight = TextUnit(1f, TextUnitType.Sp),
-                modifier = Modifier.padding(start = 5.dp)
+            ImageWrapper(
+                selected = details.isThanked,
+                selectedRes = R.drawable.heart_fill,
+                unselectedRes = R.drawable.heart_outline,
+                contentDescription = context.getString(R.string.thanks),
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterHorizontally)
             )
             Spacer(Modifier.height(2.dp))
             Text(
-                text = "${details.thanks ?: 0}",
+                text = details.thanks.ifEmpty { "0" },
                 fontSize = TextUnit(14f, TextUnitType.Sp),
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
-                modifier = Modifier
-                    .padding(start = 5.dp)
-                    .align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
-        Spacer(Modifier.width(15.dp))
         //Collect
         Column(
             Modifier
                 .align(Alignment.CenterVertically)
-                .clickable(details.isCollected.value.not()) {
-                    vm.toast("点击了关注按钮")
-                }
+                .width(36.dp)
+                .clickable { vm.favorite() }
         ) {
             ImageWrapper(
-                selected = details.isCollected.value,
+                selected = details.isCollected,
                 selectedRes = R.drawable.collect_selected,
                 unselectedRes = R.drawable.collect_normal,
                 contentDescription = context.getString(R.string.collect),
-                modifier = Modifier.size(16.dp)
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterHorizontally)
             )
             Spacer(Modifier.height(2.dp))
             Text(
@@ -387,18 +420,24 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
-        Spacer(Modifier.width(15.dp))
         //Reply
-        Column(Modifier.align(Alignment.CenterVertically)) {
+        Column(
+            Modifier
+                .align(Alignment.CenterVertically)
+                .width(36.dp)
+                .clickable { vm.replayTopic() }
+        ) {
             Image(
                 painter = painterResource(R.drawable.reply),
-                contentDescription = null,
+                contentDescription = context.getString(R.string.replay),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterHorizontally)
             )
             Spacer(Modifier.height(2.dp))
             Text(
-                text = "${details.replyCount ?: 0}",
+                text = details.replyCount ?: "0",
                 fontSize = TextUnit(14f, TextUnitType.Sp),
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),

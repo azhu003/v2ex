@@ -30,9 +30,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         details.title = str { header.select("h1").text() }
         details.author = str { header.select("small.gray a[href^=/member/]").text() }
         details.avatar = str { header.select("img.avatar").attr("src") }
-        details.clicks = str {
-            Constant.CLICKS.find(header.select("small.gray").text() ?: "")?.value
-        }
+        details.clicks = str { Constant.CLICKS.find(header.select("small.gray").text() ?: "")?.value }
 
         details.time = str {
             val original = header.select("small.gray span[title]").attr("title")
@@ -59,10 +57,12 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         }
         //div.topic_buttons 未登录时没有这个div
         val buttons = document.select("div.topic_buttons")
-        details.isCollected.value = buttons.select("> a[href^=/unfavorite/topic/]").isNotEmpty()
+        details.isCollected = buttons.select("> a[href^=/unfavorite/topic/]").isNotEmpty()
         val stats = buttons.select("div.topic_stats").text()
         details.collections = Constant.COLLECTIONS.find(stats)?.value
         details.thanks = Constant.THANKS.find(stats)?.value
+        details.once = Constant.ONCE.find(buttons.select("> a[href*=favorite/topic/]").attr("href"))?.value
+        details.isThanked = buttons.select("span.topic_thanked").isNotEmpty()
 
         //回复数
         details.replyCount = str {
@@ -85,7 +85,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
                 reply.avatar = str { tr.select("img.avatar").attr("src") }
                 reply.username = str { tr.select("strong a[href^=/member/]").text() }
                 reply.time = str { DateTimeUtils.ago(tr.select("span.ago[title]").attr("title")) }
-                reply.heart = str { tr.select("span.small.fade").text().trim() }
+                reply.thanks = str { tr.select("span.small.fade").text().trim() }
                 reply.no = str { tr.select("div.fr span.no").text() }
                 val badges = tr.select("div.badges > div.badge")
                 badges.forEach { reply.badges.add(it.text()) }

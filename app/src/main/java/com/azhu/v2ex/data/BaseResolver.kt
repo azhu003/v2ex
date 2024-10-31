@@ -16,11 +16,15 @@ abstract class BaseResolver<T> : DocumentResolver<T> {
         stream.use {
             val document = Jsoup.parse(it, "UTF-8", "https://www.v2ex.com/")
             catch {
-                document.select("a[data-cfemail]").forEach { a ->
-                    val data = a.attr("data-cfemail")
+                document.select("[data-cfemail]").forEach { element ->
+                    val data = element.attr("data-cfemail")
                     val email = getUnprotectMail(data)
+                    logger.info("查询到保护邮箱 -> data=$data email=$email element=$element")
+                    if (element.tagName().lowercase() != "a") {
+                        element.tagName("a")
+                    }
                     if (email != null) {
-                        a.attr("href", "mailto:$email").text(email)
+                        element.attr("href", "mailto:$email").text(email)
                     }
                 }
             }
