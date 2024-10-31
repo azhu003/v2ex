@@ -60,7 +60,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         details.isCollected = buttons.select("> a[href^=/unfavorite/topic/]").isNotEmpty()
         val stats = buttons.select("div.topic_stats").text()
         details.collections = Constant.COLLECTIONS.find(stats)?.value
-        details.thanks = Constant.THANKS.find(stats)?.value
+        details.thanks = Constant.THANKS.find(stats)?.value ?: ""
         details.once = Constant.ONCE.find(buttons.select("> a[href*=favorite/topic/]").attr("href"))?.value
         details.isThanked = buttons.select("span.topic_thanked").isNotEmpty()
 
@@ -86,6 +86,7 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
                 reply.username = str { tr.select("strong a[href^=/member/]").text() }
                 reply.time = str { DateTimeUtils.ago(tr.select("span.ago[title]").attr("title")) }
                 reply.thanks = str { tr.select("span.small.fade").text().trim() }
+                reply.isThanked = tr.select("div.thank_area.thanked").isNotEmpty()
                 reply.no = str { tr.select("div.fr span.no").text() }
                 val badges = tr.select("div.badges > div.badge")
                 badges.forEach { reply.badges.add(it.text()) }

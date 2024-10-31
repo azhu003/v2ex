@@ -309,7 +309,9 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                             fontSize = TextUnit(12f, TextUnitType.Sp),
                             color = MaterialTheme.custom.onContainerSecondary,
                             lineHeight = TextUnit(1f, TextUnitType.Sp),
-                            modifier = Modifier.align(Alignment.CenterVertically)
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(start = 3.dp)
                         )
                     }
                 }
@@ -323,12 +325,12 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                         .padding(horizontal = 3.dp)
                 )
                 ImageWrapper(
-                    selected = false,
+                    selected = item.isThanked,
                     selectedRes = R.drawable.heart_fill,
                     unselectedRes = R.drawable.heart_outline,
                     contentDescription = context.getString(R.string.thanks),
                     modifier = Modifier
-                        .clickable(item.id.isNotEmpty()) { vm.thanksReply(item) }
+                        .clickable(item.isThanked.not()) { vm.thanksReply(item) }
                         .padding(5.dp)
                         .size(16.dp)
                 )

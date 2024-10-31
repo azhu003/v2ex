@@ -95,6 +95,7 @@ data class TopicReplyItem(
     var content: String = "",
 ) {
     var thanks by mutableStateOf("")
+    var isThanked by mutableStateOf(false)
 }
 
 @Stable

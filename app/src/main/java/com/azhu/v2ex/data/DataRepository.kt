@@ -63,7 +63,6 @@ class DataRepository private constructor() {
     suspend fun thank(tid: String, once: String): JsonResult {
         val body = remote.service.thank(tid, once).string()
         val result = toJsonResult(body)
-        logger.info("thank has sent. result: tid=$tid once=$once -> $result")
         return result
     }
 
@@ -164,12 +163,19 @@ class DataRepository private constructor() {
     }
 
     private fun toJsonResult(body: String): JsonResult {
-        val json = JSONObject(body)
-        val result = JsonResult()
-        result.success = json.getBoolean("success")
-        result.once = json.getInt("once")
-        result.message = json.getString("message")
-        return result
+        try {
+            val json = JSONObject(body)
+            val result = JsonResult()
+            result.success = json.optBoolean("success", false)
+            val once = json.optInt("once", -1)
+            result.once = if (once == -1) null else once
+            val message = json.optString("message", "")
+            result.message = message.ifEmpty { null }
+            return result
+        } catch (e: Exception) {
+            logger.error("json 解析失败: $e\n$body")
+            return lazy { JsonResult(success = false, message = "error") }.value
+        }
     }
 
     private fun getHtmlFromAssets(fileName: String): InputStream {

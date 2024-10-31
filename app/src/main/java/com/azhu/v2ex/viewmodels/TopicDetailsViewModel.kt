@@ -129,7 +129,7 @@ class TopicDetailsViewModel : BaseViewModel() {
             http.flows(
                 onRequestBefore = { dialog.dismiss();loadingDialogState.show() },
                 doRequest = {
-                    DataRepository.INSTANCE.thankReplay(details.tid!!, details.once!!)
+                    DataRepository.INSTANCE.thankReplay(item.id, details.once!!)
                 })
                 .smap { Result.success(it) }
                 .flowOn(Dispatchers.IO)
