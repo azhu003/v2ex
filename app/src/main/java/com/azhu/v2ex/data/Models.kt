@@ -65,7 +65,7 @@ data class TopicDetails(
     var replyCount: String? = null,
     var isCollected: Boolean = false,  //已收藏
     var once: String? = null,
-    var replys: Pagination<TopicReplyItem> = Pagination(),
+    var replies: Pagination<TopicReplyItem> = Pagination(),
 ) {
     var thanks by mutableStateOf("")  //x人感谢
     var isThanked by mutableStateOf(false)  //感谢已发送?

@@ -89,14 +89,12 @@ class TopicDetailsActivity : BaseActivity() {
 
 @Composable
 private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
-    val listState = rememberLazyListState()
     val details = vm.details
 
     val state = rememberUltraSwipeRefreshState()
     LaunchedEffect(vm.isLoadingMoreData) {
         state.isLoading = vm.isLoadingMoreData
     }
-
     LoadingLayout(vm.loading, modifier = Modifier.fillMaxSize(), onRetry = vm::fetchTopicDetails) {
 
         Column(Modifier.fillMaxHeight()) {
@@ -113,10 +111,11 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
                 onRefresh = {},
                 onLoadMore = { vm.fetchTopicDetails(true) },
                 footerIndicator = { ClassicRefreshFooter(it) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
             ) {
                 LazyColumn(
-                    state = listState,
+                    state = rememberLazyListState(),
                     modifier = Modifier.background(MaterialTheme.custom.container)
                 ) {
                     item {
@@ -135,7 +134,7 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
                                 .padding(vertical = 12.dp)
                         )
                     }
-                    itemsIndexed(details.replys.data) { index, item ->
+                    itemsIndexed(details.replies.data) { index, item ->
                         key("$index${item.id}") {
                             ReplyItem(vm, item)
                         }

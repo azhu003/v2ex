@@ -26,8 +26,9 @@ data class CustomColorScheme(
     val onBackground: Color = Color(0xFF171717),  //用于显示在背景上的文字颜色
     val backgroundSecondary: Color = Color(0xFFF2F2F0),  //次要颜色的容器颜色
     val highlights: Color = Color(0xFF576B95),  //用于显示在背景上的文字颜色
-
+    val containerCard: Color = Color(0xFF1F2224),
     val onBackgroundSecondary: Color = Color(0xFFACB3B5),
+    val icon: Color = Color(0xFF1A1A1A)
 )
 
 private val CustomLightColorScheme = CustomColorScheme(
@@ -37,7 +38,9 @@ private val CustomLightColorScheme = CustomColorScheme(
     background = backgroundLight,
     onBackground = onBackgroundLight,
     backgroundSecondary = backgroundSecondaryLight,
-    highlights = highlightsLight
+    highlights = highlightsLight,
+    icon = Color(0xFF1A1A1A),
+    containerCard = Color(0xFFF3F3F3)
 )
 
 private val CustomDarkColorScheme = CustomColorScheme(
@@ -47,7 +50,9 @@ private val CustomDarkColorScheme = CustomColorScheme(
     background = backgroundDark,
     onBackground = onBackgroundDark,
     backgroundSecondary = onBackgroundSecondaryDark,
-    highlights = highlightsDark
+    highlights = highlightsDark,
+    icon = Color(0xFFD5D5D5),
+    containerCard = Color(0xFF373839)
 )
 
 private val LocalCustomThemes = compositionLocalOf<CustomColorScheme> { error("No Color provided") }

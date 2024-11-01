@@ -98,6 +98,6 @@ class TopicDetailsResolver(private val resolverType: TopicDetailsResolverType, p
         val pages = document.select("div.ps_container").first()?.select("a[href^=?p]")
         pagination.page = pages?.select("a.page_current")?.text()?.toIntOrNull() ?: 1
         pagination.total = pages?.last()?.text()?.toIntOrNull() ?: 1
-        details.replys = pagination
+        details.replies = pagination
     }
 }

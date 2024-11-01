@@ -10,8 +10,6 @@ import com.azhu.v2ex.data.SettingsState
 import com.azhu.v2ex.ext.smap
 import com.azhu.v2ex.ext.success
 import com.azhu.v2ex.http.Retrofits
-import com.azhu.v2ex.ui.component.LoadingDialogState
-import com.azhu.v2ex.ui.component.MessageDialogState
 import com.azhu.v2ex.utils.V2exUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,8 +24,6 @@ import kotlinx.coroutines.flow.launchIn
 class SettingsViewModel : BaseViewModel() {
 
     val state = SettingsState()
-    val messageDialog = MessageDialogState()
-    val loadingDialog = LoadingDialogState()
     var cachedSize by mutableStateOf("")
         internal set
 
@@ -75,6 +71,4 @@ class SettingsViewModel : BaseViewModel() {
         val size = Retrofits.imageLoader.diskCache?.size ?: 0
         cachedSize = V2exUtils.formatBytes(size)
     }
-
-
 }

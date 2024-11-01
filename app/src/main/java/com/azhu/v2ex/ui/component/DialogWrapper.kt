@@ -85,8 +85,8 @@ fun <T : DialogState> DialogWrapper(
     Dialog(onDismissRequest = { state.dismiss();state.onDismiss?.invoke() }, properties = properties ?: DialogProperties()) {
         Surface(
             shape = MaterialTheme.shapes.medium,
-            tonalElevation = 4.dp,
-            shadowElevation = 4.dp
+            tonalElevation = 1.dp,
+            shadowElevation = 1.dp
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -107,7 +107,7 @@ fun <T : DialogState> DialogWrapper(
                         Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 15.dp),
-                        thickness = DividerDefaults.Thickness,
+                        thickness = 0.1f.dp,
                         color = MaterialTheme.custom.background
                     )
                 }
@@ -118,7 +118,7 @@ fun <T : DialogState> DialogWrapper(
                         Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 15.dp),
-                        thickness = DividerDefaults.Thickness,
+                        thickness = 0.1f.dp,
                         color = MaterialTheme.custom.background
                     )
                     DialogActions(state)

@@ -64,7 +64,7 @@ class TopicDetailsViewModel : BaseViewModel() {
             DataRepository.INSTANCE.getTopicDetails(
                 details.tid!!,
                 if (isLoadMore) TopicDetailsResolverType.ONLY_REPLY else TopicDetailsResolverType.ALL,
-                if (isLoadMore) details.replys.nextPage else 1
+                if (isLoadMore) details.replies.nextPage else 1
             )
         }.smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
@@ -168,9 +168,9 @@ class TopicDetailsViewModel : BaseViewModel() {
             .flowOn(Dispatchers.IO)
             .error { toast(R.string.operation_failed) }
             .success {
-                it.replys.page = details.replys.page
-                it.replys.total = details.replys.total
-                it.replys.data.addAll(details.replys.data)
+                it.replies.page = details.replies.page
+                it.replies.total = details.replies.total
+                it.replies.data.addAll(details.replies.data)
                 merge(it, false)
             }
             .complete { loadingDialogState.dismiss() }
@@ -193,9 +193,9 @@ class TopicDetailsViewModel : BaseViewModel() {
                 .flowOn(Dispatchers.IO)
                 .error { toast(R.string.operation_failed) }
                 .success {
-                    it.replys.page = details.replys.page
-                    it.replys.total = details.replys.total
-                    it.replys.data.addAll(details.replys.data)
+                    it.replies.page = details.replies.page
+                    it.replies.total = details.replies.total
+                    it.replies.data.addAll(details.replies.data)
                     merge(it, false)
                 }
                 .complete { loadingDialogState.dismiss() }
@@ -213,8 +213,8 @@ class TopicDetailsViewModel : BaseViewModel() {
 
     private fun merge(details: TopicDetails, isLoadMore: Boolean) {
         if (this.details.isInitialized && isLoadMore) {
-            val old = this.details.replys
-            val new = details.replys
+            val old = this.details.replies
+            val new = details.replies
             old.page = new.page
             old.total = new.total
             old.data.addAll(new.data)
@@ -223,7 +223,7 @@ class TopicDetailsViewModel : BaseViewModel() {
             details.isInitialized = true
             this.details = details
         }
-        hasMore = details.replys.page < details.replys.total
+        hasMore = details.replies.page < details.replies.total
     }
 
 }

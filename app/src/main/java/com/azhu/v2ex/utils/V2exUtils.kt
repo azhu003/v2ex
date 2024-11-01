@@ -1,6 +1,9 @@
 package com.azhu.v2ex.utils
 
+import android.content.Context
 import android.net.Uri
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import com.azhu.basic.AppManager
 import com.azhu.basic.provider.StoreProvider
 import com.azhu.v2ex.http.cookie.PersistentCookieStore
@@ -84,5 +87,29 @@ object V2exUtils {
             bytes >= kb -> String.format(Locale.ROOT, "%.2f KB", bytes.toDouble() / kb)
             else -> "$bytes Bytes"
         }
+    }
+
+    fun getRealPathFromURI(context: Context, uri: Uri): String? {
+        var path: String? = null
+        val documentId = DocumentsContract.getDocumentId(uri)
+        val split = documentId.split(":")
+        val type = split[0]
+
+        val contentUri: Uri = when (type) {
+            "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            else -> throw IllegalArgumentException("Unknown URI type")
+        }
+
+        val selection = "_id=?"
+        val selectionArgs = arrayOf(split[1])
+        context.contentResolver.query(contentUri, null, selection, selectionArgs, null)?.use { cursor ->
+            val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(columnIndex)
+            }
+        }
+        return path
     }
 }
