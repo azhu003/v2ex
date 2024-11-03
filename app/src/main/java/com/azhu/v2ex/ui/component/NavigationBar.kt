@@ -19,9 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -61,8 +60,8 @@ fun NavigationBar(tabTopicVM: TabTopicViewModel, nodeNavViewModel: NodeNavViewMo
                         label = {
                             Text(
                                 text = context.getString(item.label),
-                                fontSize = TextUnit(12f, TextUnitType.Sp),
-                                lineHeight = TextUnit(12f, TextUnitType.Sp)
+                                fontSize = 12.sp,
+                                lineHeight = 12.sp
                             )
                         },
                         icon = {

@@ -29,9 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.azhu.v2ex.R
@@ -117,14 +116,14 @@ private fun NodeCollection(vm: NodeCollectionViewModel) {
                         Text(
                             text = node.name,
                             color = MaterialTheme.custom.onContainerPrimary,
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                            fontSize = 14.sp,
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Image(painter = painterResource(R.drawable.conversation), contentDescription = null)
                             Text(
                                 text = node.comments,
                                 color = MaterialTheme.custom.onContainerSecondary,
-                                fontSize = TextUnit(14f, TextUnitType.Sp),
+                                fontSize = 14.sp,
                                 modifier = Modifier.padding(start = 4.dp)
                             )
                         }

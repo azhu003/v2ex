@@ -22,6 +22,10 @@ class DevToolsViewModel : BaseViewModel() {
         onInsertLinkClick = ::onInsertLink,
         onSubmit = ::onSubmit
     )
+    val reply = ReplayDialogState(
+        onInsertLinkClick = ::onInsertLink,
+        onSubmit = ::onSubmit
+    )
 
     val registerForActivityResult: ActivityResultCallback<Uri?> = ActivityResultCallback { uri ->
         logger.i("ActivityResultCallback -> selected file uri = $uri")

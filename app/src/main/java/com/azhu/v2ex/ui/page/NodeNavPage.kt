@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.azhu.v2ex.R
 import com.azhu.v2ex.ui.activity.TopicByNodeActivity
 import com.azhu.v2ex.ui.component.LoadingLayout
@@ -47,7 +48,7 @@ fun NodeNavPage(vm: NodeNavViewModel) {
                     title = {
                         Text(
                             text = context.getString(R.string.node_navigation),
-                            fontSize = TextUnit(20f, TextUnitType.Sp)
+                            fontSize = 20.sp
                         )
                     },
                     colors = TopAppBarColors(
@@ -68,7 +69,7 @@ fun NodeNavPage(vm: NodeNavViewModel) {
                         Text(
                             text = entry.key,
                             color = MaterialTheme.custom.onContainerPrimary,
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                            fontSize = 14.sp,
                             lineHeight = TextUnit(1f, TextUnitType.Sp),
                             modifier = Modifier.padding(top = 10.dp)
                         )
@@ -100,8 +101,8 @@ fun NodeNavPage(vm: NodeNavViewModel) {
                                     ) {
                                         Text(
                                             text = item.label,
-                                            fontSize = TextUnit(14f, TextUnitType.Sp),
-                                            lineHeight = TextUnit(14f, TextUnitType.Sp),
+                                            fontSize = 14.sp,
+                                            lineHeight = 14.sp,
                                         )
                                     }
                                 }

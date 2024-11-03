@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.TopicDetails
@@ -127,7 +128,7 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
                         )
                         Text(
                             text = stringResource(R.string.number_of_replies, details.replyCount ?: "0"),
-                            fontSize = TextUnit(15f, TextUnitType.Sp),
+                            fontSize = 15.sp,
                             color = MaterialTheme.custom.onContainerSecondary,
                             modifier = Modifier
                                 .padding(horizontal = 15.dp)
@@ -146,7 +147,7 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
                                 Text(
                                     text = "—·—",
                                     color = MaterialTheme.custom.onContainerSecondary,
-                                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                                    fontSize = 14.sp,
                                     modifier = Modifier.padding(vertical = 16.dp)
                                 )
                             }
@@ -179,7 +180,7 @@ private fun TopicBody(details: TopicDetails) {
         Text(
             text = details.author,
             color = MaterialTheme.custom.primary,
-            fontSize = TextUnit(14f, TextUnitType.Sp),
+            fontSize = 14.sp,
             modifier = Modifier.clickable {
                 UserDetailsActivity.start(context, details.author)
             }
@@ -187,7 +188,7 @@ private fun TopicBody(details: TopicDetails) {
         Text(
             text = details.time,
             color = MaterialTheme.custom.onContainerSecondary,
-            fontSize = TextUnit(14f, TextUnitType.Sp),
+            fontSize = 14.sp,
             modifier = Modifier.padding(start = 8.dp)
         )
     }
@@ -209,7 +210,7 @@ private fun TopicBody(details: TopicDetails) {
             Column(Modifier.padding(horizontal = 15.dp)) {
                 Text(
                     text = "${context.getString(R.string.subtitle_text, (index + 1))}  ${subtitle.time}",
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                     color = MaterialTheme.custom.onContainerPrimary
                 )
                 HtmlText(
@@ -233,7 +234,7 @@ private fun TopicBody(details: TopicDetails) {
     Text(
         text = context.getString(R.string.number_of_views, details.clicks),
         color = MaterialTheme.custom.onContainerSecondary,
-        fontSize = TextUnit(14f, TextUnitType.Sp),
+        fontSize = 14.sp,
         modifier = Modifier.padding(start = 15.dp, top = 15.dp)
     )
 }
@@ -258,7 +259,7 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
             )
             Text(
                 text = "#${item.no}",
-                fontSize = TextUnit(12f, TextUnitType.Sp),
+                fontSize = 12.sp,
                 color = MaterialTheme.custom.onContainerSecondary,
                 modifier = Modifier.padding(top = 3.dp)
             )
@@ -269,7 +270,7 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                     text = item.username,
                     textAlign = TextAlign.Left,
                     color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
                     modifier = Modifier.clickable { vm.onViewUserClick(context, item) }
                 )
@@ -277,9 +278,9 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                 item.badges.forEach {
                     Text(
                         text = it,
-                        fontSize = TextUnit(10f, TextUnitType.Sp),
+                        fontSize = 10.sp,
                         color = MaterialTheme.custom.primary,
-                        lineHeight = TextUnit(10f, TextUnitType.Sp),
+                        lineHeight = 10.sp,
                         modifier = Modifier
                             .padding(start = 3.dp)
                             .border(0.1f.dp, MaterialTheme.custom.primary, MaterialTheme.shapes.extraSmall)
@@ -289,7 +290,7 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
 
                 Text(
                     text = item.time,
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                    fontSize = 12.sp,
                     color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier.padding(start = 5.dp)
                 )
@@ -305,7 +306,7 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                         )
                         Text(
                             text = item.thanks,
-                            fontSize = TextUnit(12f, TextUnitType.Sp),
+                            fontSize = 12.sp,
                             color = MaterialTheme.custom.onContainerSecondary,
                             lineHeight = TextUnit(1f, TextUnitType.Sp),
                             modifier = Modifier
@@ -317,7 +318,7 @@ private fun ReplyItem(vm: TopicDetailsViewModel, item: TopicReplyItem) {
                 Spacer(Modifier.weight(1f))
                 Text(
                     text = context.getString(R.string.replay),
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                    fontSize = 12.sp,
                     color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier
                         .clickable { vm.replayAtUser(item.username) }
@@ -363,7 +364,7 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
                 .clickable { UserDetailsActivity.start(context, details.author) }
         )
         Text(
-            text = details.author, fontSize = TextUnit(14f, TextUnitType.Sp),
+            text = details.author, fontSize = 14.sp,
             modifier = Modifier
                 .padding(start = 6.dp)
                 .align(Alignment.CenterVertically)
@@ -389,7 +390,7 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
             Spacer(Modifier.height(2.dp))
             Text(
                 text = details.thanks.ifEmpty { "0" },
-                fontSize = TextUnit(14f, TextUnitType.Sp),
+                fontSize = 14.sp,
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -415,7 +416,7 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
             Spacer(Modifier.height(2.dp))
             Text(
                 text = "${details.collections ?: 0}",
-                fontSize = TextUnit(14f, TextUnitType.Sp),
+                fontSize = 14.sp,
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -439,7 +440,7 @@ private fun FooterBar(vm: TopicDetailsViewModel) {
             Spacer(Modifier.height(2.dp))
             Text(
                 text = details.replyCount ?: "0",
-                fontSize = TextUnit(14f, TextUnitType.Sp),
+                fontSize = 14.sp,
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)

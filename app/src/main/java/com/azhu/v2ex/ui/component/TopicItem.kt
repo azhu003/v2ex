@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.Topic
@@ -69,7 +70,7 @@ fun TopicItem(item: Topic) {
                         text = item.node,
                         textAlign = TextAlign.Left,
                         color = MaterialTheme.custom.onContainerPrimary,
-                        fontSize = TextUnit(12f, TextUnitType.Sp),
+                        fontSize = 12.sp,
                         lineHeight = TextUnit(1f, TextUnitType.Sp),
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.extraSmall)
@@ -80,7 +81,7 @@ fun TopicItem(item: Topic) {
                 }
                 Text(
                     text = item.author,
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                    fontSize = 12.sp,
                     color = MaterialTheme.custom.onContainerSecondary,
                 )
             }
@@ -88,20 +89,20 @@ fun TopicItem(item: Topic) {
                 Text(
                     text = item.title,
                     color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
                 Row(modifier = Modifier.padding(top = 5.dp)) {
                     Text(
                         text = item.time,
-                        fontSize = TextUnit(12f, TextUnitType.Sp),
+                        fontSize = 12.sp,
                         color = MaterialTheme.custom.onContainerSecondary,
                     )
                     item.replies?.let {
                         Text(
                             text = stringResource(R.string.number_of_replies, it.toString()),
-                            fontSize = TextUnit(12f, TextUnitType.Sp),
+                            fontSize = 12.sp,
                             color = MaterialTheme.custom.onContainerSecondary,
                             modifier = Modifier.padding(start = 15.dp)
                         )

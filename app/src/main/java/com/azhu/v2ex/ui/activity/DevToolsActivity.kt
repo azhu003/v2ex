@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,18 +15,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewModelScope
 import com.azhu.v2ex.ui.component.LoadingDialog
 import com.azhu.v2ex.ui.component.MessageDialog
-import com.azhu.v2ex.ui.component.ReplayDialog
+import com.azhu.v2ex.ui.component.ReplyDialog
+import com.azhu.v2ex.ui.component.ReplySheet
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.DevToolsViewModel
 import kotlinx.coroutines.delay
@@ -39,18 +43,19 @@ class DevToolsActivity : BaseActivity() {
     private lateinit var launcher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         launcher = registerForActivityResult(ActivityResultContracts.GetContent(), callback = vm.registerForActivityResult)
         super.onCreate(savedInstanceState)
     }
+
+//    override fun isDisplayAppBar(): Boolean {
+//        return false
+//    }
 
     override fun initialize() {
         vm.replyDialog.onInsertImageClick = { launcher.launch("image/*") }
         repeat(54) {
             vm.replyDialog.emotions.add(String.format(Locale.ROOT, "file:///android_asset/emoticons/emoticon_%d.png", it + 1))
-        }
-        repeat(54) {
-            vm.replyDialog.emotions.add(String.format(Locale.ROOT, "file:///android_asset/emoticons/emoticon_%d.png", it + 1))
+            vm.reply.emotions.add(String.format(Locale.ROOT, "file:///android_asset/emoticons/emoticon_%d.png", it + 1))
         }
     }
 
@@ -68,48 +73,68 @@ class DevToolsActivity : BaseActivity() {
 @Composable
 private fun DevToolsPage(vm: DevToolsViewModel) {
     val context = LocalContext.current
+    val scrollableState = rememberScrollState()
     if (vm.messageDialog.isDisplay) {
         MessageDialog(vm.messageDialog)
     }
     if (vm.loadingDialog.isDisplay) {
         LoadingDialog(vm.loadingDialog)
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 15.dp)
-    ) {
-        SettingItem("弹一个Loading", onClick = {
-            vm.loadingDialog.show()
-            vm.viewModelScope.launch {
-                delay(2000)
-                vm.loadingDialog.dismiss()
+
+    Scaffold(bottomBar = { ReplySheet(vm.reply) }) { _ ->
+        Box {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollableState)
+                    .padding(horizontal = 15.dp)
+            ) {
+                SettingItem("弹一个Loading", onClick = {
+                    vm.loadingDialog.show()
+                    vm.viewModelScope.launch {
+                        delay(2000)
+                        vm.loadingDialog.dismiss()
+                    }
+                })
+                SettingItem("弹一个窗", onClick = {
+                    val sb = StringBuilder()
+                    val r = Random.nextInt(1, 20)
+                    sb.append("[${r}] ")
+                    repeat(r) {
+                        sb.append("这里是弹窗内容")
+                    }
+                    vm.messageDialog.show(title = "提示", message = sb.toString(),
+                        onNegativeClick = {
+                            vm.toast("点击了取消")
+                            it.dismiss()
+                        }, onPositiveClick = {
+                            vm.toast("点击了确定")
+                            it.dismiss()
+                        }, onDismiss = {
+                            vm.toast("弹窗被关闭")
+                        }
+                    )
+                })
+                SettingItem("弹一个回复窗", onClick = {
+                    vm.replyDialog.isDisplay = true
+                })
+                SettingItem("弹一个回复窗 Next", onClick = {
+                    vm.reply.isDisplay = true
+                })
             }
-        })
-        SettingItem("弹一个窗", onClick = {
-            val sb = StringBuilder()
-            val r = Random.nextInt(1, 20)
-            sb.append("[${r}] ")
-            repeat(r) {
-                sb.append("这里是弹窗内容")
+            if (vm.reply.isDisplay) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .clickable {
+                            vm.reply.isDisplay = false
+                        }
+                )
             }
-            vm.messageDialog.show(title = "提示", message = sb.toString(),
-                onNegativeClick = {
-                    vm.toast("点击了取消")
-                    it.dismiss()
-                }, onPositiveClick = {
-                    vm.toast("点击了确定")
-                    it.dismiss()
-                }, onDismiss = {
-                    vm.toast("弹窗被关闭")
-                }
-            )
-        })
-        SettingItem("弹一个回复窗", onClick = {
-            vm.replyDialog.isDisplay = true
-        })
+        }
     }
-    ReplayDialog(vm.replyDialog)
+
+    ReplyDialog(vm.replyDialog)
 }
 
 @Composable

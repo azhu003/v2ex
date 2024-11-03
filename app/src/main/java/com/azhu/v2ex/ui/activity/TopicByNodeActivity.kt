@@ -20,9 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.azhu.v2ex.R
@@ -84,14 +83,14 @@ private fun NodeTopicPage(vm: TopicByNodeViewModel) {
                         Text(
                             text = vm.data.nodeName,
                             color = MaterialTheme.custom.onContainerPrimary,
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                            fontSize = 14.sp,
                             modifier = Modifier.alignByBaseline()
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "${context.getString(R.string.topic_total)} ${vm.data.comments}",
                             color = MaterialTheme.custom.onContainerSecondary,
-                            fontSize = TextUnit(12f, TextUnitType.Sp),
+                            fontSize = 12.sp,
                             modifier = Modifier
                                 .padding(top = 5.dp)
                                 .alignByBaseline()
@@ -100,8 +99,8 @@ private fun NodeTopicPage(vm: TopicByNodeViewModel) {
                     Text(
                         text = vm.data.intro,
                         color = MaterialTheme.custom.onContainerSecondary,
-                        fontSize = TextUnit(10f, TextUnitType.Sp),
-                        lineHeight = TextUnit(12f, TextUnitType.Sp),
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp,
                     )
                 }
             }

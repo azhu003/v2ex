@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.azhu.basic.provider.AppThemeProvider
 import com.azhu.basic.provider.nextTheme
@@ -110,7 +111,7 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
             Text(
                 text = context.getString(if (profile.isClaimedLoginRewards) R.string.claimed_login_rewards else R.string.claim_login_rewards),
                 color = Color.White,
-                fontSize = TextUnit(10f, TextUnitType.Sp),
+                fontSize = 10.sp,
                 textAlign = TextAlign.Center,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
                 modifier = Modifier
@@ -146,17 +147,17 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                 Text(
                     text = profile.username,
                     color = Color.White,
-                    fontSize = TextUnit(20f, TextUnitType.Sp),
+                    fontSize = 20.sp,
                 )
                 Text(
                     text = "${context.getString(R.string.account_balance)}: ${profile.balance}",
                     color = "#ACB3B5".toColor(),
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                    fontSize = 12.sp,
                 )
                 Text(
                     text = context.getString(R.string.consecutive_login_days, profile.daysOfConsecutiveLogin),
                     color = "#ACB3B5".toColor(),
-                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                    fontSize = 12.sp,
                 )
             }
 
@@ -171,13 +172,13 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                 Text(
                     text = "${profile.numberOfNodeCollection}",
                     color = Color.White,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                 )
                 Text(
                     text = context.getString(R.string.node_collection),
                     color = MaterialTheme.custom.onBackgroundSecondary,
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
-                    fontSize = TextUnit(10f, TextUnitType.Sp),
+                    fontSize = 10.sp,
                 )
             }
             //主题收藏
@@ -190,13 +191,13 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                 Text(
                     text = "${profile.numberOfTopicCollection}",
                     color = Color.White,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                 )
                 Text(
                     text = context.getString(R.string.topic_collection),
                     color = MaterialTheme.custom.onBackgroundSecondary,
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
-                    fontSize = TextUnit(10f, TextUnitType.Sp),
+                    fontSize = 10.sp,
                 )
             }
             //特别关注
@@ -207,13 +208,13 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                 Text(
                     text = "${profile.numberOfFollowing}",
                     color = Color.White,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                 )
                 Text(
                     text = context.getString(R.string.following),
                     color = MaterialTheme.custom.onBackgroundSecondary,
                     lineHeight = TextUnit(1f, TextUnitType.Sp),
-                    fontSize = TextUnit(10f, TextUnitType.Sp),
+                    fontSize = 10.sp,
                 )
             }
 
@@ -222,7 +223,7 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
             Text(
                 text = context.getString(R.string.edit_profile),
                 color = Color.White,
-                fontSize = TextUnit(12f, TextUnitType.Sp),
+                fontSize = 12.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .height(24.dp)
@@ -281,7 +282,7 @@ private fun Unlogged(vm: ProfileViewModel) {
             Image(painter = painterResource(R.drawable.unlogged), contentDescription = null)
             Text(
                 text = context.getString(R.string.unlogged), color = MaterialTheme.custom.onContainerPrimary,
-                fontSize = TextUnit(16f, TextUnitType.Sp),
+                fontSize = 16.sp,
                 modifier = Modifier.padding(vertical = 10.dp)
             )
             Button(

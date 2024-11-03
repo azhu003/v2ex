@@ -14,7 +14,7 @@ open class BaseApplication : Application() {
         StoreProvider.init(this)
         AppThemeProvider.init(this)
         ContextProvider.init(this)
-        LoggerProvider.init(BuildConfig.DEBUG)
+        LoggerProvider.create(BuildConfig.DEBUG)
     }
 
     override fun onTerminate() {

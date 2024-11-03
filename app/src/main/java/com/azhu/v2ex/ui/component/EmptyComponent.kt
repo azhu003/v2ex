@@ -16,9 +16,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.azhu.v2ex.R
 import com.azhu.v2ex.ui.theme.custom
 
@@ -46,7 +45,7 @@ fun EmptyComponent() {
         )
         Text(
             text = text,
-            fontSize = TextUnit(14f, TextUnitType.Sp),
+            fontSize = 14.sp,
             color = MaterialTheme.custom.onContainerSecondary,
             modifier = Modifier.padding(top = 10.dp)
         )

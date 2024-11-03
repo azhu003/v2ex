@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.compose.material.icons)
 
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
@@ -132,7 +133,6 @@ dependencies {
             }
         }
     }
-//    implementation("io.noties.markwon:syntax-highlight:4.6.2") {
-//        exclude(group = "org.jetbrains", module = "annotations-java5")
-//    }
+
+
 }

@@ -26,11 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.UserDetails
 import com.azhu.v2ex.data.UserRecentlyTopic
 import com.azhu.v2ex.ui.activity.AllTopicActivity
-import com.azhu.v2ex.ui.activity.RepliesActivity
 import com.azhu.v2ex.ui.activity.TopicDetailsActivity
 import com.azhu.v2ex.ui.theme.custom
 
@@ -69,7 +69,7 @@ fun RecentlyPublishedTopic(
                 Text(
                     text = context.getString(R.string.recently_published),
                     color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(16f, TextUnitType.Sp)
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
@@ -94,7 +94,7 @@ fun RecentlyPublishedTopic(
                 )
                 Text(
                     text = context.getString(R.string.topic_invisible_tips, username),
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                     color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier.padding(start = 5.dp)
                 )
@@ -110,7 +110,7 @@ fun RecentlyPublishedTopic(
                     Text(
                         text = topic.title,
                         color = MaterialTheme.custom.onContainerPrimary,
-                        fontSize = TextUnit(16f, TextUnitType.Sp)
+                        fontSize = 16.sp
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -122,7 +122,7 @@ fun RecentlyPublishedTopic(
                             text = topic.node.name,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.custom.onContainerPrimary,
-                            fontSize = TextUnit(12f, TextUnitType.Sp),
+                            fontSize = 12.sp,
                             lineHeight = TextUnit(1f, TextUnitType.Sp),
                             modifier = Modifier
                                 .clip(MaterialTheme.shapes.extraSmall)
@@ -132,7 +132,7 @@ fun RecentlyPublishedTopic(
                         Text(
                             text = topic.time,
                             color = MaterialTheme.custom.onContainerSecondary,
-                            fontSize = TextUnit(14f, TextUnitType.Sp),
+                            fontSize = 14.sp,
                             modifier = Modifier.padding(start = 5.dp)
                         )
                         if (topic.replyCount.isNotBlank()) {
@@ -140,7 +140,7 @@ fun RecentlyPublishedTopic(
                             Text(
                                 text = context.getString(R.string.number_of_replies, topic.replyCount),
                                 color = MaterialTheme.custom.onContainerSecondary,
-                                fontSize = TextUnit(14f, TextUnitType.Sp)
+                                fontSize = 14.sp
                             )
                         }
                     }
@@ -151,7 +151,7 @@ fun RecentlyPublishedTopic(
             if (showFooter && topics.isNotEmpty()) {
                 Text(
                     text = context.getString(R.string.view_more),
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                     color = MaterialTheme.custom.onContainerSecondary,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)

@@ -18,7 +18,7 @@ import java.util.Locale
 class LoggerProvider(private val on: Boolean) {
 
     companion object {
-        fun init(debug: Boolean) {
+        fun create(debug: Boolean) {
             if (debug) {
                 Logger.addLogAdapter(
                     AndroidLogAdapter(

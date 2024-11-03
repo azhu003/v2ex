@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
@@ -125,8 +126,8 @@ private fun UserHeader(details: UserDetails) {
                 Spacer(Modifier.width(10.dp))
                 Text(
                     text = if (details.isFollowed) context.getString(R.string.followed) else "+ ${context.getString(R.string.following_of_user)}",
-                    fontSize = TextUnit(10f, TextUnitType.Sp),
-                    lineHeight = TextUnit(10f, TextUnitType.Sp),
+                    fontSize = 10.sp,
+                    lineHeight = 10.sp,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(start = 3.dp)
@@ -143,19 +144,19 @@ private fun UserHeader(details: UserDetails) {
             Text(
                 text = context.getString(R.string.member_no, details.no),
                 color = MaterialTheme.custom.onContainerSecondary,
-                fontSize = TextUnit(14f, TextUnitType.Sp),
+                fontSize = 14.sp,
                 modifier = Modifier.padding(top = 5.dp)
             )
             Text(
                 text = context.getString(R.string.register_at, details.registerAt),
                 color = MaterialTheme.custom.onContainerSecondary,
-                fontSize = TextUnit(14f, TextUnitType.Sp),
+                fontSize = 14.sp,
             )
             if (details.ranking.isNotBlank()) {
                 Text(
                     text = context.getString(R.string.today_ranking, details.ranking),
                     color = MaterialTheme.custom.onContainerSecondary,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                 )
             }
         }

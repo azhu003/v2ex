@@ -144,7 +144,7 @@ private fun DialogActions(state: DialogState) {
                 ),
                 onClick = { state.onNegativeClick?.invoke(state) }
             ) {
-                Text(context.getString(R.string.canceled), style = MaterialTheme.typography.bodySmall)
+                Text(context.getString(R.string.canceled), style = MaterialTheme.typography.bodyMedium)
             }
         }
         Button(
@@ -158,7 +158,7 @@ private fun DialogActions(state: DialogState) {
             onClick = { state.onPositiveClick?.invoke(state) }) {
             Text(
                 context.getString(R.string.positive),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.custom.primary
             )
         }

@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.UserRecentlyReply
 import com.azhu.v2ex.ui.activity.RepliesActivity
@@ -59,7 +60,7 @@ fun RecentlyReply(
         if (showFooter && replys.isNotEmpty()) {
             Text(
                 text = context.getString(R.string.view_more),
-                fontSize = TextUnit(14f, TextUnitType.Sp),
+                fontSize = 14.sp,
                 color = MaterialTheme.custom.onContainerSecondary,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -86,7 +87,7 @@ private fun RecentlyReplyHeader(username: String?) {
         Text(
             text = context.getString(R.string.recently_replied),
             color = MaterialTheme.custom.onContainerPrimary,
-            fontSize = TextUnit(16f, TextUnitType.Sp)
+            fontSize = 16.sp
         )
         Spacer(modifier = Modifier.weight(1f))
         Icon(
@@ -112,7 +113,7 @@ fun RecentlyReplyItem(reply: UserRecentlyReply, isLastItem: Boolean) {
                 Text(
                     text = reply.author,
                     color = MaterialTheme.custom.onContainerPrimary,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                     modifier = Modifier.clickable {
                         UserDetailsActivity.start(context, reply.author)
                     }
@@ -121,14 +122,14 @@ fun RecentlyReplyItem(reply: UserRecentlyReply, isLastItem: Boolean) {
                 Text(
                     text = reply.node.name,
                     color = MaterialTheme.custom.onContainerSecondary,
-                    fontSize = TextUnit(14f, TextUnitType.Sp),
+                    fontSize = 14.sp,
                 )
             }
             HorizontalDivider(thickness = 0.3.dp)
             Text(
                 text = reply.topic,
                 color = MaterialTheme.custom.onContainerPrimary,
-                fontSize = TextUnit(14f, TextUnitType.Sp),
+                fontSize = 14.sp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
@@ -148,7 +149,7 @@ fun RecentlyReplyItem(reply: UserRecentlyReply, isLastItem: Boolean) {
             Text(
                 text = reply.time,
                 textDecoration = null,
-                fontSize = TextUnit(12f, TextUnitType.Sp),
+                fontSize = 12.sp,
                 color = MaterialTheme.custom.onContainerSecondary,
                 lineHeight = TextUnit(1f, TextUnitType.Sp),
             )
