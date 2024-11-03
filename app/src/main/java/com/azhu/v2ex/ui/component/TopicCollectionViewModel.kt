@@ -31,7 +31,7 @@ class TopicCollectionViewModel : LifecycleViewModel() {
         http.flows { DataRepository.INSTANCE.getTopicsFromCollection() }
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
-            .error { logger.info("加载话题收藏列表失败: $it") }
+            .error { logger.i("加载话题收藏列表失败: $it") }
             .success { topics.addAll(it) }
             .launchIn(viewModelScope)
     }

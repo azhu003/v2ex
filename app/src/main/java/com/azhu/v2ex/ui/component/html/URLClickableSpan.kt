@@ -37,7 +37,7 @@ class URLClickableSpan(private val url: String) : ClickableSpan() {
                     } else if (V2exUtils.isTopicUrl(url)) {
                         TopicDetailsActivity.start(context, Constant.TOPIC_ID.find(url)?.value ?: "")
                     } else {
-                        logger.error("未处理的站内链接跳转 -> $url")
+                        logger.e("未处理的站内链接跳转 -> $url")
                     }
                 } else {
                     val schemeParams = CustomTabColorSchemeParams.Builder()
@@ -50,7 +50,7 @@ class URLClickableSpan(private val url: String) : ClickableSpan() {
                         .launchUrl(context, Uri.parse(url))
                 }
             } catch (e: Exception) {
-                logger.error("跳转链接失败 -> $e")
+                logger.e("跳转链接失败 -> $e")
             }
         }
     }

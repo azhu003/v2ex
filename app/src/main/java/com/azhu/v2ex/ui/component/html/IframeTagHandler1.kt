@@ -32,7 +32,7 @@ class IframeTagHandler1 : TagHandler {
     private var propertyValue: Stack<String>? = null
 
     override fun handleTag(opening: Boolean, tag: String?, output: Editable?, reader: XMLReader?) {
-        logger.info("handleTag -> $tag")
+        logger.i("handleTag -> $tag")
         if ("iframe".equals(tag, true)) {
             if (output != null && reader != null) {
                 iframe(opening, output, reader)
@@ -80,7 +80,7 @@ class IframeTagHandler1 : TagHandler {
             spannable.setSpan(URLClickableSpan(url), 0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             output.insert(start, spannable, 0, spannable.length)
         } catch (e: Exception) {
-            logger.error("handleEndIframe error: $e")
+            logger.e("handleEndIframe error: $e")
             e.printStackTrace()
         }
     }
@@ -114,7 +114,7 @@ class IframeTagHandler1 : TagHandler {
                 }
             }
         } catch (e: Exception) {
-            logger.error("decode attributes error: $e")
+            logger.e("decode attributes error: $e")
         }
         return null
     }

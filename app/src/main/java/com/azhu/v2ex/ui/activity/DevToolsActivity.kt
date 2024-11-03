@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewModelScope
 import com.azhu.v2ex.ui.component.LoadingDialog
 import com.azhu.v2ex.ui.component.MessageDialog
@@ -29,6 +30,7 @@ import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.DevToolsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlin.random.Random
 
 class DevToolsActivity : BaseActivity() {
@@ -37,12 +39,19 @@ class DevToolsActivity : BaseActivity() {
     private lateinit var launcher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         launcher = registerForActivityResult(ActivityResultContracts.GetContent(), callback = vm.registerForActivityResult)
         super.onCreate(savedInstanceState)
     }
 
     override fun initialize() {
         vm.replyDialog.onInsertImageClick = { launcher.launch("image/*") }
+        repeat(54) {
+            vm.replyDialog.emotions.add(String.format(Locale.ROOT, "file:///android_asset/emoticons/emoticon_%d.png", it + 1))
+        }
+        repeat(54) {
+            vm.replyDialog.emotions.add(String.format(Locale.ROOT, "file:///android_asset/emoticons/emoticon_%d.png", it + 1))
+        }
     }
 
     override fun getContentView(): @Composable () -> Unit {
@@ -65,7 +74,6 @@ private fun DevToolsPage(vm: DevToolsViewModel) {
     if (vm.loadingDialog.isDisplay) {
         LoadingDialog(vm.loadingDialog)
     }
-    ReplayDialog(vm.replyDialog)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -101,6 +109,7 @@ private fun DevToolsPage(vm: DevToolsViewModel) {
             vm.replyDialog.isDisplay = true
         })
     }
+    ReplayDialog(vm.replyDialog)
 }
 
 @Composable

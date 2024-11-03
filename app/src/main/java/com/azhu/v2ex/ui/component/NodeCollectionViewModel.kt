@@ -31,7 +31,7 @@ class NodeCollectionViewModel : LifecycleViewModel() {
         http.flows { DataRepository.INSTANCE.getNodesFromCollection() }
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
-            .error { logger.info("加载节点收藏列表失败: $it") }
+            .error { logger.i("加载节点收藏列表失败: $it") }
             .success { nodes.addAll(it) }
             .launchIn(viewModelScope)
     }

@@ -33,7 +33,7 @@ class TopicByNodeViewModel : BaseViewModel() {
         http.flows { DataRepository.INSTANCE.getTopicsByNode(node, onlyNodeInfo = true) }
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
-            .error { logger.info("获取节点主题失败 $it") }
+            .error { logger.i("获取节点主题失败 $it") }
             .success {
                 this.data = it
             }

@@ -16,7 +16,7 @@ class RepliesByUserResolver : BaseResolver<Pagination<UserRecentlyReply>>() {
         //最近回复
         val topicArray = box.select("div.dock_area td")
         val replyArray = box.select("div.reply_content")
-        if (topicArray.size != replyArray.size) logger.warning("dock_area 和 inner数量不一致")
+        if (topicArray.size != replyArray.size) logger.w("dock_area 和 inner数量不一致")
         else {
             topicArray.forEachIndexed { index, td ->
                 val reply = UserRecentlyReply()

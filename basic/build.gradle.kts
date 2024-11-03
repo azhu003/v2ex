@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.azhu.basic"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -47,4 +47,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.com.tencent.mmkv)
+
+    implementation(libs.logger)
 }

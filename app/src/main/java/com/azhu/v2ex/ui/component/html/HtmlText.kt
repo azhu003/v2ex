@@ -58,7 +58,7 @@ fun HtmlText(modifier: Modifier, html: String, isMarkdown: Boolean = false, font
             textview.setTextColor(getTextColor())
             textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
 //            view.lineHeight = 80f.dp.value.toInt()
-//            logger.info("factory -> 构造TextView ")
+//            logger.i("factory -> 构造TextView ")
 //            val helper = SelectableTextHelper.Builder(textview)
 //                .setSelectedColor(textview.resources.getColor(R.color.purple_200))
 //                .setCursorHandleSizeInDp(20f)

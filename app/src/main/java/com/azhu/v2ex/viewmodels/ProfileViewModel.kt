@@ -69,7 +69,7 @@ class ProfileViewModel : LifecycleViewModel() {
             .flowOn(Dispatchers.IO)
             .error {
                 if (!isRefreshByUser) state.setLoadError("获取用户信息失败")
-                logger.warning("获取用户信息失败 $it")
+                logger.w("获取用户信息失败 $it")
             }
             .success {
                 profile = it
@@ -90,7 +90,7 @@ class ProfileViewModel : LifecycleViewModel() {
         http.flows { DataRepository.INSTANCE.getUserDetails(profile.username) }
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
-            .error { logger.error(it?.message ?: "error message is null") }
+            .error { logger.e(it?.message ?: "error message is null") }
             .success {
                 profile.topicInvisible = it.topicInvisible
                 profile.topics.addAll(it.topics)
@@ -114,7 +114,7 @@ class ProfileViewModel : LifecycleViewModel() {
 
     fun claimLoginRewards() {
         if (profile.isClaimedLoginRewards && profile.claimedLoginRewardNonce.isNullOrBlank()) {
-            logger.info("已领取过奖励 once: ${profile.claimedLoginRewardNonce}")
+            logger.i("已领取过奖励 once: ${profile.claimedLoginRewardNonce}")
             return
         }
         val context = AppManager.getCurrentActivity()
@@ -124,7 +124,7 @@ class ProfileViewModel : LifecycleViewModel() {
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
             .error {
-                logger.warning("领取连续登录奖励失败 $it")
+                logger.w("领取连续登录奖励失败 $it")
                 val msg = when (it) {
                     is KnownApiException -> it.message
                     else -> context?.getString(R.string.claim_login_rewards_failed)

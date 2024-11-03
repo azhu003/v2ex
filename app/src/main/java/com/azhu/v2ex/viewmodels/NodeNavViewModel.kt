@@ -38,7 +38,7 @@ class NodeNavViewModel : LifecycleViewModel() {
             .error { loading.setLoadError(it?.message ?: "Load error") }
             .success {
                 navMap = it
-                logger.info("navMap: $navMap")
+                logger.i("navMap: $navMap")
                 loading.setLoadSuccess()
             }
             .launchIn(viewModelScope)

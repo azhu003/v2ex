@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.azhu.v2ex"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.azhu.v2ex"
@@ -20,7 +22,7 @@ android {
         }
     }
     lint {
-        targetSdk = 34
+        compileSdk = 35
     }
     buildTypes {
         debug {
@@ -117,12 +119,20 @@ dependencies {
 
     implementation(libs.flexmark.html2md.converter)
 
-    implementation("io.noties.markwon:core:4.6.2")
-    implementation("io.noties.markwon:ext-tables:4.6.2")
-    implementation("io.noties.markwon:linkify:4.6.2")
-    implementation("io.noties.markwon:image:4.6.2")
-    implementation("io.noties.markwon:image-coil:4.6.2")
-    implementation("io.noties.markwon:syntax-highlight:4.6.2") {
-        exclude(group = "org.jetbrains", module = "annotations-java5")
+    //markdown
+    implementation(libs.markwon.core)
+    implementation(libs.markwon.ext.tables)
+    implementation(libs.markwon.linkify)
+    implementation(libs.markwon.image)
+    implementation(libs.markwon.image.coil)
+    implementation(libs.markwon.syntax.highlight) {
+        configurations {
+            all {
+                exclude(group = "org.jetbrains", module = "annotations-java5")
+            }
+        }
     }
+//    implementation("io.noties.markwon:syntax-highlight:4.6.2") {
+//        exclude(group = "org.jetbrains", module = "annotations-java5")
+//    }
 }

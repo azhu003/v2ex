@@ -30,8 +30,8 @@ class DataRepository private constructor() {
     }
 
     suspend fun getRecentTopicList(page: Int = 1): Pagination<Topic> {
-//        val body = getHtmlFromAssets("topics.html")
-        val body = remote.service.getRecentTopicList(page).byteStream()
+        val body = getHtmlFromAssets("topics.html")
+//        val body = remote.service.getRecentTopicList(page).byteStream()
         return TopicListResolver().resolver(body)
     }
 
@@ -40,8 +40,8 @@ class DataRepository private constructor() {
         type: TopicDetailsResolverType = TopicDetailsResolverType.ALL,
         page: Int = 1
     ): TopicDetails {
-//        val body = getHtmlFromAssets("topic.html")
-        val body = remote.service.getTopicDetails(tid, page).byteStream()
+        val body = getHtmlFromAssets("topic.html")
+//        val body = remote.service.getTopicDetails(tid, page).byteStream()
         return TopicDetailsResolver(type, tid).resolver(body)
     }
 
@@ -69,7 +69,7 @@ class DataRepository private constructor() {
     suspend fun thankReplay(rid: String, once: String): JsonResult {
         val body = remote.service.thankReply(rid, once).string()
         val result = toJsonResult(body)
-        logger.info("thank has sent. result: rid=$rid once=$once -> $result")
+        logger.i("thank has sent. result: rid=$rid once=$once -> $result")
         return result
     }
 
@@ -173,7 +173,7 @@ class DataRepository private constructor() {
             result.message = message.ifEmpty { null }
             return result
         } catch (e: Exception) {
-            logger.error("json 解析失败: $e\n$body")
+            logger.e("json 解析失败: $e\n$body")
             return lazy { JsonResult(success = false, message = "error") }.value
         }
     }

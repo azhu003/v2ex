@@ -24,12 +24,12 @@ class DevToolsViewModel : BaseViewModel() {
     )
 
     val registerForActivityResult: ActivityResultCallback<Uri?> = ActivityResultCallback { uri ->
-        logger.info("ActivityResultCallback -> selected file uri = $uri")
+        logger.i("ActivityResultCallback -> selected file uri = $uri")
         if (uri != null) {
             val context = AppManager.getCurrentActivity()
             if (context != null) {
                 val path = V2exUtils.getRealPathFromURI(context, uri)
-                logger.info("ActivityResultCallback context -> ${context.javaClass.name} path = $path")
+                logger.i("ActivityResultCallback context -> ${context.javaClass.name} path = $path")
             }
         }
     }

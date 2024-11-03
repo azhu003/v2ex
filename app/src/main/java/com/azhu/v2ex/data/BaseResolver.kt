@@ -19,7 +19,7 @@ abstract class BaseResolver<T> : DocumentResolver<T> {
                 document.select("[data-cfemail]").forEach { element ->
                     val data = element.attr("data-cfemail")
                     val email = getUnprotectMail(data)
-                    logger.info("查询到保护邮箱 -> data=$data email=$email element=$element")
+                    logger.i("查询到保护邮箱 -> data=$data email=$email element=$element")
                     if (element.tagName().lowercase() != "a") {
                         element.tagName("a")
                     }
@@ -38,7 +38,7 @@ abstract class BaseResolver<T> : DocumentResolver<T> {
         return try {
             block.invoke() ?: ""
         } catch (e: Exception) {
-            logger.info("${this::class.simpleName} -> $e")
+            logger.i("${this::class.simpleName} -> $e")
             ""
         }
     }
@@ -47,7 +47,7 @@ abstract class BaseResolver<T> : DocumentResolver<T> {
         try {
             block.invoke()
         } catch (e: Exception) {
-            logger.info("${this::class.simpleName} -> $e")
+            logger.i("${this::class.simpleName} -> $e")
         }
     }
 

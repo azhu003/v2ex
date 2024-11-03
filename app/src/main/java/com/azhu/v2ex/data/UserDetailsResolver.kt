@@ -24,7 +24,7 @@ class UserDetailsResolver : BaseResolver<UserDetails>() {
             details.action.flow = Constant.LOCATION_HREF.find(it.select("input[value~=取消特别关注|加入特别关注]").attr("onclick"))?.value
             details.action.block =  Constant.LOCATION_HREF.find(it.select("input[value~=Unblock|Block]").attr("onclick"))?.value
 
-//            logger.info("flow=${details.action.flow}\nblock=${details.action.block}")
+//            logger.i("flow=${details.action.flow}\nblock=${details.action.block}")
 
             details.online = it.select("strong.online").hasText()
             val span = it.select("td").last()?.select("span.gray")
@@ -65,7 +65,7 @@ class UserDetailsResolver : BaseResolver<UserDetails>() {
         if (box.size > 2) {
             val topicArray = box[2].select("div.dock_area td")
             val replyArray = box[2].select("div.reply_content")
-            if (topicArray.size != replyArray.size) logger.warning("dock_area 和 inner数量不一致")
+            if (topicArray.size != replyArray.size) logger.w("dock_area 和 inner数量不一致")
             else {
                 topicArray.forEachIndexed { index, td ->
                     val reply = UserRecentlyReply()

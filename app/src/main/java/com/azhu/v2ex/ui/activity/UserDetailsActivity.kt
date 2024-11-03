@@ -135,7 +135,7 @@ private fun UserHeader(details: UserDetails) {
                             MaterialTheme.shapes.extraSmall
                         )
                         .clickable(details.isFollowed.not()) {
-                            logger.info("点击了关注按钮")
+                            logger.i("点击了关注按钮")
                         }
                         .padding(vertical = 2.dp, horizontal = 3.dp)
                 )

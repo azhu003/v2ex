@@ -54,7 +54,7 @@ class LoginViewModel : BaseViewModel() {
             .flowOn(Dispatchers.IO)
             .error {
                 state.setLoadError("获取用户信息失败")
-                logger.warning("获取用户信息失败 $it")
+                logger.w("获取用户信息失败 $it")
             }
             .success {
                 params = it
@@ -69,7 +69,7 @@ class LoginViewModel : BaseViewModel() {
     fun login() {
         val context = AppManager.getCurrentActivity()
         if (context == null) {
-            logger.error("登录失败，context 为空")
+            logger.e("登录失败，context 为空")
             return
         }
         when {
@@ -105,7 +105,7 @@ class LoginViewModel : BaseViewModel() {
                 warning = it?.message ?: ""
                 fetchLoginParams()
                 refreshCaptchaImage()
-                logger.warning("登录失败 $it")
+                logger.w("登录失败 $it")
             }
             .success {
                 warning = ""

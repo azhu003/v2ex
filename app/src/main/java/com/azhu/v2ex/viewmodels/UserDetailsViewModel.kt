@@ -28,7 +28,7 @@ class UserDetailsViewModel : BaseViewModel() {
         http.flows { DataRepository.INSTANCE.getUserDetails(state.value.username) }
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
-            .error { logger.error(it?.message ?: "error message is null") }
+            .error { logger.e(it?.message ?: "error message is null") }
             .success { state.value = it }
             .launchIn(viewModelScope)
     }

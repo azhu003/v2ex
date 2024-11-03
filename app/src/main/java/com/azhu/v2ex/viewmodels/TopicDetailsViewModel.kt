@@ -54,7 +54,7 @@ class TopicDetailsViewModel : BaseViewModel() {
 
     fun fetchTopicDetails(isLoadMore: Boolean = false) {
         if (TextUtils.isEmpty(details.tid)) {
-            logger.error("topic id is null")
+            logger.e("topic id is null")
             return
         }
         if (isLoadMore) this.isLoadingMoreData = true
@@ -69,7 +69,7 @@ class TopicDetailsViewModel : BaseViewModel() {
         }.smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
             .error {
-                logger.error(it?.message ?: "error message is null")
+                logger.e(it?.message ?: "error message is null")
                 if (loading.isLoading()) {
                     AppManager.getCurrentActivity()?.let { context ->
                         loading.setLoadError(context.getString(R.string.load_failed))

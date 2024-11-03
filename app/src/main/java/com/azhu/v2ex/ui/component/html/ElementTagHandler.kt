@@ -45,7 +45,7 @@ interface ElementTagHandler {
                 }
             }
         } catch (e: Exception) {
-            logger.error("decode attributes error: $e")
+            logger.e("decode attributes error: $e")
         }
         return null
     }

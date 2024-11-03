@@ -66,7 +66,7 @@ open class BaseViewModel : ViewModel() {
         return try {
             block.invoke() ?: ""
         } catch (e: Exception) {
-            logger.info("str exception -> $e")
+            logger.i("str exception -> $e")
             ""
         }
     }
@@ -75,7 +75,7 @@ open class BaseViewModel : ViewModel() {
         try {
             block.invoke()
         } catch (e: Exception) {
-            logger.info("catch -> $e")
+            logger.i("catch -> $e")
         }
     }
 

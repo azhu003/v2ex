@@ -24,7 +24,7 @@ abstract class BasePagingSource<T : Any> : PagingSource<Int, T>() {
             val nextPage = if (page < result.total) page + 1 else null
             return LoadResult.Page(result.data, prevKey = prevKey, nextKey = nextPage)
         } catch (e: Exception) {
-            logger.warning("加载列表数据失败 $e")
+            logger.w("加载列表数据失败 $e")
             return LoadResult.Error(e)
         }
     }

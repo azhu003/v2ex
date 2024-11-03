@@ -13,7 +13,7 @@ class LogoutResolver : BaseResolver<Any>() {
         val div = document.select("div#Main > div.box > div.inner")
         val isSuccessful = div.text().contains("你已经完全登出")
         if (!isSuccessful) {
-            logger.info("登出请求失败 ${div.text()}")
+            logger.i("登出请求失败 ${div.text()}")
         }
         return Unit
     }

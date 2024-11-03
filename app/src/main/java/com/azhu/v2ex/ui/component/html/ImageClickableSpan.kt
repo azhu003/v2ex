@@ -12,6 +12,6 @@ import com.azhu.basic.provider.logger
 class ImageClickableSpan(private val source: String) : ClickableSpan() {
 
     override fun onClick(weight: View) {
-        logger.info("click image -> source: $source")
+        logger.i("click image -> source: $source")
     }
 }

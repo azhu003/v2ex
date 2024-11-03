@@ -42,7 +42,7 @@ class SettingsViewModel : BaseViewModel() {
 //            .smap { Result.success(it) }
 //            .flowOn(Dispatchers.IO)
 //            .error {
-//                logger.warning("退出登录失败 $it")
+//                logger.w("退出登录失败 $it")
 //            }
 //            .success {
 //                V2exUtils.logout()

@@ -2,6 +2,7 @@ package com.azhu.v2ex.ext
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Resources
 import androidx.compose.ui.graphics.Color
@@ -70,4 +71,22 @@ fun String.toColor(): Color {
 
 fun Dp.toPx(): Float {
     return value * Resources.getSystem().displayMetrics.density.toInt()
+}
+
+/**
+ * LocalContext.current 提供的 Context 有时是 ContextThemeWrapper 类型，
+ * 而不是 Activity。这在某些情况下（例如在对话框、弹出菜单或 ModalBottomSheet 中）
+ * 尤其常见，因为这些组件包装了一个主题上下文，而不是直接的 Activity。
+ * 为了避免这种类型转换错误，可以尝试检查 Context 的类型，确保它是 Activity 实例。
+ * 可以通过 Context 的 baseContext 逐层检查，直到找到 Activity。
+ */
+fun Context.findActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) {
+            return context
+        }
+        context = context.baseContext
+    }
+    return null
 }
