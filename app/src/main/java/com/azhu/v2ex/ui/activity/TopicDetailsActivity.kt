@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -48,10 +49,12 @@ import coil.compose.AsyncImage
 import com.azhu.v2ex.R
 import com.azhu.v2ex.data.TopicDetails
 import com.azhu.v2ex.data.TopicReplyItem
+import com.azhu.v2ex.ext.clickableNoRipple
 import com.azhu.v2ex.ui.component.ImageWrapper
 import com.azhu.v2ex.ui.component.LoadingDialog
 import com.azhu.v2ex.ui.component.LoadingLayout
 import com.azhu.v2ex.ui.component.MessageDialog
+import com.azhu.v2ex.ui.component.ReplySheet
 import com.azhu.v2ex.ui.component.html.HtmlText
 import com.azhu.v2ex.ui.theme.custom
 import com.azhu.v2ex.viewmodels.TopicDetailsViewModel
@@ -98,66 +101,77 @@ private fun TopicDetailsPage(vm: TopicDetailsViewModel) {
     }
     LoadingLayout(vm.loading, modifier = Modifier.fillMaxSize(), onRetry = vm::fetchTopicDetails) {
 
-        Column(Modifier.fillMaxHeight()) {
-            if (vm.loadingDialogState.isDisplay) {
-                LoadingDialog(vm.loadingDialogState)
-            }
-            if (vm.messageDialogState.isDisplay) {
-                MessageDialog(vm.messageDialogState)
-            }
-            UltraSwipeRefresh(
-                state = state,
-                refreshEnabled = false,
-                loadMoreEnabled = vm.hasMore,
-                onRefresh = {},
-                onLoadMore = { vm.fetchTopicDetails(true) },
-                footerIndicator = { ClassicRefreshFooter(it) },
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                LazyColumn(
-                    state = rememberLazyListState(),
-                    modifier = Modifier.background(MaterialTheme.custom.container)
+        Scaffold(bottomBar = { ReplySheet(vm.reply) }) { _ ->
+            Column(Modifier.fillMaxHeight()) {
+                if (vm.loadingDialogState.isDisplay) {
+                    LoadingDialog(vm.loadingDialogState)
+                }
+                if (vm.messageDialogState.isDisplay) {
+                    MessageDialog(vm.messageDialogState)
+                }
+                UltraSwipeRefresh(
+                    state = state,
+                    refreshEnabled = false,
+                    loadMoreEnabled = vm.hasMore,
+                    onRefresh = {},
+                    onLoadMore = { vm.fetchTopicDetails(true) },
+                    footerIndicator = { ClassicRefreshFooter(it) },
+                    modifier = Modifier
+                        .weight(1f)
                 ) {
-                    item {
-                        TopicBody(details)
-                        HorizontalDivider(
-                            thickness = 5.dp,
-                            color = MaterialTheme.custom.background,
-                            modifier = Modifier.padding(top = 15.dp)
-                        )
-                        Text(
-                            text = stringResource(R.string.number_of_replies, details.replyCount ?: "0"),
-                            fontSize = 15.sp,
-                            color = MaterialTheme.custom.onContainerSecondary,
-                            modifier = Modifier
-                                .padding(horizontal = 15.dp)
-                                .padding(vertical = 12.dp)
-                        )
-                    }
-                    itemsIndexed(details.replies.data) { index, item ->
-                        key("$index${item.id}") {
-                            ReplyItem(vm, item)
-                        }
-                    }
-
-                    if (details.isInitialized && vm.hasMore.not()) {
+                    LazyColumn(
+                        state = rememberLazyListState(),
+                        modifier = Modifier.background(MaterialTheme.custom.container)
+                    ) {
                         item {
-                            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                                Text(
-                                    text = "—·—",
-                                    color = MaterialTheme.custom.onContainerSecondary,
-                                    fontSize = 14.sp,
-                                    modifier = Modifier.padding(vertical = 16.dp)
-                                )
+                            TopicBody(details)
+                            HorizontalDivider(
+                                thickness = 5.dp,
+                                color = MaterialTheme.custom.background,
+                                modifier = Modifier.padding(top = 15.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.number_of_replies, details.replyCount ?: "0"),
+                                fontSize = 15.sp,
+                                color = MaterialTheme.custom.onContainerSecondary,
+                                modifier = Modifier
+                                    .padding(horizontal = 15.dp)
+                                    .padding(vertical = 12.dp)
+                            )
+                        }
+                        itemsIndexed(details.replies.data) { index, item ->
+                            key("$index${item.id}") {
+                                ReplyItem(vm, item)
+                            }
+                        }
+
+                        if (details.isInitialized && vm.hasMore.not()) {
+                            item {
+                                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                                    Text(
+                                        text = "—·—",
+                                        color = MaterialTheme.custom.onContainerSecondary,
+                                        fontSize = 14.sp,
+                                        modifier = Modifier.padding(vertical = 16.dp)
+                                    )
+                                }
                             }
                         }
                     }
                 }
+                if (vm.isLogged) {
+                    HorizontalDivider(Modifier.fillMaxWidth(), Dp.Hairline, color = MaterialTheme.custom.background)
+                    FooterBar(vm)
+                }
             }
-            if (vm.isLogged) {
-                HorizontalDivider(Modifier.fillMaxWidth(), Dp.Hairline, color = MaterialTheme.custom.background)
-                FooterBar(vm)
+            if (vm.reply.isDisplay) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .clickableNoRipple {
+                            vm.reply.isDisplay = false
+                        }
+                )
             }
         }
     }

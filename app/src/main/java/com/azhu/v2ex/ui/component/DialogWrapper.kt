@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.SecureFlagPolicy
 import com.azhu.basic.AppManager
 import com.azhu.v2ex.R
 import com.azhu.v2ex.ui.theme.custom
@@ -82,7 +82,10 @@ fun <T : DialogState> DialogWrapper(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    Dialog(onDismissRequest = { state.dismiss();state.onDismiss?.invoke() }, properties = properties ?: DialogProperties()) {
+    Dialog(
+        onDismissRequest = { state.dismiss();state.onDismiss?.invoke() },
+        properties = properties ?: DialogProperties(securePolicy = SecureFlagPolicy.SecureOff)
+    ) {
         Surface(
             shape = MaterialTheme.shapes.medium,
             tonalElevation = 1.dp,
@@ -165,29 +168,38 @@ private fun DialogActions(state: DialogState) {
     }
 }
 
+@Composable
+fun rememberDialogState(): DialogState {
+    val state = DialogState()
+    state.onNegativeClick = { it.dismiss() }
+    state.onPositiveClick = { it.dismiss() }
+    state.onDismiss = { state.dismiss() }
+    return state
+}
+
 @Stable
-open class DialogState {
+open class DialogState : DialogDismiss {
     var title by mutableStateOf("")
     var isDisplay by mutableStateOf(false)
     var onDismiss: (() -> Unit)? = null
     var onNegativeClick: ((state: DialogState) -> Unit)? = null
     var onPositiveClick: ((state: DialogState) -> Unit)? = null
 
-    protected fun <T : DialogState> show(
+    fun show(
         title: String? = null,
         @StringRes titleRes: Int? = null,
         onDismiss: (() -> Unit)? = null,
-        onNegativeClick: ((state: T) -> Unit)? = null,
-        onPositiveClick: ((state: T) -> Unit)? = null,
+        onNegativeClick: ((state: DialogState) -> Unit)? = null,
+        onPositiveClick: ((state: DialogState) -> Unit)? = null,
     ) {
         this.title = title ?: if (titleRes !== null) AppManager.getCurrentActivity()?.getString(titleRes) ?: "" else ""
         this.onDismiss = onDismiss
-        this.onNegativeClick = onNegativeClick as ((DialogState) -> Unit)?
-        this.onPositiveClick = onPositiveClick as ((DialogState) -> Unit)?
+        this.onNegativeClick = onNegativeClick
+        this.onPositiveClick = onPositiveClick
         this.isDisplay = true
     }
 
-    open fun dismiss() {
+    override fun dismiss() {
         this.isDisplay = false
         this.onNegativeClick = null
         this.onPositiveClick = null
@@ -204,8 +216,8 @@ class MessageDialogState : DialogState() {
         title: String? = null,
         @StringRes titleRes: Int? = null,
         onDismiss: (() -> Unit)? = null,
-        onNegativeClick: ((state: MessageDialogState) -> Unit)? = null,
-        onPositiveClick: ((state: MessageDialogState) -> Unit)? = null,
+        onNegativeClick: ((state: DialogState) -> Unit)? = null,
+        onPositiveClick: ((state: DialogState) -> Unit)? = null,
     ) {
         super.show(
             title = title,
@@ -227,6 +239,10 @@ class MessageDialogState : DialogState() {
 @Stable
 class LoadingDialogState : DialogState() {
     fun show() {
-        super.isDisplay = true
+        this.isDisplay = true
     }
+}
+
+interface DialogDismiss {
+    fun dismiss()
 }

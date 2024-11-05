@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -63,6 +64,12 @@ fun InputActions(
             contentPadding = PaddingValues(0.dp),
             onClick = onClickSubmit,
             enabled = submitEnable,
+            colors = ButtonColors(
+                containerColor = MaterialTheme.custom.primary,
+                contentColor = Color.White,
+                disabledContainerColor = MaterialTheme.custom.onContainerSecondary.copy(alpha = 0.8f),
+                disabledContentColor = Color.White.copy(alpha = 0.8f)
+            ),
             modifier = Modifier.height(34.dp)
         ) {
             Text(text = getString(R.string.replay), fontSize = 14.sp, color = Color.White)

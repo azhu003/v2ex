@@ -112,15 +112,17 @@ class ProfileViewModel : LifecycleViewModel() {
         AppManager.getCurrentActivity()?.startActivityClass(LoginActivity::class)
     }
 
-    fun claimLoginRewards() {
-        if (profile.isClaimedLoginRewards && profile.claimedLoginRewardNonce.isNullOrBlank()) {
+    fun getDayMission() {
+        if (profile.isClaimedLoginRewards || profile.claimedLoginRewardNonce.isNullOrBlank()) {
             logger.i("已领取过奖励 once: ${profile.claimedLoginRewardNonce}")
             return
         }
         val context = AppManager.getCurrentActivity()
-        http.flows(onRequestBefore = { isClaimLoginRewardsEnable = false }) {
-            DataRepository.INSTANCE.claimLoginRewards(profile.claimedLoginRewardNonce!!)
-        }
+        http.flows(
+            onRequestBefore = { isClaimLoginRewardsEnable = false },
+            doRequest = {
+                DataRepository.INSTANCE.getDayMission(profile.claimedLoginRewardNonce!!)
+            })
             .smap { Result.success(it) }
             .flowOn(Dispatchers.IO)
             .error {
@@ -132,7 +134,12 @@ class ProfileViewModel : LifecycleViewModel() {
                 if (msg != null) toast(msg)
             }
             .success {
-                context?.let { context -> toast(context.getString(R.string.claim_login_rewards_succeed)) }
+                if (it.success == true) {
+                    context?.let { context -> toast(context.getString(R.string.claim_login_rewards_succeed)) }
+                } else {
+                    toast(it.message ?: context?.getString(R.string.claim_login_rewards_failed) ?: "")
+                }
+                profile.claimedLoginRewardNonce = it.once
             }
             .complete {
                 isClaimLoginRewardsEnable = !profile.isClaimedLoginRewards

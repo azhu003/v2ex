@@ -85,4 +85,8 @@
     <string name="canceled">取消</string>
     <string name="positive">确定</string>
 
+    <string name="insert_link">插入链接</string>
+    <string name="insert_link_text">文本：</string>
+    <string name="insert_link_url">链接：</string>
+    <string name="replied">回复成功</string>
 </resources>

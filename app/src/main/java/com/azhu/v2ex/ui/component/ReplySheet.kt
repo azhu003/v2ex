@@ -1,6 +1,6 @@
 package com.azhu.v2ex.ui.component
 
-import androidx.activity.compose.BackHandler
+import android.text.TextUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +30,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.azhu.basic.provider.logger
+import com.azhu.v2ex.R
 import com.azhu.v2ex.ui.theme.custom
 
 /**
@@ -44,7 +44,7 @@ import com.azhu.v2ex.ui.theme.custom
 private val DEFAULT_KEYBOARD_HEIGHT = 305.dp
 
 @Composable
-fun ReplySheet(state: ReplayDialogState) {
+fun ReplySheet(state: ReplaySheetState) {
     if (!state.isDisplay) {
         state.currentInputAction = InputActions.NONE
         return
@@ -54,11 +54,16 @@ fun ReplySheet(state: ReplayDialogState) {
         state.isEmotionSheetExpanded = !isKeyboardVisible
     }
 
-    var text by remember { mutableStateOf(TextFieldValue(state.content)) }
+//    var text by remember { mutableStateOf(TextFieldValue(state.content, TextRange(state.content.length, state.content.length))) }
     val requester = remember { FocusRequester() }
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
-    BackHandler(enabled = state.currentInputAction != InputActions.NONE) {
-        requester.requestFocus()
+//    BackHandler(enabled = state.currentInputAction != InputActions.NONE) {
+//        requester.requestFocus()
+//    }
+
+    val linkState: LinkState = rememberLinkState()
+    if (linkState.isDisplay) {
+        InsertLinkDialog(linkState)
     }
 
     Column(
@@ -70,8 +75,12 @@ fun ReplySheet(state: ReplayDialogState) {
             .navigationBarsPadding()
     ) {
         TextField(
-            value = text,
-            onValueChange = { newValue -> text = newValue },
+            value = state.content,
+            onValueChange = { newValue ->
+                if (!TextUtils.equals(newValue.text, state.content.text) && newValue.text.length <= 1000) {
+                    state.content = newValue
+                }
+            },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -89,17 +98,32 @@ fun ReplySheet(state: ReplayDialogState) {
         )
         InputActions(
             selected = state.currentInputAction,
-            onActionEvent = {
-                if (it == InputActions.EMOJI) {
+            onActionEvent = { action ->
+                if (action == InputActions.EMOJI) {
                     if (state.isEmotionSheetExpanded) {
                         softwareKeyboardController?.show()
                     } else {
                         softwareKeyboardController?.hide()
                     }
+                } else if (action == InputActions.Picture) {
+                    state.onInsertImage.invoke()
+                } else if (action == InputActions.Link) {
+                    linkState.show(
+                        titleRes = R.string.insert_link,
+                        onNegativeClick = {
+                            it.dismiss()
+                            linkState.reset()
+                        },
+                        onPositiveClick = {
+                            it.dismiss()
+                            state.onInsertLink(linkState.text, linkState.url)
+                            linkState.reset()
+                        }
+                    )
                 }
-                state.currentInputAction = it
+                state.currentInputAction = action
             },
-            submitEnable = true,
+            submitEnable = state.content.text.isNotEmpty(),
             onClickSubmit = state.onSubmit
         )
         ActionPanel(
@@ -107,8 +131,9 @@ fun ReplySheet(state: ReplayDialogState) {
             onInputActionChanged = {
                 state.currentInputAction = it
                 requester.requestFocus()
-            }, onEmotionClick = {
-                logger.i("选中 emoji -> $it local=${getEmotionAssets(it)} url=${getEmotionUrl(it)}")
+            }, onEmotionClick = { emoji ->
+                logger.d("选中 emoji -> $emoji local=${getEmotionAssets(emoji)} url=${getEmotionUrl(emoji)}")
+                state.onInsertEmoji(emoji)
             }
         )
     }

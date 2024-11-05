@@ -5,6 +5,7 @@ import android.text.TextUtils
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.azhu.basic.AppManager
 import com.azhu.basic.provider.logger
@@ -21,10 +22,14 @@ import com.azhu.v2ex.ui.activity.UserDetailsActivity
 import com.azhu.v2ex.ui.component.LoadingDialogState
 import com.azhu.v2ex.ui.component.LoadingState
 import com.azhu.v2ex.ui.component.MessageDialogState
+import com.azhu.v2ex.ui.component.ReplaySheetState
+import com.azhu.v2ex.ui.component.getEmotionUrl
 import com.azhu.v2ex.utils.V2exUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
 
 /**
  * 主题详情
@@ -48,8 +53,68 @@ class TopicDetailsViewModel : BaseViewModel() {
     //todo check re-login
     val isLogged by mutableStateOf(V2exUtils.isLogged())
 
+    val reply = ReplaySheetState(
+        onInsertEmoji = ::onInsertEmoji,
+        onInsertImage = ::onInsertImage,
+        onInsertLink = ::onInsertLink,
+        onSubmit = ::onSubmitReply
+    )
+
     fun onViewUserClick(context: Context, item: TopicReplyItem) {
         UserDetailsActivity.start(context, item.username)
+    }
+
+    private fun onInsertEmoji(emoji: String) {
+        reply.insertToContent("${getEmotionUrl(emoji)} ")
+    }
+
+    private fun onInsertImage() {
+
+    }
+
+    private fun onInsertLink(text: String, url: String) {
+        reply.insertToContent("![$text]($url)")
+    }
+
+    private fun onSubmitReply() {
+        if (reply.content.text.isBlank()) {
+            return
+        }
+        if (details.tid.isNullOrEmpty() || details.once.isNullOrEmpty()) {
+            logger.e("topic id or once is null")
+            toast(R.string.operation_failed)
+            return
+        }
+        val parser = Parser.builder().build()
+        val document = parser.parse(reply.content.text.trim())
+        var content = HtmlRenderer.builder().build().render(document)
+        if (content.length > 7) {
+            content = content.substring(3, content.length - 5)
+        }
+        logger.i("content = $content")
+        http.flows(
+            onRequestBefore = { loadingDialogState.show() },
+            doRequest = {
+                DataRepository.INSTANCE.reply(details.tid!!, content, details.once!!)
+            })
+            .smap { Result.success(it) }
+            .flowOn(Dispatchers.IO)
+            .error {
+                logger.e(it?.message ?: "error message is null")
+                if (loading.isLoading()) {
+                    AppManager.getCurrentActivity()?.let { context ->
+                        loading.setLoadError(context.getString(R.string.load_failed))
+                    }
+                }
+            }
+            .success {
+                merge(it, false)
+                reply.isDisplay = false
+                reply.content = TextFieldValue()
+                toast(R.string.replied)
+            }
+            .complete { loadingDialogState.dismiss() }
+            .launchIn(viewModelScope)
     }
 
     fun fetchTopicDetails(isLoadMore: Boolean = false) {
@@ -110,7 +175,7 @@ class TopicDetailsViewModel : BaseViewModel() {
                     } else {
                         if (!it.message.isNullOrEmpty()) toast(it.message!!) else toast(R.string.operation_failed)
                     }
-                    details.once = it.once.toString()
+                    details.once = it.once
                 }
                 .complete { loadingDialogState.dismiss() }
                 .launchIn(viewModelScope)
@@ -141,7 +206,7 @@ class TopicDetailsViewModel : BaseViewModel() {
                     } else {
                         if (!it.message.isNullOrEmpty()) toast(it.message!!) else toast(R.string.operation_failed)
                     }
-                    details.once = it.once.toString()
+                    details.once = it.once
                 }
                 .complete { loadingDialogState.dismiss() }
                 .launchIn(viewModelScope)
@@ -204,11 +269,12 @@ class TopicDetailsViewModel : BaseViewModel() {
     }
 
     fun replayAtUser(username: String) {
-        toast("回复$username")
+        reply.insertToContent("@$username ")
+        reply.isDisplay = true
     }
 
     fun replayTopic() {
-        toast("回复主题 ${details.tid}")
+        reply.isDisplay = true
     }
 
     private fun merge(details: TopicDetails, isLoadMore: Boolean) {

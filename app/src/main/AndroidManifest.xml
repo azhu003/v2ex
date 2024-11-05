@@ -46,7 +46,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.TopicDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activity.LoginActivity"
             android:exported="false" />

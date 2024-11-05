@@ -117,7 +117,7 @@ private fun UserProfile(vm: ProfileViewModel, topPadding: Dp) {
                 modifier = Modifier
                     .background("#CC4E616C".toColor(), MaterialTheme.shapes.large)
                     .padding(vertical = 2.dp, horizontal = 7.dp)
-                    .clickable(vm.isClaimLoginRewardsEnable) { vm.claimLoginRewards() }
+                    .clickable(vm.isClaimLoginRewardsEnable) { vm.getDayMission() }
             )
             Spacer(Modifier.width(7.dp))
             Image(

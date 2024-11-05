@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
+import com.azhu.v2ex.ext.clickableNoRipple
 import com.azhu.v2ex.ui.component.LoadingDialog
 import com.azhu.v2ex.ui.component.MessageDialog
 import com.azhu.v2ex.ui.component.ReplyDialog
@@ -121,12 +122,15 @@ private fun DevToolsPage(vm: DevToolsViewModel) {
                 SettingItem("弹一个回复窗 Next", onClick = {
                     vm.reply.isDisplay = true
                 })
+                SettingItem("读取emoji.html", onClick = {
+                    vm.readEmoji()
+                })
             }
             if (vm.reply.isDisplay) {
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .clickable {
+                        .clickableNoRipple {
                             vm.reply.isDisplay = false
                         }
                 )

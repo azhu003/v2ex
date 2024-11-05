@@ -4,11 +4,9 @@ import com.azhu.basic.AppManager
 import com.azhu.basic.provider.logger
 import com.azhu.v2ex.http.Http
 import com.azhu.v2ex.http.Referer
-import kotlinx.coroutines.delay
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
-import kotlin.random.Random
 
 /**
  * @author: Jerry
@@ -30,8 +28,8 @@ class DataRepository private constructor() {
     }
 
     suspend fun getRecentTopicList(page: Int = 1): Pagination<Topic> {
-        val body = getHtmlFromAssets("topics.html")
-//        val body = remote.service.getRecentTopicList(page).byteStream()
+//        val body = getHtmlFromAssets("topics.html")
+        val body = remote.service.getRecentTopicList(page).byteStream()
         return TopicListResolver().resolver(body)
     }
 
@@ -40,8 +38,8 @@ class DataRepository private constructor() {
         type: TopicDetailsResolverType = TopicDetailsResolverType.ALL,
         page: Int = 1
     ): TopicDetails {
-        val body = getHtmlFromAssets("topic.html")
-//        val body = remote.service.getTopicDetails(tid, page).byteStream()
+//        val body = getHtmlFromAssets("topic.html")
+        val body = remote.service.getTopicDetails(tid, page).byteStream()
         return TopicDetailsResolver(type, tid).resolver(body)
     }
 
@@ -71,6 +69,12 @@ class DataRepository private constructor() {
         val result = toJsonResult(body)
         logger.i("thank has sent. result: rid=$rid once=$once -> $result")
         return result
+    }
+
+    suspend fun reply(tid: String, content: String, once: String): TopicDetails {
+        val form = mapOf(Pair("once", once), Pair("content", content), Pair("return_to_page", "1"))
+        val body = remote.service.replyTopic(tid, form).byteStream()
+        return TopicDetailsResolver(TopicDetailsResolverType.ALL, tid).resolver(body)
     }
 
     suspend fun getUserDetails(username: String): UserDetails {
@@ -108,8 +112,8 @@ class DataRepository private constructor() {
         return LoginResultResolver().resolver(body)
     }
 
-    suspend fun claimLoginRewards(once: String): Any {
-        delay(Random.nextLong(2000, 3000))
+    suspend fun getDayMission(once: String): JsonResult {
+//        delay(Random.nextLong(2000, 3000))
 //        val body = getHtmlFromAssets("daily.html")
         val body = remote.service.claimLoginRewards(once).byteStream()
         return ClaimLoginRewardsResolver().resolver(body)
@@ -168,7 +172,7 @@ class DataRepository private constructor() {
             val result = JsonResult()
             result.success = json.optBoolean("success", false)
             val once = json.optInt("once", -1)
-            result.once = if (once == -1) null else once
+            result.once = if (once == -1) null else "$once"
             val message = json.optString("message", "")
             result.message = message.ifEmpty { null }
             return result
@@ -178,7 +182,7 @@ class DataRepository private constructor() {
         }
     }
 
-    private fun getHtmlFromAssets(fileName: String): InputStream {
+     fun getHtmlFromAssets(fileName: String): InputStream {
         val context = AppManager.getCurrentActivity()
         var input: InputStream? = null
         if (context != null) {

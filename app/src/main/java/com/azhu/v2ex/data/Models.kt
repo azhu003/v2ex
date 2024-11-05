@@ -218,6 +218,6 @@ data class NodeNav(
 @Stable
 data class JsonResult(
     var success: Boolean? = null,
-    var once: Int? = null,
+    var once: String? = null,
     var message: String? = null
 )

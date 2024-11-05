@@ -22,8 +22,9 @@ class RequestHeaderInterceptor(private val cookieManager: CookieManager) : Inter
                 sb.append("${cookie.name}=${cookie.value}")
                 if (index < cookies.size - 1) sb.append(";")
             }
+            val isPC = request.header("UA").isNullOrBlank()
             request.newBuilder()
-                .addHeader("User-Agent", UserAgentUtils.UA)
+                .addHeader("User-Agent", if (isPC) UserAgentUtils.UA_PC else UserAgentUtils.UA_MOBILE)
                 .addHeader("Cookie", sb.toString())
                 .addHeader("Origin", "https://www.v2ex.com")
                 .build()

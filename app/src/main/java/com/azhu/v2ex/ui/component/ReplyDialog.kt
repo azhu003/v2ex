@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -74,7 +75,7 @@ fun ReplyDialog(state: ReplayDialogState) {
     val sheet = rememberModalBottomSheetState()
 
     val requester = remember { FocusRequester() }
-    var text by remember { mutableStateOf(TextFieldValue(state.content)) }
+    var text by remember { mutableStateOf(TextFieldValue(state.content.toString())) }
     val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     LaunchedEffect(isKeyboardVisible) {
         if (isKeyboardVisible && !state.isEmotionSheetToggleByUser) {
@@ -116,7 +117,9 @@ fun ReplyDialog(state: ReplayDialogState) {
         ) {
             TextField(
                 value = text,
-                onValueChange = { newValue -> text = newValue },
+                onValueChange = { newValue ->
+                    text = newValue
+                },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -236,6 +239,37 @@ class ReplayDialogState(
     var isEmotionSheetExpanded by mutableStateOf(false)
     var isEmotionSheetToggleByUser by mutableStateOf(false)
     var emotions = mutableStateListOf<String>()
+}
+
+@Stable
+class ReplaySheetState(
+    val onInsertImage: () -> Unit,
+    val onInsertEmoji: (emoji: String) -> Unit,
+    val onInsertLink: (text: String, url: String) -> Unit,
+    val onSubmit: () -> Unit,
+) {
+    var isDisplay by mutableStateOf(false)
+    var content by mutableStateOf(TextFieldValue())
+    var isEmotionSheetExpanded by mutableStateOf(false)
+    var emotions = mutableStateListOf<String>()
 
     var currentInputAction by mutableStateOf(value = InputActions.NONE)
+
+    fun insertToContent(pending: String) {
+        val text = content
+        val oldLength = text.text.length
+        val sb = StringBuilder(text.text)
+        val selection = text.selection
+        val isSelected = text.selection.start < text.selection.end
+        if (isSelected) {
+            val newText = sb.replace(selection.start, selection.end, pending).toString()
+            content = text.copy(newText, TextRange(selection.start + pending.length))
+        } else {
+            val newText = sb.insert(selection.start, pending).toString()
+            content = text.copy(
+                newText,
+                TextRange(if (selection.start == oldLength) sb.length else selection.start + pending.length)
+            )
+        }
+    }
 }

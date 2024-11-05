@@ -45,6 +45,10 @@ interface ApiService {
     @POST("/thank/reply/{rid}")
     suspend fun thankReply(@Path("rid") rid: String, @Query("once") once: String): ResponseBody
 
+    @FormUrlEncoded
+    @POST("/t/{tid}")
+    suspend fun replyTopic(@Path("tid") tid: String, @FieldMap form: Map<String, String>): ResponseBody
+
     @GET("/member/{username}")
     suspend fun getMemberDetails(@Path("username") username: String): ResponseBody
 
@@ -65,7 +69,8 @@ interface ApiService {
     @GET("/mission/daily/redeem")
     suspend fun claimLoginRewards(
         @Query("once") once: String,
-        @Header("Referer") referer: String = "https://www.v2ex.com/signin?next=/mission/daily"
+        @Header("Referer") referer: String = "https://www.v2ex.com/signin?next=/mission/daily",
+        @Header("UA") ua: String = "mobile",
     ): ResponseBody
 
     @GET("/signout")
