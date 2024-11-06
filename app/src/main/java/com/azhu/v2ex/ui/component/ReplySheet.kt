@@ -115,9 +115,11 @@ fun ReplySheet(state: ReplaySheetState) {
                             linkState.reset()
                         },
                         onPositiveClick = {
-                            it.dismiss()
-                            state.onInsertLink(linkState.text, linkState.url)
-                            linkState.reset()
+                            if (linkState.valid()) {
+                                it.dismiss()
+                                state.onInsertLink(linkState.text, linkState.url)
+                                linkState.reset()
+                            }
                         }
                     )
                 }

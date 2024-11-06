@@ -27,6 +27,8 @@
     <string name="recently_published">最近发布</string>
     <string name="recently_replied">最近回复</string>
     <string name="topic_invisible_tips">根据 %s 的设置，主题列表被隐藏</string>
+    <string name="follow_user_tips">确认要开始关注 %s?</string>
+    <string name="unfollow_user_tips">确认要取消对 %s 的关注?</string>
 
     <string name="node_collection">节点收藏</string>
     <string name="topic_collection">主题收藏</string>
@@ -86,7 +88,8 @@
     <string name="positive">确定</string>
 
     <string name="insert_link">插入链接</string>
-    <string name="insert_link_text">文本：</string>
-    <string name="insert_link_url">链接：</string>
+    <string name="insert_link_text">文本:</string>
+    <string name="insert_link_url">链接(必填):</string>
+    <string name="invalid_url">无效的链接</string>
     <string name="replied">回复成功</string>
 </resources>

@@ -1,20 +1,20 @@
 package com.azhu.v2ex.ui.component
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,10 +26,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -45,12 +43,16 @@ import com.azhu.v2ex.ui.theme.custom
  */
 @Composable
 fun LoadingDialog(state: LoadingDialogState) {
-    DialogWrapper(state, DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false), 68.dp, 68.dp) {
+    DialogWrapper(
+        Modifier.wrapContentSize(),
+        state,
+        DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false)
+    ) {
         Box(Modifier.size(68.dp)) {
-            Image(
+            Icon(
                 painter = painterResource(id = R.drawable.loading),
                 contentDescription = LocalContext.current.getString(R.string.loading),
-                contentScale = ContentScale.Crop,
+                tint = MaterialTheme.custom.onContainerSecondary,
                 modifier = Modifier
                     .size(48.dp)
                     .align(Alignment.Center)
@@ -61,7 +63,7 @@ fun LoadingDialog(state: LoadingDialogState) {
 
 @Composable
 fun MessageDialog(state: MessageDialogState, properties: DialogProperties? = null) {
-    DialogWrapper(state, properties) {
+    DialogWrapper(Modifier.fillMaxWidth(0.75f), state, properties) {
         Text(
             text = state.message,
             style = MaterialTheme.typography.bodyMedium,
@@ -75,16 +77,14 @@ fun MessageDialog(state: MessageDialogState, properties: DialogProperties? = nul
 
 @Composable
 fun <T : DialogState> DialogWrapper(
+    modifier: Modifier? = Modifier,
     state: T,
     properties: DialogProperties? = null,
-    width: Dp? = null,
-    height: Dp? = null,
     content: @Composable () -> Unit,
 ) {
-    val context = LocalContext.current
     Dialog(
         onDismissRequest = { state.dismiss();state.onDismiss?.invoke() },
-        properties = properties ?: DialogProperties(securePolicy = SecureFlagPolicy.SecureOff)
+        properties = properties ?: DialogProperties(securePolicy = SecureFlagPolicy.SecureOff, usePlatformDefaultWidth = false)
     ) {
         Surface(
             shape = MaterialTheme.shapes.medium,
@@ -95,7 +95,7 @@ fun <T : DialogState> DialogWrapper(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .background(MaterialTheme.custom.container, MaterialTheme.shapes.small)
-                    .defaultMinSize(width ?: (context.resources.displayMetrics.widthPixels * 0.6f).dp, height ?: Dp.Unspecified),
+                    .then(modifier ?: Modifier)
             ) {
                 if (state.title.isNotEmpty()) {
                     Text(

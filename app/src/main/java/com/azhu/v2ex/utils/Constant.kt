@@ -47,4 +47,6 @@ object Constant {
     //获取URL中的once参数
     val ONCE by lazy { Regex("(?<=once=)\\d*") }
 
+    //匹配URL 绝对地址/相对地址
+    val URL by lazy { Regex("^((https?://|/)?([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}(:\\d+)?)?(/\\S*)?(\\?\\S*)?(#\\S*)?$") }
 }

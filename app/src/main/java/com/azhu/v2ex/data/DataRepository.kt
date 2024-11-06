@@ -83,6 +83,11 @@ class DataRepository private constructor() {
         return UserDetailsResolver().resolver(body)
     }
 
+    suspend fun toUserAction(action: String): UserDetails {
+        val body = remote.service.action(action).byteStream()
+        return UserDetailsResolver().resolver(body)
+    }
+
     suspend fun getUserProfile(): UserProfile {
 //        val body = getHtmlFromAssets("profile.html")
         val body = remote.service.getUserProfile().byteStream()
@@ -182,7 +187,7 @@ class DataRepository private constructor() {
         }
     }
 
-     fun getHtmlFromAssets(fileName: String): InputStream {
+    fun getHtmlFromAssets(fileName: String): InputStream {
         val context = AppManager.getCurrentActivity()
         var input: InputStream? = null
         if (context != null) {

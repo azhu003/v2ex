@@ -30,10 +30,10 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.azhu.basic.provider.logger
 import com.azhu.v2ex.R
-import com.azhu.v2ex.data.UserDetails
 import com.azhu.v2ex.ext.toColor
+import com.azhu.v2ex.ui.component.LoadingDialog
+import com.azhu.v2ex.ui.component.MessageDialog
 import com.azhu.v2ex.ui.component.RecentlyPublishedTopic
 import com.azhu.v2ex.ui.component.RecentlyReply
 import com.azhu.v2ex.ui.theme.custom
@@ -53,7 +53,7 @@ class UserDetailsActivity : BaseActivity() {
 
     override fun getContentView(): @Composable () -> Unit {
         return {
-            UserDetailsPage(vm.state.value)
+            UserDetailsPage(vm)
         }
     }
 
@@ -64,23 +64,31 @@ class UserDetailsActivity : BaseActivity() {
             finish()
             return
         }
-        vm.state.value.username = username
+        vm.state.username = username
         vm.fetchData()
     }
 }
 
 @Composable
-private fun UserDetailsPage(details: UserDetails) {
+private fun UserDetailsPage(vm: UserDetailsViewModel) {
+    val details = vm.state
     val scrollState = rememberScrollState()
+    if (vm.loadingDialogState.isDisplay) {
+        LoadingDialog(vm.loadingDialogState)
+    }
+    if (vm.messageDialogState.isDisplay) {
+        MessageDialog(vm.messageDialogState)
+    }
     Column(Modifier.verticalScroll(scrollState)) {
-        UserHeader(details)
+        UserHeader(vm)
         RecentlyPublishedTopic(details)
         RecentlyReply(details.replies, username = details.username)
     }
 }
 
 @Composable
-private fun UserHeader(details: UserDetails) {
+private fun UserHeader(vm: UserDetailsViewModel) {
+    val details = vm.state
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -135,9 +143,7 @@ private fun UserHeader(details: UserDetails) {
                             MaterialTheme.custom.background,
                             MaterialTheme.shapes.extraSmall
                         )
-                        .clickable(details.isFollowed.not()) {
-                            logger.i("点击了关注按钮")
-                        }
+                        .clickable { vm.flowing() }
                         .padding(vertical = 2.dp, horizontal = 3.dp)
                 )
             }

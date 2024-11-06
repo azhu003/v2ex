@@ -2,6 +2,7 @@ package com.azhu.v2ex.ui.component
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,20 +17,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.azhu.v2ex.R
 import com.azhu.v2ex.ui.theme.custom
+import com.azhu.v2ex.utils.Constant
 import com.azhu.v2ex.utils.getString
 
 /**
@@ -42,10 +47,25 @@ fun rememberLinkState() = remember { LinkState() }
 
 @Composable
 fun InsertLinkDialog(state: LinkState) {
-    DialogWrapper(state) {
+    DialogWrapper(Modifier.fillMaxWidth(0.8f), state) {
         InputField(R.string.insert_link_text, state.textField, KeyboardType.Text, focused = true)
         Spacer(Modifier.height(10.dp))
         InputField(R.string.insert_link_url, state.urlField, KeyboardType.Uri)
+
+        if (!state.isValidUrl) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+            ) {
+                Text(
+                    text = getString(R.string.invalid_url),
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 14.sp,
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+            }
+        }
     }
 }
 
@@ -74,6 +94,7 @@ private fun InputField(
         textStyle = TextStyle(fontSize = 14.sp),
         prefix = { Text(getString(prefix)) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        visualTransformation = VisualTransformation.None,
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
@@ -81,7 +102,6 @@ private fun InputField(
             .focusRequester(requester)
             .background(MaterialTheme.custom.containerCard, MaterialTheme.shapes.small)
     )
-
     LaunchedEffect(focused) {
         if (focused) {
             requester.requestFocus()
@@ -93,6 +113,7 @@ private fun InputField(
 class LinkState : DialogState() {
     val textField = mutableStateOf(TextFieldValue())
     val urlField = mutableStateOf(TextFieldValue())
+    var isValidUrl by mutableStateOf(true)
 
     val text: String
         get() = textField.value.text.trim()
@@ -103,5 +124,10 @@ class LinkState : DialogState() {
     fun reset() {
         textField.value = TextFieldValue()
         urlField.value = TextFieldValue()
+    }
+
+    fun valid(): Boolean {
+        isValidUrl = Constant.URL.matches(url)
+        return isValidUrl
     }
 }
